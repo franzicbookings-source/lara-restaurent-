@@ -33,39 +33,37 @@ On any other host the form shows a friendly error that points people to Instagra
 ## Structure
 
 ```
+index.html                one-screen landing page: logo, headline, sign-up, socials
+design-system.html        logo, colour, type, components, video and voice guidelines
 assets/
-  css/tokens.css          design tokens (colour, type, space, motion): the system's source of truth
-  css/site.css            landing page styles
+  css/tokens.css          design tokens: the system's source of truth
+  css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
-  js/main.js              intro, scroll choreography, cursor, form
-  js/vendor/              GSAP 3.12.5 + ScrollTrigger, Lenis 1.1.13 (vendored, no CDN)
-  fonts/                  Antonio, Manrope, Cormorant Garamond (self-hosted, OFL)
-  img/logo/               emblem / wordmark / lockup SVGs (gold + mono), favicon
-  img/photo/              brand photography, video posters
+  js/main.js              waitlist form (no libraries)
+  fonts/                  Manrope (self-hosted, OFL)
+  img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon
+  img/photo/              video poster frames
   video/                  hero loop 1280×720 + portrait 720×1080
 ```
 
-The logo was traced to vector from the identity artwork. The SVG paths are inlined into each page's sprite (`#sym-emblem`, `#sym-word`), so they can animate and scale without loss.
+The logo was traced to vector from the identity artwork. Its paths are inlined in each page so the emblem can draw itself in on load.
 
 ## The hero film
 
-The hero loop was cut from the build film:
+The hero is a 7.5s loop cut from the build film:
 
-- Kept 8 shots: ring chandeliers, leaf sconce, textured wall, timber slats, crystal chandelier, ring close-up, floor craft, and the "Coming Soon" window.
-- Each shot is slowed to about 2.1× with frame blending and given a gentle push-in, then joined with 0.6s dissolves and fades to and from black so it loops seamlessly.
-- Shots showing contractor names, phone numbers and the burned-in watermark were removed.
+- 11 shots at normal speed with hard cuts of about 0.7s: ring chandeliers, a worker on site, the leaf sconce, floor drilling, the crystal chandelier, drilling into a wall, timber slats, the team talking, the textured wall, wallpaper going down, and a ring close-up.
+- Each shot gets a gentle push-in.
+- Shots showing contractor names, phone numbers and the burned-in watermark were left out.
 
-Grade (FFmpeg):
+Grade (FFmpeg): a natural look with a little warmth.
 
 ```
-hue=s=0.28,eq=contrast=1.12:gamma=0.9,
-curves=r='0/0 0.3/0.13 0.65/0.6 1/0.99':g='0/0 0.3/0.095 0.65/0.48 1/0.9':b='0/0 0.3/0.06 0.65/0.33 1/0.73',
-vignette=PI/4
+eq=contrast=1.12:saturation=1.08:gamma=0.97,colorbalance=rs=.03:bs=-.03:rh=.04:bh=-.04,vignette=PI/5
 ```
 
 ## Accessibility & performance
 
-- `prefers-reduced-motion` skips the intro, scroll scrubbing, the custom cursor and grain, and pauses the videos.
-- Videos only play while on screen. The hero loop is about 1.5MB.
-- Without JavaScript the full page still renders, with no animation.
-- Every text colour pairing passes WCAG AA, and most pass AAA (see the design system).
+- With reduced motion turned on, the logo appears without drawing in and the video holds on its poster frame.
+- The page uses no JavaScript libraries, and each video is about 1.3MB.
+- Soft white and gold both pass WCAG AAA contrast on black.
