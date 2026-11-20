@@ -34,22 +34,15 @@ The countdown targets `data-opening` on `#countdown` in `index.html` (currently 
 
 ## The swarm (intro)
 
-`assets/js/swarm.js` runs the intro, which takes about 8 seconds:
+`assets/js/swarm.js` runs the intro, which takes about 6.5 seconds:
 
 1. **Birth:** the drawn emblem pulses and releases about 50 tiny gold butterflies, each the emblem split into two flapping wings.
 2. **Flight:** each butterfly flies its own curved 3D path, banking and circling in a vortex, with a gold-dust trail drawn on a canvas.
 3. **Formation:** they land in the shape of the La Raza butterfly.
-4. **Reveal:** a wave from the centre flips every tile over to show a photo.
-5. **Pop-out:** two large photos lift out of the wings as 3D cards while the two captions play.
-6. **Take-off:** the cards return, the big butterfly flaps twice and flies at the camera, and the page appears.
+4. **Shimmer:** a wave of light runs out from the centre. Each butterfly lifts toward you, flutters and throws off a ring of gold sparks.
+5. **Take-off:** the big butterfly flaps twice and flies at the camera, and the page appears.
 
-It plays on every page load. Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. On desktop the formation tilts with the mouse; on phones it sways gently. With reduced motion turned on, it doesn't play.
-
-To add photos, edit the data attributes on `#swarm` in `index.html`:
-
-- `data-photos`: 240×300 tiles in `assets/img/swarm/` (more variety makes a richer mosaic)
-- `data-cards`: the two 600×750 photos that pop out
-- `data-captions`: the two captions, separated by `|`
+It plays on every page load. Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. On desktop the formation tilts with the mouse; on phones it sways gently. The formation, depth and timing scale to the screen. With reduced motion turned on, it doesn't play.
 
 ## Structure
 
@@ -61,8 +54,7 @@ assets/
   css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
   js/main.js              rotating line, countdown, waitlist form (no libraries)
-  js/swarm.js             the intro: gold butterfly swarm → photo mosaic → 3D cards
-  img/swarm/              swarm tiles and pop-out card photos
+  js/swarm.js             the intro: gold butterfly swarm → formation → shimmer → take-off
   fonts/                  Manrope (self-hosted, OFL)
   img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon
   img/photo/              video poster frames

@@ -6,13 +6,12 @@
    2. Flight    Each one flies its own curved 3D path, banking and swirling,
                 leaving a trail of gold dust.
    3. Formation They land in the shape of the La Raza butterfly.
-   4. Reveal    A wave from the centre flips every tile to show a photo.
-   5. Pop-out   Two photos lift out as large 3D cards while the captions play.
-   6. Take-off  Cards return, the big butterfly flaps twice and flies at you,
+   4. Shimmer   A wave of light runs out from the centre: each butterfly
+                lifts, flutters and throws off a spark of gold.
+   5. Take-off  The big butterfly flaps twice and flies at you,
                 handing over to the page.
 
    Plays on every load; tap anywhere to skip; tap the logo to replay.
-   Photos, cards and captions come from data-* attributes on #swarm.
    ========================================================================== */
 (() => {
   const root = document.documentElement;
@@ -37,14 +36,7 @@
   // Butterfly formation, sampled from the emblem artwork (x, y in -1..1).
   const BUTTERFLY = [[-.725,-.769],[-.55,-.769],[-.375,-.769],[.5,-.769],[.675,-.769],[-.8,-.59],[-.625,-.59],[-.45,-.59],[-.275,-.59],[.25,-.59],[.425,-.59],[.6,-.59],[.775,-.59],[-.55,-.41],[-.2,-.41],[-.025,-.41],[.15,-.41],[.5,-.41],[.675,-.41],[-.8,-.231],[-.625,-.231],[-.45,-.231],[-.275,-.231],[.25,-.231],[.425,-.231],[.6,-.231],[.775,-.231],[-.9,-.051],[-.725,-.051],[-.55,-.051],[-.375,-.051],[-.025,-.051],[.325,-.051],[.5,-.051],[.675,-.051],[.85,-.051],[-.45,.128],[-.1,.128],[.425,.128],[-.2,.308],[.15,.308],[-.275,.487],[.25,.487],[-.375,.667],[-.2,.667],[.15,.667],[.325,.667],[-.275,.846],[.25,.846]];
 
-  const list = (s) => (s || '').split(',').map((v) => v.trim()).filter(Boolean);
-  const PHOTOS = list(swarm.dataset.photos);
-  const CARDS = list(swarm.dataset.cards);
-  const CAPTIONS = (swarm.dataset.captions || '').split('|').map((v) => v.trim()).filter(Boolean);
   const PERSPECTIVE = 900;
-
-  // Warm the cache so tiles and cards are ready by the time they flip.
-  [...PHOTOS, ...CARDS].forEach((src) => { const i = new Image(); i.src = src; });
 
   /* ---------- math ---------- */
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -79,8 +71,6 @@
     const stage = el('div', 'swarm__stage', swarm);
     const wingL = el('div', 'swarm__wing swarm__wing--l', stage);
     const wingR = el('div', 'swarm__wing swarm__wing--r', stage);
-    const veil = el('div', 'swarm__veil', swarm);
-    const caption = el('p', 'swarm__caption', swarm);
     const skip = el('button', 'swarm__skip', swarm);
     skip.type = 'button';
     skip.textContent = 'Skip';
@@ -116,25 +106,18 @@
     /* ---------- timeline (ms from start) ---------- */
     const S = isReplay ? 250 : 950;      // release, just as the emblem finishes drawing
     const SPREAD = 520;
-    const REVEAL = S + 2350;             // flip wave starts
-    const POP = REVEAL + 850;            // cards lift out
-    const CAP2 = POP + 1350;
-    const RETURN = POP + 2550;
-    const FLAP = RETURN + 450;
+    const REVEAL = S + 2300;             // shimmer wave starts once they've landed
+    const FLAP = REVEAL + 1150;
     const TAKEOFF = FLAP + 850;
     const TAKEOFF_DUR = 900;
     const END = TAKEOFF + TAKEOFF_DUR;
 
     /* ---------- build the swarm ---------- */
     const swirl = Math.random() < .5 ? 1 : -1;
-    const tiles = BUTTERFLY.map(([bx, by], i) => {
-      const photo = PHOTOS.length ? i % PHOTOS.length : 0;
+    const tiles = BUTTERFLY.map(([bx, by]) => {
       const t = el('div', 'bf', bx < 0 ? wingL : wingR);
-      // Absolute URL: a url() inside a custom property resolves against the stylesheet otherwise
-      t.style.setProperty('--img', PHOTOS.length ? `url("${new URL(PHOTOS[photo], document.baseURI).href}")` : 'none');
       const wl = el('div', 'bf__wing bf__wing--l', t);
       const wr = el('div', 'bf__wing bf__wing--r', t);
-      [wl, wr].forEach((w) => { el('i', 'bf__front', w); el('i', 'bf__back', w); });
 
       const T = { x: bx * half.x, y: by * half.y };
       const p0 = { x: origin.x + rnd(-8, 8), y: origin.y + rnd(-8, 8), z: 0 };
@@ -149,7 +132,7 @@
       const len = Math.hypot(T.x, T.y) || 1;
 
       return {
-        el: t, wl, wr, photo, T, p0, p1, p2,
+        el: t, wl, wr, T, p0, p1, p2,
         dir: { x: T.x / len, y: T.y / len, z: rnd(.3, 1) },
         start: S + rnd(0, SPREAD),
         dur: rnd(1700, 2100),
@@ -157,8 +140,9 @@
         phase: rnd(0, Math.PI * 2),
         bank: rnd(-30, 30),
         rEnd: rnd(-7, 7),
-        flipAt: REVEAL + Math.hypot(bx, by) / 1.2 * 320 + rnd(0, 60),
-        wing: -1, op: -1, popped: false,
+        shineAt: REVEAL + Math.hypot(bx, by) / 1.2 * 420 + rnd(0, 60),
+        sparked: false,
+        wing: -1, op: -1,
         pos: { x: p0.x, y: p0.y, z: 0 }, p: 0,
       };
     });
@@ -174,13 +158,6 @@
     /* ---------- one-shot events ---------- */
     const fired = new Set();
     const at = (t, key, fn) => { if (t >= 0 && !fired.has(key)) { fired.add(key); fn(); } };
-    let cards = [];
-
-    const say = (text) => {
-      caption.classList.remove('is-on');
-      setTimeout(() => { caption.textContent = text; caption.classList.add('is-on'); }, caption.textContent ? 360 : 0);
-    };
-
     function pulseEmblem() {
       if (!emblem) return;
       emblem.animate([
@@ -203,71 +180,17 @@
       wingR.animate(frames(-1), { duration, easing: 'ease-in-out' });
     }
 
-    function popCards() {
-      if (!CARDS.length) return;
-      const small = vw < 600;
-      // Two cards side by side, sized by whichever runs out first: width or height
-      const W = Math.round(Math.min(small ? vw * .44 : Math.min(280, vw * .22), vh * (portrait ? .42 : .34) / 1.25));
-      const H = Math.round(W * 1.25);
-      const cy = vh * (portrait ? .47 : vh < 500 ? .38 : .44);
-      const spots = [
-        { x: center.x - W * (small ? .52 : .6), y: cy - H * .03, rz: -6, ry: 14 },
-        { x: center.x + W * (small ? .52 : .6), y: cy + H * .05, rz: 5, ry: -14 },
-      ];
-      const halfPhotos = Math.max(1, Math.ceil(PHOTOS.length / 2));
-      cards = CARDS.slice(0, 2).map((src, k) => {
-        // Lift the card out of a tile near the middle of each wing, showing the same shoot
-        const want = { x: (k ? .5 : -.5) * half.x, y: -.42 * half.y };
-        const pool = tiles.filter((t) => !t.popped && (k ? t.photo >= halfPhotos : t.photo < halfPhotos) && (k ? t.T.x > 0 : t.T.x < 0));
-        const tile = (pool.length ? pool : tiles).reduce((best, t) =>
-          Math.hypot(t.T.x - want.x, t.T.y - want.y) < Math.hypot(best.T.x - want.x, best.T.y - want.y) ? t : best);
-        const r = tile.el.getBoundingClientRect();
-        tile.popped = true;
-
-        const c = el('div', 'swarm__card', swarm);
-        c.style.width = W + 'px';
-        c.style.height = H + 'px';
-        const img = el('img', '', c);
-        img.src = src; img.alt = '';
-        const s = spots[k];
-        const from = `translate3d(${r.left + r.width / 2 - W / 2}px, ${r.top + r.height / 2 - H / 2}px, 0) rotateZ(${tile.rEnd}deg) rotateY(0deg) scale(${r.width / W})`;
-        const mid = `translate3d(${(r.left + s.x) / 2 - W / 2}px, ${(r.top + s.y) / 2 - H / 2 - 30}px, 220px) rotateZ(${s.rz * 2}deg) rotateY(${s.ry * -2.4}deg) scale(.75)`;
-        const to = `translate3d(${s.x - W / 2}px, ${s.y - H / 2}px, 40px) rotateZ(${s.rz}deg) rotateY(${s.ry}deg) scale(1)`;
-        const frames = [{ transform: from }, { transform: mid, offset: .45 }, { transform: to }];
-        c.animate(frames, { duration: 950, delay: k * 200, easing: 'cubic-bezier(.2,.9,.25,1)', fill: 'both' });
-        setTimeout(() => c.classList.add('is-shine'), 950 + k * 200);
-        // A gentle float while it is held
-        setTimeout(() => {
-          c.animate([{ transform: to }, { transform: to.replace('40px)', '70px)') + ` rotateZ(${-s.rz * .3}deg)` }],
-            { duration: 1400, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', fill: 'both' });
-        }, 1150 + k * 200);
-        return { c, tile, frames };
-      });
-      veil.animate([{ opacity: 0 }, { opacity: .62 }], { duration: 600, fill: 'forwards' });
-    }
-
-    function returnCards() {
-      cards.forEach(({ c, tile, frames }, k) => {
-        c.getAnimations().forEach((a) => a.cancel());
-        const back = c.animate([...frames].reverse(), { duration: 700, delay: k * 120, easing: 'cubic-bezier(.6,0,.3,1)', fill: 'both' });
-        back.onfinish = () => { tile.popped = false; c.remove(); };
-      });
-      veil.animate([{ opacity: .62 }, { opacity: 0 }], { duration: 600, delay: 250, fill: 'forwards' });
-    }
-
     /* ---------- frame loop ---------- */
     const t0 = performance.now();
     let raf = 0;
     let dustOn = true;
+    const sparks = [];
 
     function frame(now) {
       const t = now - t0;
 
       at(t - (S - 60), 'pulse', pulseEmblem);
       at(t - REVEAL, 'glow', () => glow.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: 'forwards' }));
-      at(t - POP, 'pop', () => { popCards(); say(CAPTIONS[0] || ''); });
-      at(t - CAP2, 'cap2', () => { if (CAPTIONS[1]) say(CAPTIONS[1]); });
-      at(t - RETURN, 'return', () => { returnCards(); caption.classList.remove('is-on'); });
       at(t - FLAP, 'flap', () => flapBig(2, 52, 850));
       at(t - TAKEOFF, 'takeoff', () => {
         flapBig(1, 70, 520);
@@ -306,12 +229,14 @@
         const rx = b.bank * Math.sin(p * Math.PI);
         const sc = p < .15 ? .18 + .82 * (p / .15) : 1;
 
-        // Flip from gold butterfly to photo
-        let ry = 180;
-        if (t >= b.flipAt) {
-          const fp = clamp((t - b.flipAt) / 520);
-          ry = 180 - 180 * easeOutBack(fp);
-          z += Math.sin(fp * Math.PI) * 70 * ZK;
+        // Shimmer: the wave lifts each one toward you with a little pop and a flutter
+        let sc2 = 1, shine = 0;
+        if (t >= b.shineAt) {
+          const fp = clamp((t - b.shineAt) / 620);
+          shine = Math.sin(fp * Math.PI);
+          z += shine * 90 * ZK;
+          sc2 = 1 + shine * .28;
+          if (!b.sparked) { b.sparked = true; sparks.push({ b, t }); }
         }
 
         // Take-off: scatter outward and past the viewer
@@ -323,14 +248,13 @@
           z += b.dir.z * 650 * ZK * kk;
           op = 1 - smooth(.35, 1, ko);
         }
-        if (b.popped) op = 0;
 
         b.pos.x = x; b.pos.y = y; b.pos.z = z;
-        b.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rz.toFixed(1)}deg) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
+        b.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rz.toFixed(1)}deg) rotateX(${rx.toFixed(1)}deg) scale(${(sc * sc2).toFixed(3)})`;
         if (op !== b.op) { b.el.style.opacity = op; b.op = op; }
 
         // Wingbeat, calming as it lands
-        const amp = 70 * (1 - smooth(.68, .96, p));
+        const amp = Math.max(70 * (1 - smooth(.68, .96, p)), 75 * shine);
         const wing = amp > .2 ? amp * (.5 + .5 * Math.sin(b.omega * t + b.phase)) : 0;
         if (wing !== b.wing) {
           b.wl.style.transform = `rotateY(${wing.toFixed(1)}deg)`;
@@ -357,7 +281,24 @@
             ctx.fill();
           }
         }
-        if (!flying && t > REVEAL + 1400) { dustOn = false; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        // Sparks thrown off by the shimmer wave
+        for (let n = sparks.length - 1; n >= 0; n--) {
+          const sp = sparks[n];
+          const age = (t - sp.t) / 700;
+          if (age >= 1) { sparks.splice(n, 1); continue; }
+          const f = PERSPECTIVE / (PERSPECTIVE - Math.min(sp.b.pos.z, PERSPECTIVE - 50));
+          const sx = (center.x + sp.b.pos.x * f) * dpr;
+          const sy = (center.y + sp.b.pos.y * f) * dpr;
+          const rad = (6 + age * 26) * ZK * dpr;
+          ctx.fillStyle = `rgba(234,195,134,${(.75 * (1 - age)).toFixed(3)})`;
+          for (let m = 0; m < (finePointer ? 3 : 2); m++) {
+            const ang = rnd(0, Math.PI * 2);
+            ctx.beginPath();
+            ctx.arc(sx + Math.cos(ang) * rad, sy + Math.sin(ang) * rad, rnd(.6, 1.6) * dpr, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        if (!flying && !sparks.length && t > REVEAL + 1600) { dustOn = false; ctx.clearRect(0, 0, canvas.width, canvas.height); }
       }
 
       raf = requestAnimationFrame(frame);
