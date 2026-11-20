@@ -71,9 +71,6 @@
     const stage = el('div', 'swarm__stage', swarm);
     const wingL = el('div', 'swarm__wing swarm__wing--l', stage);
     const wingR = el('div', 'swarm__wing swarm__wing--r', stage);
-    const skip = el('button', 'swarm__skip', swarm);
-    skip.type = 'button';
-    skip.textContent = 'Skip';
 
     // Size the formation to the screen: as wide as a phone allows, but never taller than ~58% of it
     const vw = innerWidth, vh = innerHeight;
