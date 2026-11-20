@@ -52,10 +52,43 @@
 
   let running = false;
 
+  // The background film pauses while the intro plays, so the phone only has one thing to draw.
+  const video = document.getElementById('bg');
+  const holdVideo = () => { if (video) video.pause(); };
+  const resumeVideo = () => { if (video && video.paused) { const p = video.play(); if (p) p.catch(() => {}); } };
+
+  // Each butterfly is the gold emblem. Drawing it once to a bitmap means the phone
+  // never re-renders the vector artwork while the butterflies move and grow.
+  const emblemSrc = new URL('assets/img/logo/emblem-gold.svg', document.baseURI).href;
+  const emblemImg = new Image();
+  emblemImg.src = emblemSrc;
+  const emblemReady = (emblemImg.decode ? emblemImg.decode() : Promise.resolve()).catch(() => {});
+  // Returns a short blob: URL (a long data: URL would be re-parsed on every style update).
+  let bakedUrl = '';
+  function bakeEmblem(tileW) {
+    return new Promise((resolve) => {
+    try {
+      const k = Math.min(devicePixelRatio || 1, 2) * 1.35; // headroom for the shimmer pop
+      const w = Math.round(tileW * k), h = Math.round(tileW * 1.25 * k);
+      const ew = w, eh = Math.round(w * 1170 / 1206);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(emblemImg, 0, Math.round((h - eh) / 2), ew, eh);
+      c.toBlob((blob) => {
+        if (!blob) return resolve('');
+        if (bakedUrl) URL.revokeObjectURL(bakedUrl);
+        bakedUrl = URL.createObjectURL(blob);
+        resolve(`url("${bakedUrl}")`);
+      }, 'image/png');
+    } catch (e) { resolve(''); }
+    });
+  }
+
   const replay = document.getElementById('logo-replay');
   if (replay) replay.addEventListener('click', () => { if (!running) play(true); });
 
-  play(false);
+  holdVideo();
+  emblemReady.then(() => play(false));
 
   /* ======================================================================== */
   function play(isReplay) {
@@ -84,6 +117,8 @@
     const half = { x: rect.width / 2, y: rect.height / 2 };
     const tileW = Math.round(rect.width * 0.09);
     stage.style.setProperty('--tile', tileW + 'px');
+    if (emblemImg.complete && emblemImg.naturalWidth) bakeEmblem(tileW).then((u) => { if (u) { stage.style.setProperty('--bf', u); stage.classList.add('has-bf'); } });
+    holdVideo();
     const R = Math.max(innerWidth, innerHeight);
     const center = { x: innerWidth / 2, y: innerHeight / 2 };
 
@@ -139,7 +174,7 @@
         rEnd: rnd(-7, 7),
         shineAt: REVEAL + Math.hypot(bx, by) / 1.2 * 420 + rnd(0, 60),
         sparked: false,
-        wing: -1, op: -1,
+        wing: -1, op: -1, tf: '',
         pos: { x: p0.x, y: p0.y, z: 0 }, p: 0,
       };
     });
@@ -158,9 +193,9 @@
     function pulseEmblem() {
       if (!emblem) return;
       emblem.animate([
-        { transform: 'scale(1)', filter: 'brightness(1)' },
-        { transform: 'scale(1.16)', filter: 'brightness(1.6)', offset: .35 },
-        { transform: 'scale(1)', filter: 'brightness(1)' },
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.16)', offset: .35 },
+        { transform: 'scale(1)' },
       ], { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)' });
     }
 
@@ -181,6 +216,7 @@
     const t0 = performance.now();
     let raf = 0;
     let dustOn = true;
+    let stageT = '';
     const sparks = [];
 
     function frame(now) {
@@ -198,15 +234,12 @@
       if (t >= END) { finish(); return; }
 
       // Stage: tilt, sway and the final rush toward the camera
-      if (!finePointer && t > REVEAL) {
-        tilt.tx = Math.cos(t / 1300) * 2;
-        tilt.ty = Math.sin(t / 1100) * 4;
-      }
       tilt.x += (tilt.tx - tilt.x) * .08;
       tilt.y += (tilt.ty - tilt.y) * .08;
       const ko = clamp((t - TAKEOFF) / TAKEOFF_DUR);
       const ke = easeInOut(ko);
-      stage.style.transform = `translate3d(0, ${-110 * ZK * ke}px, ${780 * ZK * ke}px) rotateX(${tilt.x + 18 * ke}deg) rotateY(${tilt.y}deg)`;
+      const st = `translate3d(0, ${(-110 * ZK * ke).toFixed(1)}px, ${(780 * ZK * ke).toFixed(1)}px) rotateX(${(tilt.x + 18 * ke).toFixed(2)}deg) rotateY(${tilt.y.toFixed(2)}deg)`;
+      if (st !== stageT) { stage.style.transform = st; stageT = st; }
 
       // Butterflies
       let flying = 0;
@@ -247,12 +280,13 @@
         }
 
         b.pos.x = x; b.pos.y = y; b.pos.z = z;
-        b.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rz.toFixed(1)}deg) rotateX(${rx.toFixed(1)}deg) scale(${(sc * sc2).toFixed(3)})`;
+        const tf = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rz.toFixed(1)}deg) rotateX(${rx.toFixed(1)}deg) scale(${(sc * sc2).toFixed(3)})`;
+        if (tf !== b.tf) { b.el.style.transform = tf; b.tf = tf; }
         if (op !== b.op) { b.el.style.opacity = op; b.op = op; }
 
         // Wingbeat, calming as it lands
         const amp = Math.max(70 * (1 - smooth(.68, .96, p)), 75 * shine);
-        const wing = amp > .2 ? amp * (.5 + .5 * Math.sin(b.omega * t + b.phase)) : 0;
+        const wing = amp > .2 ? Math.round(amp * (.5 + .5 * Math.sin(b.omega * t + b.phase)) * 2) / 2 : 0;
         if (wing !== b.wing) {
           b.wl.style.transform = `rotateY(${wing.toFixed(1)}deg)`;
           b.wr.style.transform = `rotateY(${(-wing).toFixed(1)}deg)`;
@@ -314,6 +348,7 @@
       swarm.removeEventListener('click', finish);
       swarm.classList.add('is-done');
       ready();
+      resumeVideo();
       setTimeout(() => {
         swarm.hidden = true;
         swarm.innerHTML = '';

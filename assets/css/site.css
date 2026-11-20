@@ -94,8 +94,11 @@ button, input { font: inherit; color: inherit; }
   border-radius: 28px;
   background: rgba(22, 22, 20, .72);
   border: 1px solid var(--color-line);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   transition: border-color var(--dur-fast);
+}
+/* A live blur over moving video is costly on phones; keep it for desktops only */
+@media (hover: hover) and (pointer: fine) {
+  .field { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 }
 .field:focus-within { border-color: var(--lr-gold); }
 .field input {
@@ -217,7 +220,8 @@ button, input { font: inherit; color: inherit; }
 .bf__wing--l { left: 0; transform-origin: 100% 50%; }
 .bf__wing--r { right: 0; transform-origin: 0 50%; }
 .bf__wing { background: url("../img/logo/emblem-gold.svg") no-repeat; background-size: 200% auto; }
-@media (hover: hover) and (pointer: fine) { .bf__wing { filter: drop-shadow(0 0 4px rgba(234,195,134,.35)); } }
+/* swarm.js swaps in a bitmap of the emblem (--bf) so it is never re-rasterised mid-flight */
+.swarm__stage.has-bf .bf__wing { background-image: var(--bf); background-size: 200% 100%; }
 .bf__wing--l { background-position: 0 50%; }
 .bf__wing--r { background-position: 100% 50%; }
 
