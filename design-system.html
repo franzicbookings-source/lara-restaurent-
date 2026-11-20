@@ -87,11 +87,28 @@
       <div class="ds-comp">
         <div>
           <small>Sign-up field</small>
-          <div class="field"><label class="sr-only" for="ds-email">Email</label><input id="ds-email" type="email" placeholder="Your email"><button class="btn" type="button">Notify me</button></div>
+          <div class="field"><label class="sr-only" for="ds-email">Email</label><input id="ds-email" type="email" placeholder="Your email for opening night"><button class="btn" type="button">Get the invite</button></div>
+        </div>
+        <div>
+          <small>Rotating line · changes every 2.6s under the headline, gold, one short sentence each</small>
+          <p class="ticker ds-ticker" id="ticker">
+            <span class="ticker__line is-on">A restaurant &amp; cocktail lounge.</span>
+            <span class="ticker__line">Opening the first week of December.</span>
+            <span class="ticker__line">Be first through the door.</span>
+          </p>
+        </div>
+        <div>
+          <small>Countdown · live to opening night, tabular numbers between hairlines</small>
+          <div class="countdown" id="countdown" data-opening="2026-12-01T18:00:00+02:00">
+            <div class="countdown__unit"><b data-u="d">00</b><span>days</span></div>
+            <div class="countdown__unit"><b data-u="h">00</b><span>hours</span></div>
+            <div class="countdown__unit"><b data-u="m">00</b><span>mins</span></div>
+            <div class="countdown__unit"><b data-u="s">00</b><span>secs</span></div>
+          </div>
         </div>
         <div>
           <small>Buttons</small>
-          <div class="ds-row"><button class="btn" type="button">Notify me</button><button class="btn btn--ghost" type="button">Follow us</button></div>
+          <div class="ds-row"><button class="btn" type="button">Get the invite</button><button class="btn btn--ghost" type="button">Follow us</button></div>
         </div>
         <div>
           <small>Social links</small>
@@ -101,7 +118,7 @@
           </ul>
         </div>
       </div>
-      <p class="ds-note">Pill shapes, 46px tall. One gold button per screen. Motion: the emblem draws itself in on load (about 1.5s), then everything else fades up. Nothing else moves.</p>
+      <p class="ds-note">Pill shapes, 46–48px tall. One gold button per screen. Motion: the emblem draws itself in on load (about 1.5s), then everything fades up. After that only the rotating line and the countdown move.</p>
     </section>
 
     <section id="video">
@@ -122,10 +139,11 @@
       <h2>Voice</h2>
       <p class="ds-note">Short, warm and confident. Say one thing per screen. Emoji belong on social, not the site.</p>
       <div class="ds-voice">
-        <div><small>Say</small><p>Something extraordinary is coming to Newcastle.</p><p>Notify me</p><p>We'll let you know the moment we open.</p></div>
+        <div><small>Say</small><p>Something extraordinary is coming to Newcastle.</p><p>Opening the first week of December.</p><p>Get the invite</p></div>
         <div><small>Avoid</small><p class="no">A new chapter in dining awaits ✦</p><p class="no">BEST RESTAURANT IN TOWN!!! 🔥</p><p class="no">Long paragraphs explaining the brand</p></div>
       </div>
     </section>
   </main>
+  <script src="assets/js/main.js" defer></script>
 </body>
 </html>

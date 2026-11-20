@@ -13,6 +13,48 @@
     video.pause();
   }
 
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Ticker: the page "talks" — one short line at a time under the headline.
+  const ticker = document.getElementById('ticker');
+  if (ticker && !reduced) {
+    const lines = [...ticker.children];
+    let i = 0;
+    setTimeout(() => setInterval(() => {
+      const cur = lines[i];
+      i = (i + 1) % lines.length;
+      const next = lines[i];
+      cur.classList.remove('is-on'); cur.classList.add('is-out');
+      next.classList.remove('is-out');
+      void next.offsetWidth; // restart from below
+      next.classList.add('is-on');
+      setTimeout(() => cur.classList.remove('is-out'), 600);
+    }, 2600), 1200);
+  }
+
+  // Countdown to opening night. Change data-opening on #countdown when the exact date is set.
+  const cd = document.getElementById('countdown');
+  if (cd) {
+    const target = new Date(cd.dataset.opening).getTime();
+    const el = (u) => cd.querySelector(`[data-u="${u}"]`);
+    const out = { d: el('d'), h: el('h'), m: el('m'), s: el('s') };
+    const pad = (n) => String(n).padStart(2, '0');
+    const tick = () => {
+      let t = Math.max(0, Math.floor((target - Date.now()) / 1000));
+      if (t === 0) {
+        cd.classList.add('is-open');
+        if (ticker) ticker.innerHTML = '<span class="ticker__line is-on">Now open. Come and see us.</span>';
+        return false;
+      }
+      out.d.textContent = pad(Math.floor(t / 86400)); t %= 86400;
+      out.h.textContent = pad(Math.floor(t / 3600)); t %= 3600;
+      out.m.textContent = pad(Math.floor(t / 60));
+      out.s.textContent = pad(t % 60);
+      return true;
+    };
+    if (tick()) { const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000); }
+  }
+
   const form = document.getElementById('waitlist-form');
   if (!form) return;
   const msg = document.getElementById('form-msg');
@@ -43,7 +85,7 @@
       say('Thanks! We’ll let you know the moment we open.', true);
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = 'Notify me';
+      btn.textContent = 'Get the invite';
       say('That didn’t go through. Try again, or message us on Instagram.', false);
     }
   });

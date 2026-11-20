@@ -30,16 +30,20 @@ The form in `index.html` (`#waitlist-form`) is ready for two backends:
 
 On any other host the form shows a friendly error that points people to Instagram, so no sign-up is silently lost.
 
+## Opening date
+
+The countdown targets `data-opening` on `#countdown` in `index.html` (currently `2026-12-01T18:00:00+02:00`). Set it to the exact opening night once it's confirmed. When the time passes, the countdown hides and the rotating line changes to "Now open."
+
 ## Structure
 
 ```
-index.html                one-screen landing page: logo, headline, sign-up, socials
+index.html                one-screen landing page: logo, headline, rotating line, countdown, sign-up, socials
 design-system.html        logo, colour, type, components, video and voice guidelines
 assets/
   css/tokens.css          design tokens: the system's source of truth
   css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
-  js/main.js              waitlist form (no libraries)
+  js/main.js              rotating line, countdown, waitlist form (no libraries)
   fonts/                  Manrope (self-hosted, OFL)
   img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon
   img/photo/              video poster frames

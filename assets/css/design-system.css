@@ -61,3 +61,4 @@ html, body { height: auto; }
 .ds-voice { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-2); }
 .ds-voice > div { display: grid; gap: .5rem; align-content: start; padding: var(--space-3); border-radius: 12px; background: var(--lr-black-2); }
 .ds-voice .no { color: var(--lr-white-50); text-decoration: line-through; }
+.ds-ticker { text-align: left; } .ds .countdown { text-align: center; }

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>La Raza — Coming soon to Newcastle</title>
-  <meta name="description" content="Something extraordinary is coming to Newcastle. Get first word when La Raza opens.">
+  <title>La Raza — Restaurant &amp; cocktail lounge, opening December in Newcastle</title>
+  <meta name="description" content="La Raza, a restaurant and cocktail lounge, opens in Newcastle the first week of December. Get the opening news first.">
   <meta name="theme-color" content="#0B0B0A">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="La Raza — Coming soon to Newcastle">
-  <meta property="og:description" content="Something extraordinary is coming to Newcastle.">
+  <meta property="og:title" content="La Raza — Opening first week of December">
+  <meta property="og:description" content="A restaurant and cocktail lounge is coming to Newcastle. Doors open the first week of December.">
   <meta property="og:image" content="assets/img/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/logo/favicon.svg" type="image/svg+xml">
@@ -47,20 +47,34 @@
           <svg class="logo__word" viewBox="0 0 2544 1170" aria-hidden="true"><use href="#sym-word" fill="url(#g-gold)"/></svg>
         </h1>
 
-        <p class="headline reveal reveal-1">Something extraordinary is coming to Newcastle.</p>
+        <div class="pitch reveal reveal-1">
+          <p class="headline">Something extraordinary is coming to Newcastle.</p>
+          <p class="ticker" id="ticker" aria-live="off">
+            <span class="ticker__line is-on">A restaurant &amp; cocktail lounge.</span>
+            <span class="ticker__line">Opening the first week of December.</span>
+            <span class="ticker__line">Be first through the door.</span>
+          </p>
+        </div>
 
-        <form class="form reveal reveal-2" id="waitlist-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="company" data-endpoint="" novalidate>
+        <div class="countdown reveal reveal-2" id="countdown" data-opening="2026-12-01T18:00:00+02:00" role="timer" aria-label="Time until La Raza opens">
+          <div class="countdown__unit"><b data-u="d">00</b><span>days</span></div>
+          <div class="countdown__unit"><b data-u="h">00</b><span>hours</span></div>
+          <div class="countdown__unit"><b data-u="m">00</b><span>mins</span></div>
+          <div class="countdown__unit"><b data-u="s">00</b><span>secs</span></div>
+        </div>
+
+        <form class="form reveal reveal-3" id="waitlist-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="company" data-endpoint="" novalidate>
           <input type="hidden" name="form-name" value="waitlist">
           <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
           <div class="field">
             <label class="sr-only" for="email">Email address</label>
-            <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required>
-            <button class="btn" type="submit">Notify me</button>
+            <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email for opening night" required>
+            <button class="btn" type="submit">Get the invite</button>
           </div>
           <p class="form__msg" id="form-msg" role="status" aria-live="polite"></p>
         </form>
 
-        <ul class="socials reveal reveal-3">
+        <ul class="socials reveal reveal-4">
           <li><a href="https://www.instagram.com/laraza_restaurant" target="_blank" rel="noopener" aria-label="La Raza on Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a></li>
           <li><a href="https://www.facebook.com/share/19Yjqxi3mR/" target="_blank" rel="noopener" aria-label="La Raza on Facebook">
@@ -71,7 +85,7 @@
 
     <footer class="foot">
       <span>© <span id="year">2026</span> La Raza</span>
-      <span>Newcastle · Opening soon</span>
+      <span>Opening December · Newcastle</span>
     </footer>
   </main>
 
