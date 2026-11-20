@@ -83,14 +83,17 @@
     }
     if (form.company && form.company.value) return; // honeypot
 
+    const endpoint = form.dataset.endpoint; // Backend URL that accepts a POST of the form fields.
+    if (!endpoint) {
+      // No backend yet (front-end preview): confirm the email looks right, send nothing.
+      say('Thanks! Sign-ups open very soon. Follow us on Instagram in the meantime.', true);
+      return;
+    }
     btn.disabled = true;
     btn.textContent = 'Sending…';
     const data = new FormData(form);
-    const endpoint = form.dataset.endpoint; // e.g. https://formspree.io/f/xxxx. Leave empty on Netlify.
     try {
-      const res = endpoint
-        ? await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-        : await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
+      const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
       if (!res.ok) throw new Error(String(res.status));
       form.email.value = '';
       btn.textContent = 'You’re in';

@@ -23,12 +23,10 @@ Drag the folder onto Netlify, Vercel or any static host. `netlify.toml` sets cac
 
 ### Waitlist form
 
-The form in `index.html` (`#waitlist-form`) is ready for two backends:
+The form in `index.html` (`#waitlist-form`) is front end only for now (phase one).
 
-1. **Netlify Forms (default).** Deploy on Netlify and the form is detected automatically (`data-netlify="true"`). Sign-ups appear under *Site → Forms*. Turn on email notifications there.
-2. **Formspree, or any endpoint that accepts form POSTs.** Set `data-endpoint="https://formspree.io/f/XXXXXXX"` on the form.
-
-On any other host the form shows a friendly error that points people to Instagram, so no sign-up is silently lost.
+- **No backend yet:** with `data-endpoint=""` the form checks the email and shows "Sign-ups open very soon". Nothing is sent or stored.
+- **Phase two:** set `data-endpoint` on the form to your backend URL. The form POSTs its fields (`email`, plus the `company` honeypot, which bots fill and people don't) as `multipart/form-data` with `Accept: application/json`, and treats any 2xx response as success.
 
 ## Opening date
 
