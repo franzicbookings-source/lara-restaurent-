@@ -85,7 +85,15 @@
     skip.type = 'button';
     skip.textContent = 'Skip';
 
+    // Size the formation to the screen: as wide as a phone allows, but never taller than ~58% of it
+    const vw = innerWidth, vh = innerHeight;
+    const portrait = vh > vw;
+    const ratio = 1206 / 1170;
+    const size = Math.round(Math.min(vw * (portrait ? .94 : .8), 600, vh * (portrait ? .58 : .7) * ratio));
+    stage.style.width = size + 'px';
     const rect = stage.getBoundingClientRect();
+    // Depth scales with the formation, so a phone gets the same 3D feel as a desktop, not an exaggerated one
+    const ZK = clamp(size / 600, .45, 1);
     const half = { x: rect.width / 2, y: rect.height / 2 };
     const tileW = Math.round(rect.width * 0.09);
     stage.style.setProperty('--tile', tileW + 'px');
@@ -100,7 +108,7 @@
       : { x: 0, y: -half.y * 1.4 };
 
     // Dust canvas
-    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    const dpr = finePointer ? Math.min(devicePixelRatio || 1, 1.5) : 1;
     canvas.width = Math.round(innerWidth * dpr);
     canvas.height = Math.round(innerHeight * dpr);
     const ctx = canvas.getContext('2d');
@@ -132,12 +140,12 @@
       const p0 = { x: origin.x + rnd(-8, 8), y: origin.y + rnd(-8, 8), z: 0 };
       const a = rnd(-.15, 1.15) * Math.PI;           // mostly outward and down from the logo
       const d = rnd(.32, .7) * R;
-      const p1 = { x: p0.x + Math.cos(a) * d, y: p0.y + Math.sin(a) * d * .8, z: rnd(-750, 380) };
+      const p1 = { x: p0.x + Math.cos(a) * d, y: p0.y + Math.sin(a) * d * .8, z: rnd(-750, 380) * ZK };
       let v = { x: T.x, y: T.y };
       if (Math.hypot(v.x, v.y) < 50) v = { x: rnd(-90, 90), y: rnd(-90, 90) };
       const th = swirl * rnd(.8, 1.6);                 // everyone circles the same way: a vortex
       const k = rnd(1.3, 1.8);
-      const p2 = { x: (v.x * Math.cos(th) - v.y * Math.sin(th)) * k, y: (v.x * Math.sin(th) + v.y * Math.cos(th)) * k, z: rnd(-380, 240) };
+      const p2 = { x: (v.x * Math.cos(th) - v.y * Math.sin(th)) * k, y: (v.x * Math.sin(th) + v.y * Math.cos(th)) * k, z: rnd(-380, 240) * ZK };
       const len = Math.hypot(T.x, T.y) || 1;
 
       return {
@@ -197,10 +205,11 @@
 
     function popCards() {
       if (!CARDS.length) return;
-      const small = innerWidth < 600;
-      const W = Math.round(small ? innerWidth * .43 : Math.min(280, innerWidth * .22));
+      const small = vw < 600;
+      // Two cards side by side, sized by whichever runs out first: width or height
+      const W = Math.round(Math.min(small ? vw * .44 : Math.min(280, vw * .22), vh * (portrait ? .42 : .34) / 1.25));
       const H = Math.round(W * 1.25);
-      const cy = innerHeight * (small ? .44 : .46);
+      const cy = vh * (portrait ? .47 : vh < 500 ? .38 : .44);
       const spots = [
         { x: center.x - W * (small ? .52 : .6), y: cy - H * .03, rz: -6, ry: 14 },
         { x: center.x + W * (small ? .52 : .6), y: cy + H * .05, rz: 5, ry: -14 },
@@ -270,14 +279,14 @@
 
       // Stage: tilt, sway and the final rush toward the camera
       if (!finePointer && t > REVEAL) {
-        tilt.tx = Math.cos(t / 1100) * 4;
-        tilt.ty = Math.sin(t / 900) * 9;
+        tilt.tx = Math.cos(t / 1300) * 2;
+        tilt.ty = Math.sin(t / 1100) * 4;
       }
       tilt.x += (tilt.tx - tilt.x) * .08;
       tilt.y += (tilt.ty - tilt.y) * .08;
       const ko = clamp((t - TAKEOFF) / TAKEOFF_DUR);
       const ke = easeInOut(ko);
-      stage.style.transform = `translate3d(0, ${-110 * ke}px, ${780 * ke}px) rotateX(${tilt.x + 18 * ke}deg) rotateY(${tilt.y}deg)`;
+      stage.style.transform = `translate3d(0, ${-110 * ZK * ke}px, ${780 * ZK * ke}px) rotateX(${tilt.x + 18 * ke}deg) rotateY(${tilt.y}deg)`;
 
       // Butterflies
       let flying = 0;
@@ -302,16 +311,16 @@
         if (t >= b.flipAt) {
           const fp = clamp((t - b.flipAt) / 520);
           ry = 180 - 180 * easeOutBack(fp);
-          z += Math.sin(fp * Math.PI) * 70;
+          z += Math.sin(fp * Math.PI) * 70 * ZK;
         }
 
         // Take-off: scatter outward and past the viewer
         let op = 1;
         if (ko > 0) {
           const kk = ko * ko;
-          x += b.dir.x * 560 * kk;
-          y += b.dir.y * 560 * kk;
-          z += b.dir.z * 650 * kk;
+          x += b.dir.x * 560 * ZK * kk;
+          y += b.dir.y * 560 * ZK * kk;
+          z += b.dir.z * 650 * ZK * kk;
           op = 1 - smooth(.35, 1, ko);
         }
         if (b.popped) op = 0;
@@ -342,7 +351,7 @@
           const sx = (center.x + b.pos.x * f) * dpr;
           const sy = (center.y + b.pos.y * f) * dpr;
           ctx.fillStyle = `rgba(234,195,134,${(.65 * (1 - b.p)).toFixed(3)})`;
-          for (let n = 0; n < 2; n++) {
+          for (let n = 0; n < (finePointer ? 2 : 1); n++) {
             ctx.beginPath();
             ctx.arc(sx + rnd(-4, 4) * dpr, sy + rnd(-4, 4) * dpr, rnd(.6, 1.8) * dpr * f, 0, Math.PI * 2);
             ctx.fill();
@@ -363,6 +372,7 @@
       cancelAnimationFrame(raf);
       removeEventListener('pointermove', onMove);
       removeEventListener('keydown', onKey);
+      removeEventListener('resize', onResize);
       swarm.removeEventListener('click', finish);
       swarm.classList.add('is-done');
       ready();
@@ -375,6 +385,8 @@
     }
     const onKey = (e) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') finish(); };
     addEventListener('keydown', onKey);
+    const onResize = () => { if (Math.abs(innerWidth - vw) > 40 || Math.abs(innerHeight - vh) > 160) finish(); };
+    addEventListener('resize', onResize);
     swarm.addEventListener('click', finish);
   }
 })();
