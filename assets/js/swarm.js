@@ -11,7 +11,7 @@
    6. Take-off  Cards return, the big butterfly flaps twice and flies at you,
                 handing over to the page.
 
-   Plays once per visit; tap anywhere to skip; tap the logo to replay.
+   Plays on every load; tap anywhere to skip; tap the logo to replay.
    Photos, cards and captions come from data-* attributes on #swarm.
    ========================================================================== */
 (() => {
@@ -59,13 +59,11 @@
   const el = (tag, cls, parent) => { const n = document.createElement(tag); if (cls) n.className = cls; if (parent) parent.appendChild(n); return n; };
 
   let running = false;
-  let seen = false;
-  try { seen = sessionStorage.getItem('lr-swarm') === '1'; } catch (_) {}
 
   const replay = document.getElementById('logo-replay');
   if (replay) replay.addEventListener('click', () => { if (!running) play(true); });
 
-  if (seen) { swarm.hidden = true; ready(); } else { play(false); }
+  play(false);
 
   /* ======================================================================== */
   function play(isReplay) {
@@ -368,7 +366,6 @@
       swarm.removeEventListener('click', finish);
       swarm.classList.add('is-done');
       ready();
-      try { sessionStorage.setItem('lr-swarm', '1'); } catch (_) {}
       setTimeout(() => {
         swarm.hidden = true;
         swarm.innerHTML = '';

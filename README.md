@@ -45,7 +45,7 @@ The countdown targets `data-opening` on `#countdown` in `index.html` (currently 
 5. **Pop-out:** two large photos lift out of the wings as 3D cards while the two captions play.
 6. **Take-off:** the cards return, the big butterfly flaps twice and flies at the camera, and the page appears.
 
-It plays once per visit. Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. On desktop the formation tilts with the mouse; on phones it sways gently. With reduced motion turned on, it doesn't play.
+It plays on every page load. Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. On desktop the formation tilts with the mouse; on phones it sways gently. With reduced motion turned on, it doesn't play.
 
 To add photos, edit the data attributes on `#swarm` in `index.html`:
 
