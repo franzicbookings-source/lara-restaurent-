@@ -34,6 +34,12 @@ On any other host the form shows a friendly error that points people to Instagra
 
 The countdown targets `data-opening` on `#countdown` in `index.html` (currently `2026-12-01T18:00:00+02:00`). Set it to the exact opening night once it's confirmed. When the time passes, the countdown hides and the rotating line changes to "Now open."
 
+## Photo swarm
+
+Right after the logo draws, small photo tiles fly in from all sides in 3D, form the La Raza butterfly, hold while two captions play, then burst away. It plays once per visit, and tapping skips it.
+
+To add photos, put 240×300 JPGs in `assets/img/swarm/` and list them in `data-photos` on `#swarm` in `index.html`. Captions are in `CAPTIONS` in `assets/js/main.js`.
+
 ## Structure
 
 ```

@@ -34,6 +34,14 @@
       <source src="assets/video/hero-1280.mp4" type="video/mp4">
     </video>
 
+    <!-- Photo swarm: tiles fly in, gather into the butterfly, then burst. Add photos to data-photos. -->
+    <div class="swarm" id="swarm" aria-hidden="true"
+      data-photos="assets/img/swarm/01.jpg,assets/img/swarm/02.jpg,assets/img/swarm/03.jpg,assets/img/swarm/04.jpg,assets/img/swarm/05.jpg,assets/img/swarm/06.jpg,assets/img/swarm/07.jpg,assets/img/swarm/08.jpg">
+      <div class="swarm__stage" id="swarm-stage"></div>
+      <p class="swarm__caption" id="swarm-caption"></p>
+      <button class="swarm__skip" id="swarm-skip" type="button" tabindex="-1">Tap to skip</button>
+    </div>
+
     <section class="center">
       <div class="center__inner">
         <h1 class="logo">
