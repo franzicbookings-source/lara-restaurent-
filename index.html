@@ -16,12 +16,12 @@
   <link rel="preload" href="assets/img/logo/emblem-gold.svg" as="image" type="image/svg+xml">
   <link rel="preload" href="assets/img/photo/hero-poster-portrait.jpg" as="image" media="(max-aspect-ratio: 4/5)">
   <link rel="preload" href="assets/img/photo/hero-poster.jpg" as="image" media="(min-aspect-ratio: 4.001/5)">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=19">
-  <link rel="stylesheet" href="assets/css/site.css?v=19">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=20">
+  <link rel="stylesheet" href="assets/css/site.css?v=20">
   <script>document.documentElement.classList.add('js');</script>
-  <script src="assets/js/swarm.js?v=19" defer></script>
-  <script src="assets/js/main.js?v=19" defer></script>
-  <script src="assets/js/hiring.js?v=19" defer></script>
+  <script src="assets/js/swarm.js?v=20" defer></script>
+  <script src="assets/js/main.js?v=20" defer></script>
+  <script src="assets/js/hiring.js?v=20" defer></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -117,6 +117,20 @@
       </div>
     </section>
 
+    <!-- A little envelope slipped under the door: hints there's more below (hiring.js) -->
+    <a class="peek" id="peek" href="#hiring" aria-label="Scroll down: we’re hiring">
+      <span class="peek__note" aria-hidden="true">Psst… something for you</span>
+      <svg class="peek__env" viewBox="0 0 64 44" aria-hidden="true">
+        <defs>
+          <linearGradient id="pe-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6efe1"/><stop offset="1" stop-color="#e2d5bd"/></linearGradient>
+          <linearGradient id="pe-flap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ece1cd"/><stop offset="1" stop-color="#d9caae"/></linearGradient>
+        </defs>
+        <rect x="1" y="1" width="62" height="42" rx="3" fill="url(#pe-body)"/>
+        <path d="M1.6 2 32 25 62.4 2" fill="url(#pe-flap)" stroke="#c9b694" stroke-width=".8" stroke-linejoin="round"/>
+        <use href="#sym-seal" x="24" y="17" width="16" height="16"/>
+        <path class="peek__glint" d="M27 21.5a6 6 0 0 1 5.5-2.6" fill="none" stroke="#fff6df" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </a>
   </main>
 
   <!-- We're hiring (assets/js/hiring.js): an invitation. A cream envelope sealed with black wax and

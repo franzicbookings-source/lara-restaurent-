@@ -40,6 +40,10 @@ Every flight path is worked out up front and handed to the browser as a Web Anim
 
 It plays on every load, except when the link points to a section (such as `#hiring`). Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. With reduced motion turned on, it doesn't play.
 
+## "Psst… something for you"
+
+The main screen fills the phone, so a small cream envelope with the black wax seal peeks up from the bottom edge, like a letter slipped under the door, with "Psst… something for you" above it. Every few seconds it gets a little nudge and the seal catches the light. Tapping it glides down to the invitation, and it tucks itself away once you start scrolling (`.peek` in `index.html`; `hiring.js`).
+
 ## We're hiring: the invitation
 
 After the main screen: "Oh, and one more thing… **We're hiring.**" (`assets/js/hiring.js`).

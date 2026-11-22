@@ -60,14 +60,24 @@
     section.classList.add('is-near');
   }
 
-  /* ---------- the pill on the main screen glides down here ---------- */
-  const pill = document.getElementById('hire-open');
-  if (pill) {
-    pill.addEventListener('click', (e) => {
+  /* ---------- the pill and the little envelope on the main screen glide down here ---------- */
+  ['hire-open', 'peek'].forEach((id) => {
+    const link = document.getElementById(id);
+    if (!link) return;
+    link.addEventListener('click', (e) => {
       e.preventDefault();
       section.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
       try { history.replaceState(null, '', '#hiring'); } catch (err) { /* sandboxed */ }
     });
+  });
+
+  // The envelope tucks itself away once you start scrolling (one class flip, no per-frame work)
+  const peek = document.getElementById('peek');
+  if (peek) {
+    let gone = null;
+    const check = () => { const g = scrollY > 40; if (g !== gone) { gone = g; peek.classList.toggle('is-gone', g); } };
+    addEventListener('scroll', check, { passive: true });
+    check();
   }
 
   /* ---------- the hero film rests while it's off screen ---------- */

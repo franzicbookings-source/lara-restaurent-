@@ -235,6 +235,42 @@ button, input { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) { .js .swarm { display: none; } }
 
 /* ==========================================================================
+   The little envelope "slipped under the door" at the foot of the main screen
+   ========================================================================== */
+.center { padding-bottom: calc(var(--space-3) + 84px); }
+.peek {
+  position: absolute; left: 50%; bottom: 0; z-index: 2;
+  display: grid; justify-items: center; gap: .45rem;
+  translate: -50% 0; text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transition: opacity .4s var(--ease), translate .5s var(--ease);
+}
+.peek.is-gone { opacity: 0; translate: -50% 24px; pointer-events: none; }
+.peek__note { font-size: .8125rem; font-weight: var(--fw-medium); color: var(--lr-gold-light); white-space: nowrap; }
+.peek__env {
+  display: block; width: 84px; height: auto; margin-bottom: -18px; /* only the top shows, like a letter under a door */
+  filter: drop-shadow(0 -4px 10px rgba(0,0,0,.45));
+  transition: transform .45s cubic-bezier(.3,1.5,.5,1);
+  animation: peek-nudge 4.2s cubic-bezier(.3,1.4,.5,1) 3s infinite;
+}
+.peek:hover .peek__env, .peek:focus-visible .peek__env { transform: translateY(-8px) rotate(-3deg); animation-play-state: paused; }
+@keyframes peek-nudge { 0%, 72%, 100% { transform: none; } 78% { transform: translateY(-9px) rotate(-4deg); } 86% { transform: translateY(-2px) rotate(2deg); } 92% { transform: translateY(-4px); } }
+.peek__glint { opacity: 0; animation: peek-glint 4.2s ease 3s infinite; }
+@keyframes peek-glint { 0%, 76%, 100% { opacity: 0; } 82% { opacity: .9; } }
+/* It arrives with the rest of the page, after the intro */
+.js .peek { opacity: 0; }
+.js.is-ready .peek:not(.is-gone) { opacity: 1; transition-delay: .6s; }
+@media (max-height: 600px) and (max-width: 599px) {
+  .center { padding-bottom: 58px; }
+  .center__inner > .links { margin-bottom: .35rem; }
+  .center__inner { gap: .8rem; }
+  .logo { width: 92px; }
+  .peek { gap: .3rem; }
+  .peek__note { font-size: .75rem; }
+  .peek__env { width: 64px; margin-bottom: -16px; }
+}
+@media (prefers-reduced-motion: reduce) { .peek__env, .peek__glint { animation: none; } }
+
+/* ==========================================================================
    We're hiring — the pill on the main screen
    ========================================================================== */
 .links { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .5rem; }
