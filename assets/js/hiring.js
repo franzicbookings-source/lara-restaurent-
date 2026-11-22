@@ -50,6 +50,16 @@
     });
   });
 
+  /* ---------- the paper and lining textures load once the invitation is close ---------- */
+  if ('IntersectionObserver' in window) {
+    const near = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { section.classList.add('is-near'); near.disconnect(); }
+    }, { rootMargin: '50% 0px' });
+    near.observe(section);
+  } else {
+    section.classList.add('is-near');
+  }
+
   /* ---------- the pill on the main screen glides down here ---------- */
   const pill = document.getElementById('hire-open');
   if (pill) {
@@ -65,7 +75,7 @@
   const video = document.getElementById('bg');
   if (hero && video && !reduced && 'IntersectionObserver' in window) {
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
+      if (e.isIntersecting && e.intersectionRatio > 0) { // just touching the top edge doesn't count
         delete video.dataset.offscreen;
         const swarm = document.getElementById('swarm');
         if (root.classList.contains('is-ready') && video.paused && (!swarm || swarm.hidden)) {
@@ -75,7 +85,7 @@
         video.dataset.offscreen = '1';
         video.pause();
       }
-    }).observe(hero);
+    }, { threshold: [0, .01] }).observe(hero);
   }
 
   // The plain, open invitation is already readable; the envelope needs a modern browser
@@ -233,8 +243,8 @@
     new IntersectionObserver(([e]) => {
       if (state !== 'sealed') return;
       clearTimeout(autoT);
-      if (e.isIntersecting) autoT = setTimeout(open, 750); // opens by itself if nobody breaks the seal
-    }, { threshold: .55 }).observe(back);
+      if (e.intersectionRatio >= .35) autoT = setTimeout(open, 750); // opens by itself if nobody breaks the seal
+    }, { threshold: [.35, .55] }).observe(back);
   } else {
     open();
   }

@@ -13,9 +13,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/logo/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=17">
-  <link rel="stylesheet" href="assets/css/site.css?v=17">
+  <link rel="preload" href="assets/img/logo/emblem-gold.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/img/photo/hero-poster-portrait.jpg" as="image" media="(max-aspect-ratio: 4/5)">
+  <link rel="preload" href="assets/img/photo/hero-poster.jpg" as="image" media="(min-aspect-ratio: 4.001/5)">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=19">
+  <link rel="stylesheet" href="assets/css/site.css?v=19">
   <script>document.documentElement.classList.add('js');</script>
+  <script src="assets/js/swarm.js?v=19" defer></script>
+  <script src="assets/js/main.js?v=19" defer></script>
+  <script src="assets/js/hiring.js?v=19" defer></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -46,7 +52,7 @@
   </svg>
 
   <main class="stage">
-    <video class="stage__video" id="bg" autoplay muted loop playsinline preload="auto" poster="assets/img/photo/hero-poster.jpg" aria-hidden="true">
+    <video class="stage__video" id="bg" muted loop playsinline preload="none" aria-hidden="true">
       <source src="assets/video/hero-720x1080.mp4" type="video/mp4" media="(max-aspect-ratio: 4/5)">
       <source src="assets/video/hero-1280.mp4" type="video/mp4">
     </video>
@@ -187,8 +193,5 @@
     <p class="end__copy">© <span id="year">2026</span> La Raza</p>
   </footer>
 
-  <script src="assets/js/swarm.js?v=17" defer></script>
-  <script src="assets/js/main.js?v=17" defer></script>
-  <script src="assets/js/hiring.js?v=17" defer></script>
 </body>
 </html>

@@ -10,18 +10,30 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  // Respect reduced motion: hold the video on its poster frame.
+  // The background film loads only after the intro, so the first screen arrives fast.
+  // Until then (and with reduced motion, always) the still photo shows behind it.
   const video = document.getElementById('bg');
-  if (video && reduced) {
-    video.removeAttribute('autoplay');
-    video.pause();
+  if (video) {
+    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
   }
+  const startVideo = () => {
+    if (!video || reduced || video.dataset.offscreen || !video.paused) return;
+    const hero = video.closest('.stage');
+    if (hero && hero.getBoundingClientRect().bottom <= 0) return; // starts when you scroll back up
+    const p = video.play(); if (p) p.catch(() => {});
+  };
 
   // Run something once the intro has handed over to the page.
   const whenReady = (fn) => {
     if (root.classList.contains('is-ready')) fn();
     else document.addEventListener('lr:ready', fn, { once: true });
   };
+
+  whenReady(() => {
+    const sw = document.getElementById('swarm');
+    if (!sw || sw.hidden) setTimeout(startVideo, 300);
+    else document.addEventListener('lr:intro-done', startVideo, { once: true });
+  });
 
   /* ---------- Rotating line: the page "talks", one short line at a time ---------- */
   const ticker = document.getElementById('ticker');

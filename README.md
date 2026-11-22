@@ -92,6 +92,10 @@ eq=contrast=1.12:saturation=1.08:gamma=0.97,colorbalance=rs=.03:bs=-.03:rh=.04:b
 
 ## Accessibility & performance
 
-- With reduced motion turned on, the logo appears without drawing in and the video holds on its poster frame.
-- The page uses no JavaScript libraries, and each video is about 1.3MB.
+- With reduced motion turned on, the logo appears without drawing in, there's no intro, the invitation shows open and the still photo stays in place of the video.
+- The page uses no JavaScript libraries. Before the intro ends a phone downloads about 175KB; the background film (about 1MB, lightly denoised and encoded with x264 CRF 28, `+faststart`) only starts loading once the intro has finished, with the still photo behind it until then. The right still for the screen shape is preloaded.
+- Scripts are deferred from the `<head>` so they download alongside the styles. The invitation's paper and lining textures load only when you scroll near it, and the film pauses whenever the main screen is out of view.
+- Versioned CSS and JS (`?v=`) and the font are cached for a year (`vercel.json`); images and video for a week.
+- Every animation is transform and opacity only. The flock and the invitation are Web Animations the compositor plays on its own thread.
+- Checked at 320, 360, 390 and 430px wide, a phone held sideways, a tablet and desktop, with no sideways scrolling.
 - Soft white and gold both pass WCAG AAA contrast on black.

@@ -26,10 +26,14 @@ button, input { font: inherit; color: inherit; }
   grid-template-rows: 1fr auto;
   overflow: hidden;
   isolation: isolate;
+  background: var(--lr-black) url("../img/photo/hero-poster.jpg") center / cover no-repeat;
 }
 .stage__video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
+  opacity: 0; transition: opacity .8s var(--ease);
 }
+.stage__video.is-playing { opacity: 1; }
+@media (max-aspect-ratio: 4/5) { .stage { background-image: url("../img/photo/hero-poster-portrait.jpg"); } }
 .stage::after {
   /* Calm the footage enough for text, without tinting it */
   content: ""; position: absolute; inset: 0; z-index: -1;
@@ -133,6 +137,14 @@ button, input { font: inherit; color: inherit; }
   .center { padding-top: calc(var(--space-4) + env(safe-area-inset-top, 0px)); }
   .center__inner { gap: 1.125rem; }
   .logo { width: 116px; }
+}
+
+@media (max-height: 600px) and (max-width: 599px) {
+  .center { padding-top: calc(var(--space-3) + env(safe-area-inset-top, 0px)); padding-bottom: var(--space-2); }
+  .center__inner { gap: .9rem; }
+  .logo { width: 100px; gap: .5rem; }
+  .countdown { padding-block: .55rem; }
+  .countdown b { font-size: 1.5rem; }
 }
 
 /* ---------- Larger screens ---------- */
@@ -260,10 +272,11 @@ button, input { font: inherit; color: inherit; }
 }
 .hiring__head { margin-bottom: var(--space-4); }
 .hiring__aside { margin: 0 0 .45rem; font-size: 1.0625rem; font-weight: var(--fw-medium); color: var(--lr-gold-light); }
-.hiring__title { margin: 0; font-size: clamp(2.6rem, .5rem + 10vw, 6rem); font-weight: var(--fw-medium); letter-spacing: -.045em; line-height: .95; }
+.hiring__title { margin: 0; font-size: clamp(2.4rem, min(.5rem + 10vw, 15svh), 6rem); font-weight: var(--fw-medium); letter-spacing: -.045em; line-height: .95; }
 
 .invite {
-  --ew: min(calc(100vw - 2 * var(--gutter)), 400px);
+  /* as wide as the phone allows, but short enough that the open card fits a sideways screen too */
+  --ew: min(calc(100vw - 2 * var(--gutter)), 400px, max(250px, 62svh));
   --eh: calc(var(--ew) / 1.42);
   position: relative; width: var(--ew); margin: 0 auto;
 }
@@ -344,6 +357,9 @@ button, input { font: inherit; color: inherit; }
 .inv-hint b { display: block; margin-top: .15rem; color: var(--lr-gold-light); font-weight: var(--fw-semibold); }
 .invite.is-sealed .inv-hint { opacity: 1; }
 
+/* The textures load only once the invitation is close (hiring.js adds .is-near) */
+.js .hiring:not(.is-near) .inv-card, .js .hiring:not(.is-near) .inv-back, .js .hiring:not(.is-near) .inv-flap__back { background-image: none; }
+
 /* Bits that fly when it opens (made by hiring.js) */
 .inv-fx { position: absolute; left: 0; top: 0; z-index: 6; pointer-events: none; will-change: transform, opacity; }
 .inv-spark { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: radial-gradient(circle, #fff3d6, #eac386 45%, rgba(234,195,134,0) 70%); }
@@ -351,7 +367,8 @@ button, input { font: inherit; color: inherit; }
 .inv-bird img { display: block; width: 100%; height: auto; }
 
 /* RSVP */
-.rsvp { width: min(100%, 400px); margin: var(--space-5) auto 0; display: grid; gap: .85rem; justify-items: center; }
+.rsvp { width: min(100%, 400px); margin: var(--space-5) auto 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: .85rem; justify-items: center; }
+.rsvp > * { max-width: 100%; }
 .rsvp__need { margin: 0; max-width: 30ch; color: var(--lr-white-70); text-wrap: balance; }
 .rsvp__btn { display: grid; place-items: center; width: 100%; height: 50px; margin-top: .25rem; text-decoration: none; font-size: 1rem; }
 .rsvp__how { margin: 0; font-size: var(--fs-small); color: var(--lr-white-50); text-wrap: balance; }
@@ -365,6 +382,11 @@ button, input { font: inherit; color: inherit; }
   background: transparent; color: var(--lr-gold-light); font-size: .8125rem; font-weight: var(--fw-semibold); cursor: pointer;
 }
 .copy__btn.is-done { background: var(--lr-gold); color: var(--lr-black); border-color: var(--lr-gold); }
+@media (max-width: 359px) {
+  .copy { padding-left: .8rem; }
+  .copy__text { font-size: .8125rem; }
+  .copy__btn { padding: 0 .75rem; }
+}
 
 /* ---------- Closing footer: the wordmark signs off ---------- */
 .end {

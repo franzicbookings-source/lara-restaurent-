@@ -246,7 +246,8 @@
       swarm.removeEventListener('click', finish);
       swarm.classList.add('is-leaving', 'is-done');
       ready();
-      resumeVideo();
+      document.dispatchEvent(new Event('lr:intro-done'));
+      if (isReplay) resumeVideo();
       setTimeout(() => {
         swarm.hidden = true;
         swarm.innerHTML = '';
