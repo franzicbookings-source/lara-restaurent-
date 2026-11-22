@@ -30,7 +30,7 @@ The form in `index.html` (`#waitlist-form`) is front end only for now (phase one
 
 ## Opening date
 
-The countdown targets `data-opening` on `#countdown` in `index.html` (currently `2026-12-01T18:00:00+02:00`). Set it to the exact opening night once it's confirmed. When the time passes, the countdown hides and the rotating line changes to "Now open."
+The countdown targets `data-opening` on `#countdown` in `index.html` (currently `2026-12-02T18:00:00+02:00`). Opening night is 2 December; the time (6pm South Africa time) is still to be confirmed. When the time passes, the countdown hides and the rotating line changes to "Now open."
 
 ## The swarm (intro)
 
