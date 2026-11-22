@@ -44,6 +44,15 @@ The countdown targets `data-opening` on `#countdown` in `index.html` (currently 
 
 It plays on every page load. Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. On desktop the formation tilts with the mouse; on phones it sways gently. The formation, depth and timing scale to the screen. With reduced motion turned on, it doesn't play.
 
+## We're hiring
+
+The **We're hiring** pill next to the social icons opens a pull-up panel, "Pull up a chair.", listing the open roles (`assets/js/hiring.js`).
+
+- **Roles** are the `.role` items inside `#hiring` in `index.html`. Each has a name (`data-role`, also the email subject), a short tag and a description. Add, remove or reorder them there; the count on the pill and the row of chairs follow automatically.
+- **Applying:** each role's Apply button opens an email to the CV address with the role as the subject (as the hiring poster asks) and a ready-made first line. The address is also shown with a Copy button.
+- **Share link:** add `#hiring` to the end of the site link (for example `https://la-raza-tau.vercel.app/#hiring`) to open the panel straight after the intro. Handy for Instagram and WhatsApp posts.
+- The phone's back button, swiping down, Esc, tapping outside or the ✕ close it.
+
 ## Structure
 
 ```
@@ -54,6 +63,7 @@ assets/
   css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
   js/main.js              rotating line, countdown, waitlist form (no libraries)
+  js/hiring.js            the We're hiring panel
   js/swarm.js             the intro: gold butterfly swarm → formation → shimmer → take-off
   fonts/                  Manrope (self-hosted, OFL)
   img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon

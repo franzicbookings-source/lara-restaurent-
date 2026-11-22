@@ -13,8 +13,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/logo/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=11">
-  <link rel="stylesheet" href="assets/css/site.css?v=11">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=12">
+  <link rel="stylesheet" href="assets/css/site.css?v=12">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -58,6 +58,7 @@
             <span class="ticker__line is-on">A restaurant &amp; cocktail lounge.</span>
             <span class="ticker__line">Opening the first week of December.</span>
             <span class="ticker__line">Be first through the door.</span>
+            <span class="ticker__line">We’re hiring. Pull up a chair.</span>
           </p>
         </div>
 
@@ -79,12 +80,17 @@
           <p class="form__msg" id="form-msg" role="status" aria-live="polite"></p>
         </form>
 
-        <ul class="socials reveal reveal-4">
-          <li><a href="https://www.instagram.com/laraza_restaurant" target="_blank" rel="noopener" aria-label="La Raza on Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a></li>
-          <li><a href="https://www.facebook.com/share/19Yjqxi3mR/" target="_blank" rel="noopener" aria-label="La Raza on Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1z"/></svg></a></li>
-        </ul>
+        <div class="links reveal reveal-4">
+          <button class="hire" id="hire-open" type="button" aria-haspopup="dialog" aria-controls="hiring">
+            <span class="hire__dot" aria-hidden="true"></span>We’re hiring<span class="hire__count" id="hire-count" aria-hidden="true">4</span><span class="sr-only" id="hire-count-sr">: 4 open roles</span>
+          </button>
+          <ul class="socials">
+            <li><a href="https://www.instagram.com/laraza_restaurant" target="_blank" rel="noopener" aria-label="La Raza on Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a></li>
+            <li><a href="https://www.facebook.com/share/19Yjqxi3mR/" target="_blank" rel="noopener" aria-label="La Raza on Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1z"/></svg></a></li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -94,7 +100,91 @@
     </footer>
   </main>
 
-  <script src="assets/js/swarm.js?v=11" defer></script>
-  <script src="assets/js/main.js?v=11" defer></script>
+  <!-- We're hiring: pull-up panel (assets/js/hiring.js). Edit roles here; the count and chairs follow.
+       Opens from the pill, or directly with #hiring on the end of the link. -->
+  <div class="sheet" id="hiring" role="dialog" aria-modal="true" aria-labelledby="hiring-title" hidden>
+    <div class="sheet__scrim" data-close></div>
+    <div class="sheet__panel" tabindex="-1">
+      <div class="sheet__grip" aria-hidden="true"></div>
+      <button class="sheet__close" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <header class="sheet__head">
+        <img class="sheet__emblem" src="assets/img/logo/emblem-gold.svg" alt="" width="40" height="39">
+        <h2 id="hiring-title">Pull up a chair.</h2>
+        <p>We’re putting together the crew for opening night. If you have one to two years in hospitality or front of house, there’s a seat here with your name on it.</p>
+        <div class="chairs" aria-hidden="true"></div>
+      </header>
+
+      <ul class="roles">
+          <li class="role" style="--i:0" data-role="Manager">
+            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-1">
+              <span class="role__name">Manager</span><span class="role__tag">Runs the room</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="role__body" id="role-1" inert>
+              <div class="role__inner">
+                <p>Keep the whole place moving: daily operations, staff scheduling, stock and cost control, POS and cash-up, and guests who leave happy.</p>
+                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for Manager</a>
+              </div>
+            </div>
+          </li>
+          <li class="role" style="--i:1" data-role="Barman">
+            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-2">
+              <span class="role__name">Barman</span><span class="role__tag">Behind the bar</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="role__body" id="role-2" inert>
+              <div class="role__inner">
+                <p>Mix cocktails properly and serve them fast, keep the bar stock tight and handle cash honestly.</p>
+                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for Barman</a>
+              </div>
+            </div>
+          </li>
+          <li class="role" style="--i:2" data-role="Hostess">
+            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-3">
+              <span class="role__name">Hostess</span><span class="role__tag">The first hello</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="role__body" id="role-3" inert>
+              <div class="role__inner">
+                <p>Welcome every guest warmly and with polish, communicate clearly, run the booking software and speak the local languages.</p>
+                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for Hostess</a>
+              </div>
+            </div>
+          </li>
+          <li class="role" style="--i:3" data-role="General Workers">
+            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-4">
+              <span class="role__name">General Workers</span><span class="role__tag">The backbone</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="role__body" id="role-4" inert>
+              <div class="role__inner">
+                <p>Be someone the team can count on: reliable, flexible and happy to pitch in wherever the night needs you.</p>
+                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for General Workers</a>
+              </div>
+            </div>
+          </li>
+      </ul>
+
+      <section class="sheet__block">
+        <h3>Everyone on the team</h3>
+        <ul class="ticks">
+          <li>Communicates well and presents professionally</li>
+          <li>Can work flexible shifts, including evenings, weekends and public holidays</li>
+          <li>Comes with good references</li>
+        </ul>
+      </section>
+
+      <section class="sheet__block sheet__apply">
+        <h3>How to apply</h3>
+        <p>Email your CV and contact details for two references. Put the role you want in the subject line (the Apply buttons do it for you).</p>
+        <div class="copy">
+          <span class="copy__text" id="cv-email">restaurantlaraza@gmail.com</span>
+          <button class="copy__btn" type="button" data-copy="cv-email">Copy</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="assets/js/swarm.js?v=12" defer></script>
+  <script src="assets/js/main.js?v=12" defer></script>
+  <script src="assets/js/hiring.js?v=12" defer></script>
 </body>
 </html>
