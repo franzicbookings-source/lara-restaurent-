@@ -34,24 +34,22 @@ The countdown targets `data-opening` on `#countdown` in `index.html` (currently 
 
 ## The swarm (intro)
 
-`assets/js/swarm.js` runs the intro, which takes about 6.5 seconds:
+`assets/js/swarm.js` runs a short intro, about 3 seconds from load. The emblem draws itself and pulses, then a flock of about 30 small gold butterflies bursts out of it, swoops across the screen and flies off the top. The page rises in behind them while they're still in the air. Each butterfly is the emblem split into two flapping wings, drawn to a bitmap once so phones never redraw the artwork mid-flight. The background film waits until the flock has gone.
 
-1. **Birth:** the drawn emblem pulses and releases about 50 tiny gold butterflies, each the emblem split into two flapping wings.
-2. **Flight:** each butterfly flies its own curved 3D path, banking and circling in a vortex, with a gold-dust trail drawn on a canvas.
-3. **Formation:** they land in the shape of the La Raza butterfly.
-4. **Shimmer:** a wave of light runs out from the centre. Each butterfly lifts toward you, flutters and throws off a ring of gold sparks.
-5. **Take-off:** the big butterfly flaps twice and flies at the camera, and the page appears.
-
-It plays on every page load. Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. On desktop the formation tilts with the mouse; on phones it sways gently. The formation, depth and timing scale to the screen. With reduced motion turned on, it doesn't play.
+It plays on every load, except when the link points to a section (such as `#hiring`). Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. With reduced motion turned on, it doesn't play.
 
 ## We're hiring
 
-The **We're hiring** pill next to the social icons opens a pull-up panel, "Pull up a chair.", listing the open roles (`assets/js/hiring.js`).
+Below the main screen is a scroll scene (`assets/js/hiring.js`): a dark stage with one empty chair per role.
 
-- **Roles** are the `.role` items inside `#hiring` in `index.html`. Each has a name (`data-role`, also the email subject), a short tag and a description. Add, remove or reorder them there; the count on the pill and the row of chairs follow automatically.
-- **Applying:** each role's Apply button opens an email to the CV address with the role as the subject (as the hiring poster asks) and a ready-made first line. The address is also shown with a Copy button.
-- **Share link:** add `#hiring` to the end of the site link (for example `https://la-raza-tau.vercel.app/#hiring`) to open the panel straight after the intro. Handy for Instagram and WhatsApp posts.
-- The phone's back button, swiping down, Esc, tapping outside or the ✕ close it.
+1. **"We're hiring."** opens the scene.
+2. As you scroll, a spotlight flickers on and swings from chair to chair. Each chair it finds turns gold and its role takes the stage, with an **Apply for this seat** button.
+3. **"Your seat is waiting."** follows: what everyone needs, how to apply, one button per role and the email address with a Copy button.
+
+- **Roles** are the `.act--role` items in `#hiring` in `index.html` (name, tagline, description). Add, remove or reorder them there and also update the role buttons under "How to apply"; the chairs, the count and the pill's number follow automatically.
+- **Applying:** every Apply button opens an email to the CV address with the role as the subject and a ready-made first line.
+- **The pill** on the main screen glides down to the scene. **Share link:** `https://la-raza-tau.vercel.app/#hiring` skips the intro and opens on the scene.
+- Without JavaScript, or with reduced motion, the roles simply stack one under another.
 
 ## Structure
 
@@ -63,8 +61,8 @@ assets/
   css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
   js/main.js              rotating line, countdown, waitlist form (no libraries)
-  js/hiring.js            the We're hiring panel
-  js/swarm.js             the intro: gold butterfly swarm → formation → shimmer → take-off
+  js/hiring.js            the We're hiring stage (scroll scene)
+  js/swarm.js             the intro: a quick flock of gold butterflies
   fonts/                  Manrope (self-hosted, OFL)
   img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon
   img/photo/              video poster frames

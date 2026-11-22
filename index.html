@@ -13,8 +13,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/logo/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=13">
-  <link rel="stylesheet" href="assets/css/site.css?v=13">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=14">
+  <link rel="stylesheet" href="assets/css/site.css?v=14">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -23,6 +23,9 @@
       <!-- Traced logo paths are y-flipped, so the gradient runs bottom→top in local space -->
       <linearGradient id="g-gold" x1="0" y1="1" x2="0" y2="0">
         <stop offset="0" stop-color="#EAC386"/><stop offset=".5" stop-color="#CCA46C"/><stop offset="1" stop-color="#9C794C"/>
+      </linearGradient>
+      <linearGradient id="g-chair" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#EAC386"/><stop offset="1" stop-color="#9C794C"/>
       </linearGradient>
       <symbol id="sym-word" viewBox="0 0 2544 1170"><g transform="translate(0,1170) scale(0.100000,-0.100000)"><path d="M14360 11199 c-501 -37 -1196 -202 -1685 -399 -463 -186 -812 -358 -1197 -589 -235 -141 -314 -191 -493 -311 -232 -157 -643 -485 -883 -706 -101 -93 -197 -180 -214 -194 -30 -24 -234 -252 -399 -445 -282 -330 -471 -650 -560 -945 -14 -49 -19 -95 -19 -187 0 -112 2 -127 27 -179 55 -117 137 -168 268 -169 117 0 210 49 170 89 -8 8 -34 17 -57 21 -90 14 -107 23 -119 68 -38 139 50 389 234 662 165 247 277 374 661 760 467 468 774 723 1281 1066 475 321 998 596 1484 779 128 48 418 142 541 175 36 10 85 23 110 30 25 7 81 20 125 30 44 9 107 23 140 31 63 14 177 32 360 58 154 22 677 22 820 1 252 -39 501 -135 668 -257 167 -121 277 -357 277 -594 0 -86 -24 -242 -54 -349 -50 -179 -205 -515 -321 -695 -105 -164 -148 -227 -239 -348 -161 -215 -256 -320 -652 -713 -374 -371 -578 -552 -884 -783 -399 -303 -686 -497 -1085 -735 -93 -56 -177 -106 -185 -111 -8 -6 -21 -13 -29 -17 -8 -4 -58 -31 -110 -61 -160 -90 -715 -361 -930 -454 -279 -120 -884 -338 -899 -323 -9 9 8 39 316 551 164 275 325 544 357 599 64 110 221 372 245 410 8 13 51 83 94 157 259 435 356 600 356 605 0 4 6 14 14 22 7 9 26 39 41 66 15 28 58 102 95 165 37 63 98 169 135 235 89 158 184 324 204 355 52 83 137 254 252 508 60 133 18 212 -113 212 -87 0 -153 -25 -245 -92 -68 -51 -84 -74 -227 -320 -67 -117 -158 -274 -201 -348 -43 -74 -125 -218 -183 -320 -57 -102 -123 -216 -146 -255 -23 -38 -45 -77 -49 -85 -4 -8 -20 -35 -35 -60 -15 -25 -122 -213 -239 -416 -116 -204 -237 -412 -267 -463 -31 -50 -56 -94 -56 -97 0 -2 -11 -21 -23 -42 -13 -20 -89 -154 -169 -297 -170 -304 -178 -320 -228 -405 -21 -36 -48 -83 -60 -105 -82 -145 -127 -227 -247 -442 -74 -133 -142 -252 -151 -263 -10 -12 -36 -25 -57 -30 -22 -4 -76 -17 -120 -30 -150 -41 -260 -70 -310 -81 -65 -15 -141 -50 -188 -90 -70 -58 -98 -151 -58 -200 15 -19 27 -22 74 -21 31 1 70 8 86 17 17 8 37 15 45 15 9 0 30 6 48 14 51 21 105 37 177 52 79 17 101 17 101 3 0 -6 -41 -85 -91 -177 -51 -92 -108 -196 -127 -232 -19 -36 -46 -82 -59 -102 -13 -21 -23 -40 -23 -42 0 -3 -13 -27 -29 -54 -39 -66 -57 -99 -271 -487 -253 -459 -242 -439 -250 -450 -8 -11 -57 -101 -132 -240 -59 -108 -330 -652 -375 -750 -127 -280 -148 -349 -148 -495 0 -130 12 -163 81 -215 49 -38 147 -47 183 -18 24 20 24 21 11 82 -7 33 -10 85 -7 114 10 95 144 392 294 653 38 66 72 126 76 134 4 8 13 24 20 35 26 42 166 291 297 525 75 135 146 261 157 280 324 566 467 815 545 945 52 88 123 208 157 268 35 59 70 107 78 107 7 0 78 -51 156 -113 720 -574 1074 -842 1398 -1059 469 -314 744 -475 1159 -675 129 -63 242 -118 251 -123 8 -4 92 -40 185 -80 634 -272 1364 -451 1827 -449 123 0 161 4 197 18 101 41 46 79 -170 117 -355 62 -915 228 -1210 360 -19 9 -51 23 -70 31 -110 47 -167 73 -280 126 -272 128 -488 238 -600 306 -25 15 -52 30 -60 34 -8 4 -28 16 -45 27 -16 11 -37 23 -45 27 -63 29 -597 368 -738 467 -55 39 -190 134 -299 211 -269 191 -622 465 -1003 780 -80 66 -184 152 -232 190 -48 39 -88 76 -88 83 0 17 33 30 255 101 105 34 206 68 225 75 40 16 103 40 160 61 22 8 57 22 78 30 20 7 91 35 157 60 66 25 129 50 140 55 11 5 86 36 166 69 80 33 181 76 223 95 43 20 79 36 81 36 5 0 258 119 280 132 11 6 79 41 150 76 488 243 1030 555 1440 828 194 130 188 125 470 335 517 383 1043 875 1372 1284 110 138 253 331 317 429 136 210 277 493 343 691 21 62 43 137 64 215 51 197 49 500 -5 685 -65 221 -215 425 -406 555 -161 109 -440 210 -740 266 -214 40 -613 54 -910 33z M5565 9881 c-34 -10 -70 -23 -80 -28 -73 -37 -95 -50 -140 -79 -85 -56 -133 -116 -434 -539 -160 -225 -353 -495 -428 -598 -74 -104 -201 -281 -280 -395 -152 -215 -177 -250 -257 -359 -27 -37 -124 -177 -215 -312 -90 -135 -188 -280 -217 -321 -29 -41 -150 -219 -269 -395 -119 -176 -237 -349 -263 -385 -25 -36 -119 -173 -208 -305 -89 -132 -200 -296 -247 -365 -299 -433 -1129 -1679 -1267 -1900 -51 -82 -103 -162 -255 -395 -115 -176 -176 -271 -271 -423 -49 -78 -96 -153 -104 -166 -8 -13 -28 -46 -44 -73 -16 -26 -66 -104 -111 -173 -146 -225 -301 -482 -374 -621 -60 -116 -71 -144 -71 -186 0 -40 5 -54 26 -74 24 -23 32 -24 137 -23 122 2 198 18 372 80 55 20 114 39 130 44 17 4 55 18 85 30 30 12 69 25 85 30 43 11 843 282 1200 405 306 106 379 130 580 194 173 54 517 158 655 197 30 9 75 22 100 29 25 8 72 21 105 31 33 9 80 23 105 30 274 78 329 93 625 164 317 77 349 85 465 110 790 172 1164 231 1870 295 232 22 1267 18 1396 -5 91 -15 144 -4 144 30 0 24 -52 76 -82 83 -13 3 -57 15 -98 27 -262 76 -533 116 -930 136 -448 23 -1016 -1 -1465 -62 -213 -29 -391 -55 -470 -69 -146 -26 -409 -75 -450 -85 -22 -5 -74 -16 -115 -25 -104 -22 -177 -40 -300 -71 -58 -14 -121 -30 -140 -34 -19 -4 -55 -13 -80 -19 -25 -7 -72 -20 -105 -28 -70 -18 -151 -40 -215 -58 -25 -8 -137 -39 -250 -70 -113 -31 -259 -73 -325 -92 -66 -19 -133 -39 -150 -43 -76 -20 -480 -145 -645 -200 -47 -15 -132 -42 -190 -59 -58 -18 -116 -36 -130 -41 -14 -5 -196 -61 -405 -125 -209 -64 -393 -120 -410 -125 -16 -6 -70 -23 -120 -39 -128 -42 -165 -48 -165 -26 0 21 230 403 423 700 148 230 212 326 567 866 255 389 997 1502 1111 1669 51 74 162 239 247 365 85 127 178 264 207 305 113 162 209 302 319 465 63 94 142 208 175 255 69 98 74 105 326 470 195 281 258 371 329 472 23 31 97 139 166 238 69 100 162 233 208 296 90 125 110 154 268 379 119 170 160 229 365 516 244 342 243 340 243 379 0 57 -11 84 -43 103 -38 22 -136 21 -216 -2z M21590 6565 c-188 -36 -468 -147 -603 -239 -21 -14 -40 -26 -42 -26 -6 0 -135 -89 -200 -138 -136 -103 -251 -207 -450 -407 -223 -224 -260 -255 -425 -355 -58 -36 -159 -102 -225 -147 -66 -45 -167 -115 -225 -155 -58 -40 -193 -135 -300 -211 -173 -123 -198 -138 -225 -132 -171 35 -415 35 -620 0 -124 -21 -205 -28 -205 -17 0 5 28 36 63 68 567 528 986 938 1081 1056 138 172 194 354 149 482 -58 162 -276 221 -549 150 -213 -55 -445 -214 -801 -549 -537 -505 -918 -814 -1446 -1170 -380 -258 -612 -351 -725 -292 -35 19 -75 75 -99 141 -21 56 -20 190 1 300 18 90 71 286 86 315 4 9 16 36 25 61 35 91 127 268 206 400 157 259 179 302 179 346 0 67 -59 108 -155 107 -70 -1 -120 -20 -192 -74 -29 -21 -54 -39 -57 -39 -2 0 -20 23 -40 50 -152 211 -569 199 -1041 -30 -262 -127 -491 -296 -745 -550 -315 -315 -505 -627 -554 -912 -25 -144 9 -265 96 -343 154 -140 426 -127 693 33 307 183 620 422 944 722 148 136 154 137 127 14 -8 -41 -23 -108 -32 -150 -28 -126 -12 -273 41 -399 27 -61 139 -167 218 -204 69 -32 192 -61 262 -61 211 0 493 129 910 417 166 115 589 463 775 638 206 195 695 574 1000 775 237 157 389 233 454 228 38 -3 41 -5 44 -35 6 -60 -70 -187 -207 -346 -48 -56 -340 -352 -647 -657 -585 -579 -604 -601 -604 -683 0 -28 8 -46 34 -75 34 -36 36 -37 103 -36 62 0 166 18 522 90 238 49 417 60 428 27 2 -6 -54 -55 -124 -109 -248 -189 -579 -462 -788 -648 -247 -221 -323 -292 -550 -520 -297 -299 -395 -408 -586 -656 -366 -478 -531 -856 -497 -1143 17 -143 109 -268 236 -319 50 -20 74 -23 197 -22 185 0 277 22 473 116 400 191 947 612 1310 1007 326 355 555 652 755 978 68 111 217 398 217 418 0 4 6 21 14 38 33 77 69 176 91 252 9 33 22 74 27 90 5 17 12 76 15 133 5 80 2 117 -12 170 -34 127 -107 237 -195 295 -27 17 -50 35 -50 38 0 10 58 57 141 115 41 28 137 96 214 151 264 188 364 253 369 244 4 -5 -6 -38 -20 -73 -26 -64 -41 -104 -63 -168 -6 -19 -14 -71 -18 -116 -11 -158 55 -271 197 -337 61 -28 246 -29 335 -2 145 43 430 217 639 390 121 100 333 291 464 419 84 82 147 135 152 130 5 -5 0 -47 -12 -99 -16 -70 -21 -126 -22 -255 0 -155 1 -169 27 -239 73 -200 206 -305 437 -346 152 -27 343 -14 528 36 173 46 441 139 560 194 29 14 55 25 58 25 8 0 226 109 299 150 190 105 636 362 695 400 8 5 35 21 60 35 25 14 52 30 60 35 48 30 301 177 565 327 91 52 237 122 292 139 26 9 75 19 108 22 56 7 60 9 63 34 3 22 -3 30 -29 44 -27 13 -52 15 -138 11 -58 -3 -122 -11 -141 -17 -101 -37 -150 -61 -315 -155 -99 -56 -292 -164 -430 -240 -301 -167 -286 -158 -360 -200 -118 -65 -492 -254 -595 -300 -208 -93 -264 -117 -350 -150 -25 -9 -58 -22 -75 -29 -66 -28 -267 -94 -320 -106 -22 -5 -60 -14 -85 -21 -25 -6 -94 -12 -155 -13 -103 -1 -113 1 -156 26 -91 54 -130 121 -155 273 -14 84 -15 112 -5 199 40 334 187 686 422 1006 84 115 102 154 95 199 -16 102 -159 131 -302 61 -34 -17 -66 -30 -72 -30 -6 0 -32 20 -57 44 -67 66 -134 88 -275 92 -71 2 -144 -2 -190 -11z m303 -206 c31 -17 37 -28 37 -76 0 -115 -200 -366 -638 -801 -312 -309 -553 -515 -807 -687 -111 -75 -166 -102 -238 -116 -75 -14 -90 -1 -85 69 5 74 59 181 183 367 145 217 290 392 509 610 342 341 720 604 916 638 50 9 102 7 123 -4z m-6331 -329 c11 0 36 -16 55 -35 34 -34 36 -38 30 -93 -6 -68 -48 -165 -105 -240 -63 -84 -458 -479 -608 -608 -377 -324 -613 -496 -839 -611 -117 -59 -217 -88 -248 -71 -78 41 129 426 411 763 225 271 550 553 847 736 175 109 359 179 423 162 8 -1 23 -3 34 -3z m3311 -1578 c28 -30 57 -131 57 -195 0 -64 -20 -162 -55 -272 -84 -261 -314 -683 -569 -1045 -258 -367 -411 -547 -743 -878 -252 -251 -291 -285 -486 -430 -224 -167 -284 -206 -357 -236 -25 -10 -56 -23 -70 -28 -36 -15 -159 -38 -200 -38 -139 1 -213 145 -170 333 37 163 82 263 220 487 338 552 854 1106 1650 1772 128 107 692 547 701 548 3 0 13 -8 22 -18z M0 6455 c0 -30 4 -55 9 -55 18 0 28 60 15 94 -13 33 -24 14 -24 -39z M5955 6032 c-387 -87 -834 -357 -1180 -713 -278 -286 -445 -512 -537 -729 -55 -129 -70 -199 -66 -311 3 -83 7 -103 33 -155 37 -73 110 -126 198 -145 80 -17 244 -6 327 20 215 71 517 272 871 581 99 87 289 261 337 309 30 31 55 38 52 16 -1 -13 -18 -76 -36 -139 -9 -32 -14 -99 -14 -202 0 -151 1 -155 31 -219 63 -134 182 -217 336 -233 96 -11 232 1 331 28 79 22 240 87 295 120 17 10 47 27 65 36 89 45 439 290 667 468 421 326 725 590 739 642 4 13 0 30 -11 43 -26 32 -46 22 -231 -116 -517 -384 -973 -700 -1162 -805 -288 -160 -427 -210 -506 -183 -97 33 -138 153 -114 332 14 111 48 240 85 328 7 17 23 55 35 85 22 56 102 218 160 325 37 69 207 342 227 366 7 8 13 38 13 66 0 38 -5 54 -22 71 -69 63 -198 53 -311 -25 l-40 -28 -16 25 c-37 57 -85 99 -143 126 -58 26 -74 28 -198 31 -102 2 -155 -2 -215 -15z m384 -226 c55 -50 4 -190 -127 -346 -159 -190 -517 -541 -748 -734 -122 -102 -337 -267 -504 -386 -127 -91 -245 -148 -342 -165 -47 -9 -83 22 -74 63 20 88 207 411 334 576 119 155 329 375 516 541 259 231 577 430 741 465 70 15 180 7 204 -14z"/></g></symbol>
     </defs>
@@ -81,9 +84,9 @@
         </form>
 
         <div class="links reveal reveal-4">
-          <button class="hire" id="hire-open" type="button" aria-haspopup="dialog" aria-controls="hiring">
+          <a class="hire" id="hire-open" href="#hiring">
             <span class="hire__dot" aria-hidden="true"></span>We’re hiring<span class="hire__count" id="hire-count" aria-hidden="true">4</span><span class="sr-only" id="hire-count-sr">: 4 open roles</span>
-          </button>
+          </a>
           <ul class="socials">
             <li><a href="https://www.instagram.com/laraza_restaurant" target="_blank" rel="noopener" aria-label="La Raza on Instagram">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a></li>
@@ -100,91 +103,95 @@
     </footer>
   </main>
 
-  <!-- We're hiring: pull-up panel (assets/js/hiring.js). Edit roles here; the count and chairs follow.
-       Opens from the pill, or directly with #hiring on the end of the link. -->
-  <div class="sheet" id="hiring" role="dialog" aria-modal="true" aria-labelledby="hiring-title" hidden>
-    <div class="sheet__scrim" data-close></div>
-    <div class="sheet__panel" tabindex="-1">
-      <div class="sheet__grip" aria-hidden="true"></div>
-      <button class="sheet__close" type="button" data-close aria-label="Close">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <header class="sheet__head">
-        <img class="sheet__emblem" src="assets/img/logo/emblem-gold.svg" alt="" width="40" height="39">
-        <h2 id="hiring-title">Pull up a chair.</h2>
-        <p>We’re putting together the crew for opening night. If you have one to two years in hospitality or front of house, there’s a seat here with your name on it.</p>
-        <div class="chairs" aria-hidden="true"></div>
-      </header>
+  <!-- We're hiring (assets/js/hiring.js). A stage with one chair per role: the spotlight
+       moves from chair to chair as you scroll. Edit the roles here; the chairs, count and
+       role buttons follow. Link straight here with #hiring. -->
+  <section class="casting" id="hiring" aria-labelledby="hiring-title">
+    <div class="casting__track">
+      <div class="casting__stage">
+        <div class="casting__beam" aria-hidden="true"></div>
+        <div class="casting__floor" aria-hidden="true"></div>
 
-      <ul class="roles">
-          <li class="role" style="--i:0" data-role="Manager">
-            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-1">
-              <span class="role__name">Manager</span><span class="role__tag">Runs the room</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div class="role__body" id="role-1" inert>
-              <div class="role__inner">
-                <p>Keep the whole place moving: daily operations, staff scheduling, stock and cost control, POS and cash-up, and guests who leave happy.</p>
-                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for Manager</a>
-              </div>
-            </div>
-          </li>
-          <li class="role" style="--i:1" data-role="Barman">
-            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-2">
-              <span class="role__name">Barman</span><span class="role__tag">Behind the bar</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div class="role__body" id="role-2" inert>
-              <div class="role__inner">
-                <p>Mix cocktails properly and serve them fast, keep the bar stock tight and handle cash honestly.</p>
-                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for Barman</a>
-              </div>
-            </div>
-          </li>
-          <li class="role" style="--i:2" data-role="Hostess">
-            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-3">
-              <span class="role__name">Hostess</span><span class="role__tag">The first hello</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div class="role__body" id="role-3" inert>
-              <div class="role__inner">
-                <p>Welcome every guest warmly and with polish, communicate clearly, run the booking software and speak the local languages.</p>
-                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for Hostess</a>
-              </div>
-            </div>
-          </li>
-          <li class="role" style="--i:3" data-role="General Workers">
-            <button class="role__head" type="button" aria-expanded="false" aria-controls="role-4">
-              <span class="role__name">General Workers</span><span class="role__tag">The backbone</span><svg class="role__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div class="role__body" id="role-4" inert>
-              <div class="role__inner">
-                <p>Be someone the team can count on: reliable, flexible and happy to pitch in wherever the night needs you.</p>
-                <a class="btn role__apply" href="mailto:restaurantlaraza@gmail.com">Apply for General Workers</a>
-              </div>
-            </div>
-          </li>
-      </ul>
-
-      <section class="sheet__block">
-        <h3>Everyone on the team</h3>
-        <ul class="ticks">
-          <li>Communicates well and presents professionally</li>
-          <li>Can work flexible shifts, including evenings, weekends and public holidays</li>
-          <li>Comes with good references</li>
-        </ul>
-      </section>
-
-      <section class="sheet__block sheet__apply">
-        <h3>How to apply</h3>
-        <p>Email your CV and contact details for two references. Put the role you want in the subject line (the Apply buttons do it for you).</p>
-        <div class="copy">
-          <span class="copy__text" id="cv-email">restaurantlaraza@gmail.com</span>
-          <button class="copy__btn" type="button" data-copy="cv-email">Copy</button>
+        <div class="casting__acts">
+          <div class="act act--intro" data-act="0">
+            <h2 class="act__big" id="hiring-title"><span>We’re</span> <span>hiring.</span></h2>
+            <p class="act__lead">Four seats are still empty before opening night on 2 December. One of them has your name on it.</p>
+            <p class="act__cue" aria-hidden="true">Scroll to meet the roles<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></p>
+          </div>
+          <article class="act act--role" data-act="1" data-role="Manager">
+            <h3 class="act__title"><span class="act__the">The</span> Manager</h3>
+            <p class="act__tag">Runs the room.</p>
+            <p class="act__desc">Keep the whole place moving: daily operations, staff scheduling, stock and cost control, POS and cash-up, and guests who leave happy.</p>
+            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=Manager" data-apply="Manager" aria-label="Apply for Manager">Apply for this seat</a>
+          </article>
+          <article class="act act--role" data-act="2" data-role="Barman">
+            <h3 class="act__title"><span class="act__the">The</span> Barman</h3>
+            <p class="act__tag">Behind the bar.</p>
+            <p class="act__desc">Mix cocktails properly and serve them fast, keep the bar stock tight and handle cash honestly.</p>
+            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=Barman" data-apply="Barman" aria-label="Apply for Barman">Apply for this seat</a>
+          </article>
+          <article class="act act--role" data-act="3" data-role="Hostess">
+            <h3 class="act__title"><span class="act__the">The</span> Hostess</h3>
+            <p class="act__tag">The first hello.</p>
+            <p class="act__desc">Welcome every guest warmly and with polish, communicate clearly, run the booking software and speak the local languages.</p>
+            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=Hostess" data-apply="Hostess" aria-label="Apply for Hostess">Apply for this seat</a>
+          </article>
+          <article class="act act--role" data-act="4" data-role="General Workers">
+            <h3 class="act__title"><span class="act__the">The</span> General Workers</h3>
+            <p class="act__tag">The backbone.</p>
+            <p class="act__desc">Be someone the team can count on: reliable, flexible and happy to pitch in wherever the night needs you.</p>
+            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=General%20Workers" data-apply="General Workers" aria-label="Apply for General Workers">Apply for this seat</a>
+          </article>
         </div>
-      </section>
-    </div>
-  </div>
 
-  <script src="assets/js/swarm.js?v=13" defer></script>
-  <script src="assets/js/main.js?v=13" defer></script>
-  <script src="assets/js/hiring.js?v=13" defer></script>
+        <div class="casting__chairs" aria-hidden="true"></div>
+        <p class="casting__count" aria-hidden="true"><span class="casting__n">01</span><span class="casting__of"> / 04</span></p>
+      </div>
+    </div>
+
+    <div class="casting__end">
+      <h2 class="end__title">Your seat is waiting.</h2>
+      <p class="end__lead">We’re looking for reliable, professional team players with one to two years’ experience in hospitality or front of house.</p>
+      <div class="end__cols">
+        <div>
+          <h3>Everyone on the team</h3>
+          <ul class="ticks">
+            <li>Communicates well and presents professionally</li>
+            <li>Can work flexible shifts, including evenings, weekends and public holidays</li>
+            <li>Comes with good references</li>
+          </ul>
+        </div>
+        <div>
+          <h3>How to apply</h3>
+          <p>Email your CV and contact details for two references, with the role you want as the subject. Tap a role and we’ll fill that in for you.</p>
+          <div class="chips">
+            <a class="chip" href="mailto:restaurantlaraza@gmail.com?subject=Manager" data-apply="Manager">Manager</a>
+            <a class="chip" href="mailto:restaurantlaraza@gmail.com?subject=Barman" data-apply="Barman">Barman</a>
+            <a class="chip" href="mailto:restaurantlaraza@gmail.com?subject=Hostess" data-apply="Hostess">Hostess</a>
+            <a class="chip" href="mailto:restaurantlaraza@gmail.com?subject=General%20Workers" data-apply="General Workers">General Workers</a>
+          </div>
+          <div class="copy">
+            <span class="copy__text" id="cv-email">restaurantlaraza@gmail.com</span>
+            <button class="copy__btn" type="button" data-copy="cv-email">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="end">
+    <img class="end__emblem" src="assets/img/logo/emblem-gold.svg" alt="" width="36" height="35">
+    <ul class="socials">
+      <li><a href="https://www.instagram.com/laraza_restaurant" target="_blank" rel="noopener" aria-label="La Raza on Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a></li>
+        <li><a href="https://www.facebook.com/share/19Yjqxi3mR/" target="_blank" rel="noopener" aria-label="La Raza on Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1z"/></svg></a></li>
+    </ul>
+    <p>© 2026 La Raza · Opening 2 December · Newcastle</p>
+  </footer>
+
+  <script src="assets/js/swarm.js?v=14" defer></script>
+  <script src="assets/js/main.js?v=14" defer></script>
+  <script src="assets/js/hiring.js?v=14" defer></script>
 </body>
 </html>
