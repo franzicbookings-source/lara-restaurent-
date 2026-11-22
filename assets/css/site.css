@@ -147,6 +147,8 @@ button, input { font: inherit; color: inherit; }
   .countdown b { font-size: 1.5rem; }
 }
 
+@media (max-width: 359px) { .ticker { font-size: .9375rem; } }
+
 /* ---------- Larger screens ---------- */
 @media (min-width: 600px) {
   .logo { width: clamp(160px, 18vw, 210px); gap: .9rem; }
@@ -235,40 +237,56 @@ button, input { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) { .js .swarm { display: none; } }
 
 /* ==========================================================================
-   The little envelope "slipped under the door" at the foot of the main screen
+   Scroll cue: pinned to the bottom of the screen while the main screen shows,
+   gone once the invitation arrives (hiring.js toggles .is-gone)
    ========================================================================== */
-.center { padding-bottom: calc(var(--space-3) + 84px); }
+.center { padding-bottom: calc(var(--space-3) + 72px); }
 .peek {
-  position: absolute; left: 50%; bottom: 0; z-index: 2;
-  display: grid; justify-items: center; gap: .45rem;
-  translate: -50% 0; text-decoration: none; -webkit-tap-highlight-color: transparent;
-  transition: opacity .4s var(--ease), translate .5s var(--ease);
+  position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 15;
+  display: flex; align-items: center; gap: .75rem;
+  padding: .5rem .85rem .5rem .6rem; border-radius: 18px;
+  background: rgba(17,15,12,.82); border: 1px solid rgba(214,178,122,.5);
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: var(--lr-white); text-decoration: none; text-align: left; white-space: nowrap;
+  translate: -50% 0; -webkit-tap-highlight-color: transparent;
+  transition: opacity .4s var(--ease), translate .5s var(--ease), border-color var(--dur-fast);
+  animation: peek-float 3.2s ease-in-out infinite;
 }
-.peek.is-gone { opacity: 0; translate: -50% 24px; pointer-events: none; }
-.peek__note { font-size: .8125rem; font-weight: var(--fw-medium); color: var(--lr-gold-light); white-space: nowrap; }
-.peek__env {
-  display: block; width: 84px; height: auto; margin-bottom: -18px; /* only the top shows, like a letter under a door */
-  filter: drop-shadow(0 -4px 10px rgba(0,0,0,.45));
-  transition: transform .45s cubic-bezier(.3,1.5,.5,1);
-  animation: peek-nudge 4.2s cubic-bezier(.3,1.4,.5,1) 3s infinite;
+.peek:hover { border-color: var(--lr-gold); }
+.peek:active { scale: .97; }
+.peek.is-gone { opacity: 0; translate: -50% 140%; pointer-events: none; }
+.peek__env { flex: none; width: 46px; height: auto; transform-origin: 50% 80%; animation: env-wiggle 4.5s var(--ease) 3s infinite; }
+.peek__text { display: grid; font-size: .9375rem; font-weight: var(--fw-semibold); line-height: 1.25; }
+.peek__text small { font-size: .75rem; font-weight: var(--fw-medium); color: var(--lr-gold-light); }
+.peek__arrow {
+  flex: none; width: 30px; height: 30px; padding: 6px; border-radius: 50%; background: var(--lr-gold);
+  fill: none; stroke: var(--lr-black); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  animation: peek-bounce 1.6s ease-in-out infinite;
 }
-.peek:hover .peek__env, .peek:focus-visible .peek__env { transform: translateY(-8px) rotate(-3deg); animation-play-state: paused; }
-@keyframes peek-nudge { 0%, 72%, 100% { transform: none; } 78% { transform: translateY(-9px) rotate(-4deg); } 86% { transform: translateY(-2px) rotate(2deg); } 92% { transform: translateY(-4px); } }
-.peek__glint { opacity: 0; animation: peek-glint 4.2s ease 3s infinite; }
-@keyframes peek-glint { 0%, 76%, 100% { opacity: 0; } 82% { opacity: .9; } }
+@keyframes peek-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes peek-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 /* It arrives with the rest of the page, after the intro */
-.js .peek { opacity: 0; }
-.js.is-ready .peek:not(.is-gone) { opacity: 1; transition-delay: .6s; }
+.js .peek { opacity: 0; pointer-events: none; }
+.js.is-ready .peek:not(.is-gone) { opacity: 1; pointer-events: auto; transition-delay: .5s; }
 @media (max-height: 600px) and (max-width: 599px) {
-  .center { padding-bottom: 58px; }
-  .center__inner > .links { margin-bottom: .35rem; }
-  .center__inner { gap: .8rem; }
-  .logo { width: 92px; }
-  .peek { gap: .3rem; }
-  .peek__note { font-size: .75rem; }
-  .peek__env { width: 64px; margin-bottom: -16px; }
+  .center { padding-top: calc(var(--space-2) + env(safe-area-inset-top, 0px)); padding-bottom: 74px; }
+  .center__inner { gap: .7rem; }
+  .logo { width: 84px; }
+  .peek { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); padding: .35rem .4rem .35rem .9rem; gap: .6rem; }
+  .peek__env, .peek__text small { display: none; }
+  .peek__text { font-size: .875rem; }
 }
-@media (prefers-reduced-motion: reduce) { .peek__env, .peek__glint { animation: none; } }
+/* Phone on its side: a compact gold arrow in the corner, so it never covers the content */
+@media (max-height: 500px) and (orientation: landscape) {
+  .center { padding-bottom: var(--space-3); }
+  .peek { left: auto; right: calc(14px + env(safe-area-inset-right, 0px)); translate: 0 0; padding: .3rem; border-radius: 50%; }
+  .peek.is-gone { translate: 0 140%; }
+  .peek__env, .peek__text { display: none; }
+  .peek__arrow { width: 36px; height: 36px; }
+}
+@media (min-width: 960px) { .center { padding-bottom: calc(var(--space-4) + 72px); } }
+@media (prefers-reduced-motion: reduce) { .peek, .peek__env, .peek__arrow { animation: none; } }
 
 /* ==========================================================================
    We're hiring — the pill on the main screen

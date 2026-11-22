@@ -71,13 +71,12 @@
     });
   });
 
-  // The envelope tucks itself away once you start scrolling (one class flip, no per-frame work)
+  // The scroll cue stays until the invitation itself is on screen
   const peek = document.getElementById('peek');
-  if (peek) {
-    let gone = null;
-    const check = () => { const g = scrollY > 40; if (g !== gone) { gone = g; peek.classList.toggle('is-gone', g); } };
-    addEventListener('scroll', check, { passive: true });
-    check();
+  if (peek && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      peek.classList.toggle('is-gone', e.isIntersecting || e.boundingClientRect.top < 0);
+    }, { rootMargin: '0px 0px -50% 0px' }).observe(section); // leaves once the invitation fills half the screen
   }
 
   /* ---------- the hero film rests while it's off screen ---------- */
