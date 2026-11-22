@@ -40,16 +40,19 @@ Every flight path is worked out up front and handed to the browser as a Web Anim
 
 It plays on every load, except when the link points to a section (such as `#hiring`). Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. With reduced motion turned on, it doesn't play.
 
-## We're hiring
+## We're hiring: the invitation
 
-"Oh, and one more thing… **We're hiring.**" A light, warm section slides up after the dark main screen (`assets/js/hiring.js`). The gold line on the main screen ends with "Oh, and we're hiring.", and the **We're hiring** pill glides down to the section.
+After the main screen: "Oh, and one more thing… **We're hiring.**" (`assets/js/hiring.js`).
 
-- **Chairs:** one per role, black like the hiring poster, with a gold butterfly perched on the chair of the role you're looking at; that chair turns gold. They drop in when the section arrives.
-- **Role cards:** swiped sideways on phones (the butterfly hops chair to chair as you swipe), side by side on desktop. Each has a **Take this seat** button that emails the CV address with the role as the subject and a ready-made first line.
-- **Your seat is waiting.** The small print for everyone, how to apply, one button per role and the email address with a Copy button.
-- **Share link:** `https://la-raza-tau.vercel.app/#hiring` skips the intro and opens on the section.
-- **Editing roles:** the `.seat` cards in `#hiring` in `index.html`, and the role buttons under "How to pull up a chair". Chairs, dots and the pill's number follow automatically.
-- It uses the phone's own scrolling and swiping, with only transform and opacity transitions, so it stays smooth.
+A cream envelope sits sealed with black wax pressed with the gold emblem. Tap the seal, or just wait a moment once it's on screen: the wax cracks in two with a few gold sparks, the flap swings open on its gold butterfly lining, a handful of tiny butterflies slip out, and the card rises from the envelope:
+
+> **La Raza** requests the pleasure of **your company & your CV**, for one of four seats: Manager · Barman · Hostess · General Workers
+
+- **Each role on the card** opens an email to the CV address with the role as the subject and a ready-made first line. Below the invitation: the one requirement line, an **RSVP by email** button and the address with a Copy button.
+- **The pill** on the main screen (a little envelope that wiggles now and then) glides down to it. **Share link:** `https://la-raza-tau.vercel.app/#hiring` skips the intro and opens on the invitation.
+- **Editing roles:** the links in `.inv-card__roles` in `index.html` (and "for one of four seats" if the number changes).
+- **How it's built:** the card and the envelope pieces share one stacking context (lining 1, card 2, pocket 3, flap 4, seal 5), so the card can sit inside the envelope. Every movement is a Web Animation of transform, translate, scale or opacity, played by the compositor. Without JavaScript, or with reduced motion, the invitation is simply shown open.
+- **Made for it:** `img/paper.png` (card grain) is generated noise, and `img/liner.svg` (the gold butterfly lining) is built from the emblem. The wax seal is an SVG symbol in the page with an irregular, hand-made edge.
 
 ## Structure
 
@@ -61,11 +64,13 @@ assets/
   css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
   js/main.js              rotating line, countdown, waitlist form (no libraries)
-  js/hiring.js            the We're hiring section
+  js/hiring.js            the We're hiring invitation
   js/swarm.js             the intro: a quick flock of gold butterflies
   fonts/                  Manrope (self-hosted, OFL)
   img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon
   img/photo/              video poster frames
+  img/paper.png           card paper grain
+  img/liner.svg           envelope lining (gold butterflies)
   video/                  hero loop 1280×720 + portrait 720×1080
 ```
 
