@@ -33,7 +33,8 @@
   }
 
   const PERSPECTIVE = 900;
-  const COUNT = finePointer ? 38 : 28;
+  const COUNT = finePointer ? 38 : 26;
+  const DUST = finePointer; // a full-screen trail canvas is costly on phones, so it's desktop only
 
   /* ---------- math ---------- */
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -96,7 +97,7 @@
     swarm.innerHTML = '';
     holdVideo();
 
-    const canvas = el('canvas', 'swarm__dust', swarm);
+    const canvas = DUST ? el('canvas', 'swarm__dust', swarm) : null;
     const stage = el('div', 'swarm__stage', swarm);
 
     const vw = innerWidth, vh = innerHeight;
@@ -125,10 +126,9 @@
     ];
     const spreadMax = Math.min(W2, H2) * .42;
 
-    const dpr = finePointer ? Math.min(devicePixelRatio || 1, 1.5) : 1;
-    canvas.width = Math.round(vw * dpr);
-    canvas.height = Math.round(vh * dpr);
-    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    const ctx = canvas ? canvas.getContext('2d') : null;
+    if (canvas) { canvas.width = Math.round(vw * dpr); canvas.height = Math.round(vh * dpr); }
 
     /* ---------- timeline (ms) ---------- */
     const S = isReplay ? 200 : 950;   // release, just as the emblem finishes drawing
@@ -206,15 +206,18 @@
         const op = p >= 1 ? 0 : Math.round((1 - smooth(.82, 1, p)) * 50) / 50;
         if (op !== b.op) { b.el.style.opacity = op; b.op = op; }
 
-        const wing = p >= 1 ? 0 : Math.round(66 * (.5 + .5 * Math.sin(b.omega * t + b.phase)) * 2) / 2;
+        // Wingbeat: each wing folds toward the body (a flat scale, cheaper than a 3D turn)
+        const wing = p >= 1 ? 1 : Math.round((1 - .78 * (.5 + .5 * Math.sin(b.omega * t + b.phase))) * 50) / 50;
         if (wing !== b.wing) {
-          b.wl.style.transform = `rotateY(${wing}deg)`;
-          b.wr.style.transform = `rotateY(${-wing}deg)`;
+          const w = `scaleX(${wing})`;
+          b.wl.style.transform = w;
+          b.wr.style.transform = w;
           b.wing = wing;
         }
       }
 
-      // Gold dust trail
+      // Gold dust trail (desktop)
+      if (ctx) {
       ctx.globalCompositeOperation = 'destination-out';
       ctx.fillStyle = 'rgba(0,0,0,.14)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -228,6 +231,7 @@
         ctx.beginPath();
         ctx.arc(sx + rnd(-4, 4) * dpr, sy + rnd(-4, 4) * dpr, rnd(.6, 1.7) * dpr * f, 0, Math.PI * 2);
         ctx.fill();
+      }
       }
 
       raf = requestAnimationFrame(frame);

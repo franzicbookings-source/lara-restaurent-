@@ -40,10 +40,10 @@ It plays on every load, except when the link points to a section (such as `#hiri
 
 ## We're hiring
 
-Below the main screen is a scroll scene (`assets/js/hiring.js`): a dark stage with one empty chair per role.
+Below the main screen is a scroll scene (`assets/js/hiring.js`): a dark stage with one empty chair per role. Everything in it is tied to the scroll position, so it moves with your finger, and the page gently settles on each turn (CSS scroll snap, proximity only).
 
-1. **"We're hiring."** opens the scene.
-2. As you scroll, a spotlight flickers on and swings from chair to chair. Each chair it finds turns gold and its role takes the stage, with an **Apply for this seat** button.
+1. As you leave the main screen it sinks and fades, and **"We're hiring."** follows it up with no gap.
+2. A spotlight flickers on and glides from chair to chair. Each chair warms to gold as its role drifts onto the stage, with an **Apply for this seat** button.
 3. **"Your seat is waiting."** follows: what everyone needs, how to apply, one button per role and the email address with a Copy button.
 
 - **Roles** are the `.act--role` items in `#hiring` in `index.html` (name, tagline, description). Add, remove or reorder them there and also update the role buttons under "How to apply"; the chairs, the count and the pill's number follow automatically.
