@@ -13,8 +13,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/logo/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=15">
-  <link rel="stylesheet" href="assets/css/site.css?v=15">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=16">
+  <link rel="stylesheet" href="assets/css/site.css?v=16">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -61,7 +61,7 @@
             <span class="ticker__line is-on">A restaurant &amp; cocktail lounge.</span>
             <span class="ticker__line">Opening the first week of December.</span>
             <span class="ticker__line">Be first through the door.</span>
-            <span class="ticker__line">We’re hiring. Pull up a chair.</span>
+            <span class="ticker__line">Oh, and we’re hiring.</span>
           </p>
         </div>
 
@@ -103,66 +103,67 @@
     </footer>
   </main>
 
-  <!-- We're hiring (assets/js/hiring.js). A stage with one chair per role: the spotlight
-       moves from chair to chair as you scroll. Edit the roles here; the chairs, count and
-       role buttons follow. Link straight here with #hiring. -->
-  <section class="casting" id="hiring" aria-labelledby="hiring-title">
-    <div class="casting__track">
-      <div class="casting__stage">
-        <div class="casting__beam" aria-hidden="true"></div>
-        <div class="casting__floor" aria-hidden="true"></div>
+  <!-- We're hiring (assets/js/hiring.js): a light section that slides up after the main screen.
+       One card per role, swiped sideways on phones; the butterfly hops to the chair of the role
+       you're looking at. Edit roles here; the chairs, count and dots follow. Link: #hiring -->
+  <section class="hiring" id="hiring" aria-labelledby="hiring-title">
+    <header class="hiring__head">
+      <p class="hiring__aside">Oh, and one more thing…</p>
+      <h2 class="hiring__title" id="hiring-title">We’re hiring.</h2>
+      <p class="hiring__lead">Looking for a fresh start? Four seats are still free before we open on 2 December, and one of them could have your name on it.</p>
+    </header>
 
-        <div class="casting__acts">
-          <div class="act act--intro" data-act="0">
-            <h2 class="act__big" id="hiring-title"><span>We’re</span> <span>hiring.</span></h2>
-            <p class="act__lead">Four seats are still empty before opening night on 2 December. One of them has your name on it.</p>
-            <p class="act__cue" aria-hidden="true">Scroll to meet the roles<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></p>
-          </div>
-          <article class="act act--role" data-act="1" data-role="Manager">
-            <h3 class="act__title"><span class="act__the">The</span> Manager</h3>
-            <p class="act__tag">Runs the room.</p>
-            <p class="act__desc">Keep the whole place moving: daily operations, staff scheduling, stock and cost control, POS and cash-up, and guests who leave happy.</p>
-            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=Manager" data-apply="Manager" aria-label="Apply for Manager">Apply for this seat</a>
-          </article>
-          <article class="act act--role" data-act="2" data-role="Barman">
-            <h3 class="act__title"><span class="act__the">The</span> Barman</h3>
-            <p class="act__tag">Behind the bar.</p>
-            <p class="act__desc">Mix cocktails properly and serve them fast, keep the bar stock tight and handle cash honestly.</p>
-            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=Barman" data-apply="Barman" aria-label="Apply for Barman">Apply for this seat</a>
-          </article>
-          <article class="act act--role" data-act="3" data-role="Hostess">
-            <h3 class="act__title"><span class="act__the">The</span> Hostess</h3>
-            <p class="act__tag">The first hello.</p>
-            <p class="act__desc">Welcome every guest warmly and with polish, communicate clearly, run the booking software and speak the local languages.</p>
-            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=Hostess" data-apply="Hostess" aria-label="Apply for Hostess">Apply for this seat</a>
-          </article>
-          <article class="act act--role" data-act="4" data-role="General Workers">
-            <h3 class="act__title"><span class="act__the">The</span> General Workers</h3>
-            <p class="act__tag">The backbone.</p>
-            <p class="act__desc">Be someone the team can count on: reliable, flexible and happy to pitch in wherever the night needs you.</p>
-            <a class="btn act__apply" href="mailto:restaurantlaraza@gmail.com?subject=General%20Workers" data-apply="General Workers" aria-label="Apply for General Workers">Apply for this seat</a>
-          </article>
-        </div>
-
-        <div class="casting__chairs" aria-hidden="true"></div>
-        <p class="casting__count" aria-hidden="true"><span class="casting__n">01</span><span class="casting__of"> / 04</span></p>
-      </div>
+    <div class="chairs" aria-hidden="true">
+      <div class="chairs__row"></div>
+      <img class="chairs__bird" src="assets/img/logo/emblem-gold.svg" alt="" width="34" height="33">
     </div>
 
-    <div class="casting__end">
-      <h2 class="end__title">Your seat is waiting.</h2>
-      <p class="end__lead">We’re looking for reliable, professional team players with one to two years’ experience in hospitality or front of house.</p>
-      <div class="end__cols">
+    <div class="seats" tabindex="-1">
+        <article class="seat" data-role="Manager" aria-labelledby="seat-1">
+          <p class="seat__n" aria-hidden="true">01</p>
+          <h3 class="seat__name" id="seat-1"><span>The</span> Manager</h3>
+          <p class="seat__tag">Runs the room.</p>
+          <p class="seat__desc">Keeps the whole place moving: daily operations, staff scheduling, stock and cost control, POS and cash-up, and guests who leave happy.</p>
+          <a class="btn seat__apply" href="mailto:restaurantlaraza@gmail.com?subject=Manager" data-apply="Manager" aria-label="Apply for Manager">Take this seat</a>
+        </article>
+        <article class="seat" data-role="Barman" aria-labelledby="seat-2">
+          <p class="seat__n" aria-hidden="true">02</p>
+          <h3 class="seat__name" id="seat-2"><span>The</span> Barman</h3>
+          <p class="seat__tag">Shaken, stirred, served fast.</p>
+          <p class="seat__desc">Mixes cocktails properly and serves them quickly, keeps the bar stock tight and handles cash honestly.</p>
+          <a class="btn seat__apply" href="mailto:restaurantlaraza@gmail.com?subject=Barman" data-apply="Barman" aria-label="Apply for Barman">Take this seat</a>
+        </article>
+        <article class="seat" data-role="Hostess" aria-labelledby="seat-3">
+          <p class="seat__n" aria-hidden="true">03</p>
+          <h3 class="seat__name" id="seat-3"><span>The</span> Hostess</h3>
+          <p class="seat__tag">The first hello.</p>
+          <p class="seat__desc">Welcomes every guest warmly and with polish, communicates clearly, runs the booking software and speaks the local languages.</p>
+          <a class="btn seat__apply" href="mailto:restaurantlaraza@gmail.com?subject=Hostess" data-apply="Hostess" aria-label="Apply for Hostess">Take this seat</a>
+        </article>
+        <article class="seat" data-role="General Workers" aria-labelledby="seat-4">
+          <p class="seat__n" aria-hidden="true">04</p>
+          <h3 class="seat__name" id="seat-4"><span>The</span> General Workers</h3>
+          <p class="seat__tag">The glue.</p>
+          <p class="seat__desc">Someone the team can count on: reliable, flexible and happy to pitch in wherever the night needs a hand.</p>
+          <a class="btn seat__apply" href="mailto:restaurantlaraza@gmail.com?subject=General%20Workers" data-apply="General Workers" aria-label="Apply for General Workers">Take this seat</a>
+        </article>
+    </div>
+    <div class="seats__dots"></div>
+
+    <div class="hiring__how">
+      <h2 class="how__title">Your seat is waiting.</h2>
+      <p class="how__lead">We’re after reliable, professional team players with one to two years’ experience in hospitality or front of house.</p>
+      <div class="how__cols">
         <div>
-          <h3>Everyone on the team</h3>
+          <h3>The small print</h3>
           <ul class="ticks">
-            <li>Communicates well and presents professionally</li>
-            <li>Can work flexible shifts, including evenings, weekends and public holidays</li>
-            <li>Comes with good references</li>
+            <li>You communicate well and present professionally</li>
+            <li>You’re up for flexible shifts, including evenings, weekends and public holidays</li>
+            <li>You come with good references</li>
           </ul>
         </div>
         <div>
-          <h3>How to apply</h3>
+          <h3>How to pull up a chair</h3>
           <p>Email your CV and contact details for two references, with the role you want as the subject. Tap a role and we’ll fill that in for you.</p>
           <div class="chips">
             <a class="chip" href="mailto:restaurantlaraza@gmail.com?subject=Manager" data-apply="Manager">Manager</a>
@@ -190,8 +191,8 @@
     <p>© 2026 La Raza · Opening 2 December · Newcastle</p>
   </footer>
 
-  <script src="assets/js/swarm.js?v=15" defer></script>
-  <script src="assets/js/main.js?v=15" defer></script>
-  <script src="assets/js/hiring.js?v=15" defer></script>
+  <script src="assets/js/swarm.js?v=16" defer></script>
+  <script src="assets/js/main.js?v=16" defer></script>
+  <script src="assets/js/hiring.js?v=16" defer></script>
 </body>
 </html>

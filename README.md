@@ -34,22 +34,22 @@ The countdown targets `data-opening` on `#countdown` in `index.html` (currently 
 
 ## The swarm (intro)
 
-`assets/js/swarm.js` runs a short intro, about 3 seconds from load. The emblem draws itself and pulses, then a flock of about 30 small gold butterflies bursts out of it, swoops across the screen and flies off the top. The page rises in behind them while they're still in the air. Each butterfly is the emblem split into two flapping wings, drawn to a bitmap once so phones never redraw the artwork mid-flight. The background film waits until the flock has gone.
+`assets/js/swarm.js` runs a short intro, about 3 seconds from load. The emblem draws itself and pulses, then a flock of small gold butterflies bursts out of it, swoops across the screen and flies off the top, and the page rises in behind them.
+
+Every flight path is worked out up front and handed to the browser as a Web Animation of transform and opacity, so the phone's compositor plays it on its own thread, like a video: nothing else the page is doing while it loads can make it stutter. Each butterfly is the emblem drawn once to a bitmap and split into two wings. The background film waits until the flock has gone. Desktop adds a gold-dust trail.
 
 It plays on every load, except when the link points to a section (such as `#hiring`). Tapping, Esc, Enter or Space skips it. Tapping the logo replays it. With reduced motion turned on, it doesn't play.
 
 ## We're hiring
 
-Below the main screen is a scroll scene (`assets/js/hiring.js`): a dark stage with one empty chair per role. Everything in it is tied to the scroll position, so it moves with your finger, and the page gently settles on each turn (CSS scroll snap, proximity only).
+"Oh, and one more thing… **We're hiring.**" A light, warm section slides up after the dark main screen (`assets/js/hiring.js`). The gold line on the main screen ends with "Oh, and we're hiring.", and the **We're hiring** pill glides down to the section.
 
-1. As you leave the main screen it sinks and fades, and **"We're hiring."** follows it up with no gap.
-2. A spotlight flickers on and glides from chair to chair. Each chair warms to gold as its role drifts onto the stage, with an **Apply for this seat** button.
-3. **"Your seat is waiting."** follows: what everyone needs, how to apply, one button per role and the email address with a Copy button.
-
-- **Roles** are the `.act--role` items in `#hiring` in `index.html` (name, tagline, description). Add, remove or reorder them there and also update the role buttons under "How to apply"; the chairs, the count and the pill's number follow automatically.
-- **Applying:** every Apply button opens an email to the CV address with the role as the subject and a ready-made first line.
-- **The pill** on the main screen glides down to the scene. **Share link:** `https://la-raza-tau.vercel.app/#hiring` skips the intro and opens on the scene.
-- Without JavaScript, or with reduced motion, the roles simply stack one under another.
+- **Chairs:** one per role, black like the hiring poster, with a gold butterfly perched on the chair of the role you're looking at; that chair turns gold. They drop in when the section arrives.
+- **Role cards:** swiped sideways on phones (the butterfly hops chair to chair as you swipe), side by side on desktop. Each has a **Take this seat** button that emails the CV address with the role as the subject and a ready-made first line.
+- **Your seat is waiting.** The small print for everyone, how to apply, one button per role and the email address with a Copy button.
+- **Share link:** `https://la-raza-tau.vercel.app/#hiring` skips the intro and opens on the section.
+- **Editing roles:** the `.seat` cards in `#hiring` in `index.html`, and the role buttons under "How to pull up a chair". Chairs, dots and the pill's number follow automatically.
+- It uses the phone's own scrolling and swiping, with only transform and opacity transitions, so it stays smooth.
 
 ## Structure
 
@@ -61,7 +61,7 @@ assets/
   css/site.css            landing page styles (components reused by the design system)
   css/design-system.css   design system page styles
   js/main.js              rotating line, countdown, waitlist form (no libraries)
-  js/hiring.js            the We're hiring stage (scroll scene)
+  js/hiring.js            the We're hiring section
   js/swarm.js             the intro: a quick flock of gold butterflies
   fonts/                  Manrope (self-hosted, OFL)
   img/logo/               emblem / wordmark / lockup SVGs (gold + one colour), favicon
