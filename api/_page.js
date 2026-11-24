@@ -51,7 +51,7 @@ function head({ title, desc, og, url }) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/pinyon-script.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/invite/invite.css?v=8">
+<link rel="stylesheet" href="/assets/invite/invite.css?v=9">
 </head>`;
 }
 
@@ -73,20 +73,42 @@ export function page(slug, guest, origin, vid = "") {
   const no_ = wa(friend ? `It’s ${name}. I can’t make it on Friday 😩` : `Hi, it’s ${name}. Sadly I can’t make it on Friday 27 November.`);
   const data = JSON.stringify({ slug, name, first, kind, iso: EVENT.iso }).replace(/</g, "\\u003c");
 
-  const opener = sphe ? `
-  <section class="film" id="film" aria-label="A message from Sphe D">
-    <div class="iphone"><div class="iphone__screen" id="screen">
-      <video id="film-video" src="/assets/v/${vid}.mp4" autoplay muted playsinline preload="auto"></video>
-    </div><i class="iphone__island"></i></div>
-    <div class="film__btns">
-      <button type="button" class="film-btn" id="sound">🔊 Tap for sound</button>
-      <button type="button" class="film-btn" id="replay" hidden>↺ Watch again</button>
+  if (sphe) return `${head({ title, desc, og: `${origin}/i/${slug}/og.png`, url })}
+<body class="k-sd">
+<main class="sd">
+  <section class="sd-reel" aria-label="A message from Sphe D">
+    <div class="sd-screen" id="screen">
+      <video id="film-video" src="/assets/v/${vid}.mp4" poster="/assets/v/${vid}.jpg" playsinline preload="auto"></video>
+      <button type="button" class="sd-tap" id="tap" aria-label="Open Sphe D’s message"><i class="sd-ring"></i><span class="sd-hint">Tap to open</span></button>
     </div>
-    <a class="film__down" href="#invite">Your invite ↓</a>
-  </section>` : friend ? `
+  </section>
+  <section class="sd-sheet" id="invite" aria-label="Your invitation">
+    <div class="sd-top"><span>La Raza · Soft launch</span><img src="/assets/img/logo/emblem-gold.svg" alt=""></div>
+    <h1 class="sd-h"><span class="sd-name fit" data-max="46">${esc(name)},</span>you made the list.</h1>
+    <p class="sd-sub">Don’t be late, I’m not saving you a seat&nbsp;😂&nbsp;·&nbsp;Sphe&nbsp;D</p>
+    <dl class="sd-facts">
+      <div><dt>Date</dt><dd>Fri 27 Nov</dd></div>
+      <div><dt>Doors</dt><dd>17:00</dd></div>
+      <div><dt>Dress</dt><dd>All black</dd></div>
+    </dl>
+    <p class="sd-doors" id="doors">Doors open on Friday</p>
+    <div class="sd-btns">
+      <a class="sd-btn gold" href="${esc(yes)}" target="_blank" rel="noopener">Say less. I’m there</a>
+      <a class="sd-btn line" href="${esc(no_)}" target="_blank" rel="noopener">Can’t make it</a>
+    </div>
+    <p class="sd-by">Reply by Wed 25 Nov · <span class="nw">${EVENT.phone}</span> · <a id="cal" href="/assets/invite/la-raza-soft-launch.ics">Add to calendar</a></p>
+    <p class="sd-foot">Newcastle · Guest ${num}</p>
+  </section>
+</main>
+<script>window.LR=${data}</script>
+<script src="/assets/invite/invite.js?v=9" defer></script>
+</body>
+</html>`;
+
+  const opener = friend ? `
   <section class="scene chat" id="opener" aria-label="A message from ${from}">
     <header class="chat-hdr">
-      <span class="av">${sphe ? '<b class="ini">SD</b>' : '<img src="/assets/img/logo/emblem-gold.svg" alt="">'}</span>
+      <span class="av"><img src="/assets/img/logo/emblem-gold.svg" alt=""></span>
       <span><b>${from}</b><small id="chat-st">online</small></span>
     </header>
     <div class="thread" id="thread">
@@ -151,7 +173,7 @@ export function page(slug, guest, origin, vid = "") {
     <p class="sub rise">Before the doors open to Newcastle, they open&nbsp;for&nbsp;you.</p>`;
 
   return `${head({ title, desc, og: `${origin}/i/${slug}/og.png`, url })}
-<body class="${friend ? "k-f" : "k-v"}${sphe ? " k-sd opened instant" : ""}">
+<body class="${friend ? "k-f" : "k-v"}">
 ${SPRITE}
 <main>
 ${opener}
@@ -175,7 +197,7 @@ ${card}
   </section>
 </main>
 <script>window.LR=${data}</script>
-<script src="/assets/invite/invite.js?v=8" defer></script>
+<script src="/assets/invite/invite.js?v=9" defer></script>
 </body>
 </html>`;
 }

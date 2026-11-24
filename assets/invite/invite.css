@@ -152,18 +152,50 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
-/* ---------- Sphe D's friends: his chat film playing on an iPhone ---------- */
-.film { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
-  padding: max(22px, env(safe-area-inset-top)) 20px max(22px, env(safe-area-inset-bottom)); }
-.iphone { position: relative; width: min(78vw, 340px, calc((100svh - 170px) * .5)); padding: 11px; border-radius: 56px; background: linear-gradient(145deg, #2c2824, #0d0c0b 40%, #1d1a17);
-  box-shadow: 0 0 0 1.5px #4a443d, 0 40px 70px -30px rgba(40,25,10,.7), 0 14px 26px -16px rgba(40,25,10,.45); }
-.iphone::before, .iphone::after { content: ""; position: absolute; width: 4px; border-radius: 2px; background: #3a352f; }
-.iphone::before { left: -4px; top: 22%; height: 9%; box-shadow: 0 60px 0 #3a352f; }
-.iphone::after { right: -4px; top: 28%; height: 14%; }
-.iphone__screen { position: relative; aspect-ratio: 9 / 16; border-radius: 45px; overflow: hidden; background: #f7f1e7; }
-.iphone__screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #f7f1e7; }
-.iphone__island { position: absolute; left: 50%; top: 17px; width: 22%; height: 3.6%; max-height: 22px; transform: translateX(-50%); border-radius: 20px; background: #000; }
-.film__btns { display: flex; gap: 10px; min-height: 44px; }
-.film-btn { height: 44px; padding: 0 20px; border-radius: 99px; background: #1a140e; color: #F1D29E; font-weight: 700; font-size: 15px; }
-.film__down { font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--bronze); text-decoration: none; animation: breathe 2.2s ease-in-out infinite; }
-.k-sd .invite { min-height: 0; }
+/* ---------- Sphe D's friends: his chat fills the phone, the invite slides up under it ---------- */
+/* The video is 1080x1920; the top 104px (its fake status bar) and bottom 40px are trimmed so it sits flush with the real phone. */
+.k-sd { background: #0f0d0b; color: #F3ECE1; }
+.k-sd::before { background: radial-gradient(90% 50% at 50% 100%, #221a12, #0f0d0b 70%); }
+.k-sd::after { display: none; }
+.sd-reel { position: relative; z-index: 1; }
+.sd-screen { position: relative; width: min(100%, 460px, calc(100svh * 1080 / 1776)); aspect-ratio: 1080 / 1776; margin: 0 auto; overflow: hidden;
+  container-type: inline-size; background: #EDE3D1; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.sd-screen video { position: absolute; left: 0; top: -5.856%; width: 100%; height: auto; aspect-ratio: 9 / 16; display: block; background: #EDE3D1; }
+.sd-tap { position: absolute; inset: 0; z-index: 2; width: 100%; transition: opacity .3s; }
+.sd-ring { position: absolute; left: 3.33%; right: 3.33%; top: 43.7%; height: 11%; border-radius: 4.3cqw; animation: sd-pulse 1.9s ease-out infinite; }
+@keyframes sd-pulse { 0% { box-shadow: 0 0 0 0 rgba(160,122,69,.55); } 75%, 100% { box-shadow: 0 0 0 16px rgba(160,122,69,0); } }
+.sd-hint { position: absolute; left: 50%; top: 58.5%; transform: translateX(-50%); padding: 10px 18px; border-radius: 99px; white-space: nowrap;
+  background: rgba(29,23,18,.88); color: #F3E3C3; font-size: 13px; font-weight: 700; letter-spacing: .06em; animation: breathe 2.2s ease-in-out infinite; }
+.playing .sd-tap { opacity: 0; pointer-events: none; }
+
+.sd-sheet { position: relative; z-index: 2; width: min(100%, 460px); margin: -18px auto 0; border-radius: 26px 26px 0 0;
+  padding: 14px max(22px, env(safe-area-inset-right)) calc(26px + env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+  background: radial-gradient(120% 60% at 50% 0%, #241c14, #14110e 60%); box-shadow: 0 -14px 34px -10px rgba(0,0,0,.45), inset 0 1px 0 rgba(226,188,133,.16); }
+.sd-sheet::before { content: ""; display: block; width: 38px; height: 4px; margin: 0 auto 18px; border-radius: 4px; background: rgba(243,236,225,.18); }
+.sd-top { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: #C9A56E; }
+.sd-top img { width: 26px; opacity: .95; }
+.sd-h { display: flex; flex-direction: column; align-items: flex-start; margin-top: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -.035em; line-height: .98; font-size: 27px; color: #F3ECE1; }
+.sd-name { white-space: nowrap; font-size: 46px; padding-bottom: .04em;
+  background: linear-gradient(180deg, #F6DCAE, #E2BC85 45%, #B38A55); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sd-sub { text-wrap: balance; margin-top: 10px; font-size: 14px; line-height: 1.45; color: rgba(243,236,225,.62); }
+.sd-facts { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 20px; border: 1px solid rgba(226,188,133,.2); border-radius: 16px; }
+.sd-facts div { padding: 12px 8px 11px; text-align: center; }
+.sd-facts div + div { border-left: 1px solid rgba(226,188,133,.2); }
+.sd-facts dt { font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: rgba(201,165,110,.85); }
+.sd-facts dd { margin-top: 4px; font-size: 16px; font-weight: 800; letter-spacing: -.01em; color: #F3ECE1; white-space: nowrap; }
+.sd-doors { margin-top: 14px; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #C9A56E; }
+.sd-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.sd-btn { display: flex; align-items: center; justify-content: center; height: 52px; padding: 0 10px; border-radius: 99px; text-align: center;
+  font-size: 15px; font-weight: 800; text-decoration: none; white-space: nowrap; transition: transform .15s; }
+.sd-btn:active { transform: scale(.97); }
+.sd-btn.gold { background: linear-gradient(180deg, #F2D39F, #DDB57C 55%, #B98F57); color: #1D1712; box-shadow: 0 10px 24px -12px rgba(226,188,133,.6); }
+.sd-btn.line { border: 1px solid rgba(243,236,225,.24); color: #F3ECE1; }
+.sd-by { margin-top: 14px; text-align: center; font-size: 12.5px; line-height: 1.6; color: rgba(243,236,225,.55); }
+.sd-by a { color: #E2BC85; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(226,188,133,.4); }
+.sd-foot { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: rgba(243,236,225,.32); }
+@media (min-width: 600px) {
+  .sd { padding-top: 28px; }
+  .sd-screen { width: min(420px, calc((100svh - 28px) * 1080 / 1776)); border-radius: 30px 30px 0 0; }
+  .sd-sheet { width: min(100%, 420px); border-radius: 26px; margin-bottom: 40px; }
+}
+@media (max-width: 599px) { .sd-reel { background: #EDE3D1; } }

@@ -57,15 +57,36 @@
 
   fit();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-  // Sphe D's friends: their personal video plays on the iPhone; sound and replay on request
+  // Sphe D's friends: their personal video fills the screen and plays with sound.
+  // Phones only allow sound after a tap, so the video waits on its lock screen until they tap Sphe D's message.
   var film = document.getElementById("film-video");
   if (film) {
-    var soundBtn = document.getElementById("sound"), replayBtn = document.getElementById("replay");
-    var p = film.play(); if (p && p.catch) p.catch(function () {});
-    soundBtn.addEventListener("click", function () { film.muted = false; film.currentTime = 0; film.play(); soundBtn.hidden = true; });
-    replayBtn.addEventListener("click", function () { film.currentTime = 0; film.play(); replayBtn.hidden = true; });
-    film.addEventListener("ended", function () { replayBtn.hidden = false; });
-    tick();
+    var OPEN_AT = 1.4; // just before the video's own tap on the notification
+    var seek = function (t) {
+      if (film.readyState >= 1) film.currentTime = t;
+      else film.addEventListener("loadedmetadata", function () { film.currentTime = t; }, { once: true });
+    };
+    var go = function (from) {
+      body.classList.add("playing");
+      film.muted = false; seek(from);
+      var p = film.play();
+      if (p && p.catch) p.catch(function () { film.muted = true; film.play().catch(function () {}); });
+    };
+    // some browsers allow sound straight away: then the whole video plays from the start
+    film.muted = false;
+    var first = film.play();
+    if (first && first.then) first.then(function () { body.classList.add("playing"); }, function () {});
+    document.getElementById("tap").addEventListener("click", function (e) {
+      e.stopPropagation(); if (navigator.vibrate) navigator.vibrate(12); go(OPEN_AT);
+    });
+    document.getElementById("screen").addEventListener("click", function () { if (film.ended) go(OPEN_AT); });
+    // when it ends, glide down to the RSVP (unless they already scrolled)
+    film.addEventListener("ended", function () {
+      if (window.scrollY < 40) setTimeout(function () {
+        document.getElementById("invite").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "end" });
+      }, 700);
+    });
+    fit(); tick();
   }
   var opener = document.getElementById("open");
   if (!opener) { tick(); return; }
