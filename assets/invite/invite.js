@@ -57,10 +57,22 @@
 
   fit();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  // Sphe D's friends: his chat film plays on the iPhone; sound and replay on request
+  var frame = document.getElementById("film-frame");
+  if (frame) {
+    var screen = document.getElementById("screen"), soundBtn = document.getElementById("sound"), replayBtn = document.getElementById("replay");
+    var scale = function () { frame.style.transform = "scale(" + screen.clientWidth / 1080 + ")"; };
+    scale(); addEventListener("resize", scale);
+    var post = function (m) { try { frame.contentWindow.postMessage(m, "*"); } catch (e) {} };
+    soundBtn.addEventListener("click", function () { post("lr-sound"); soundBtn.hidden = true; });
+    replayBtn.addEventListener("click", function () { post("lr-replay"); replayBtn.hidden = true; });
+    addEventListener("message", function (e) { if (e.data === "lr-film-done") replayBtn.hidden = false; });
+    tick();
+  }
   var opener = document.getElementById("open");
   if (!opener) { tick(); return; }
 
-  if (D.kind === "f") {
+  if (D.kind !== "v") {
     // the chat plays itself, then the gold card waits to be tapped
     var items = [].slice.call(document.querySelectorAll("#thread .chip, #thread .b"));
     var typing = document.getElementById("typing"), st = document.getElementById("chat-st");

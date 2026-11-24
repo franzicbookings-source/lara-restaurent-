@@ -51,7 +51,7 @@ function head({ title, desc, og, url }) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/pinyon-script.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/invite/invite.css?v=6">
+<link rel="stylesheet" href="/assets/invite/invite.css?v=7">
 </head>`;
 }
 
@@ -73,7 +73,17 @@ export function page(slug, guest, origin) {
   const no_ = wa(friend ? `It’s ${name}. I can’t make it on Friday 😩` : `Hi, it’s ${name}. Sadly I can’t make it on Friday 27 November.`);
   const data = JSON.stringify({ slug, name, first, kind, iso: EVENT.iso }).replace(/</g, "\\u003c");
 
-  const opener = friend ? `
+  const opener = sphe ? `
+  <section class="film" id="film" aria-label="A message from Sphe D">
+    <div class="iphone"><div class="iphone__screen" id="screen">
+      <iframe id="film-frame" src="/assets/film-sphe/index.html?name=${encodeURIComponent(first)}" title="A message from Sphe D" scrolling="no" tabindex="-1"></iframe>
+    </div><i class="iphone__island"></i></div>
+    <div class="film__btns">
+      <button type="button" class="film-btn" id="sound">🔊 Tap for sound</button>
+      <button type="button" class="film-btn" id="replay" hidden>↺ Watch again</button>
+    </div>
+    <a class="film__down" href="#invite">Your invite ↓</a>
+  </section>` : friend ? `
   <section class="scene chat" id="opener" aria-label="A message from ${from}">
     <header class="chat-hdr">
       <span class="av">${sphe ? '<b class="ini">SD</b>' : '<img src="/assets/img/logo/emblem-gold.svg" alt="">'}</span>
@@ -141,7 +151,7 @@ export function page(slug, guest, origin) {
     <p class="sub rise">Before the doors open to Newcastle, they open&nbsp;for&nbsp;you.</p>`;
 
   return `${head({ title, desc, og: `${origin}/i/${slug}/og.png`, url })}
-<body class="${friend ? "k-f" : "k-v"}">
+<body class="${friend ? "k-f" : "k-v"}${sphe ? " k-sd opened instant" : ""}">
 ${SPRITE}
 <main>
 ${opener}
@@ -165,7 +175,7 @@ ${card}
   </section>
 </main>
 <script>window.LR=${data}</script>
-<script src="/assets/invite/invite.js?v=5" defer></script>
+<script src="/assets/invite/invite.js?v=7" defer></script>
 </body>
 </html>`;
 }
