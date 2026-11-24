@@ -78,42 +78,66 @@
     if (tick()) { const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000); }
   }
 
-  /* ---------- Waitlist form ---------- */
+  /* ---------- Sign-up: email or WhatsApp number ---------- */
   const form = document.getElementById('waitlist-form');
   if (!form) return;
   const msg = document.getElementById('form-msg');
   const btn = form.querySelector('button[type="submit"]');
+  const input = document.getElementById('contact');
+  const label = document.getElementById('contact-label');
+  const choices = [...form.querySelectorAll('[data-via]')];
+  let via = 'email';
   const say = (text, ok) => { msg.textContent = text; msg.className = 'form__msg ' + (ok ? 'is-ok' : 'is-err'); };
+
+  const MODES = {
+    email: { type: 'email', inputmode: 'email', autocomplete: 'email', placeholder: 'Your email', label: 'Your email' },
+    whatsapp: { type: 'tel', inputmode: 'tel', autocomplete: 'tel', placeholder: 'Your WhatsApp number', label: 'Your WhatsApp number' },
+  };
+  const choose = (next, focus) => {
+    if (next === via && !focus) return;
+    via = next;
+    const m = MODES[via];
+    choices.forEach((c) => c.setAttribute('aria-checked', String(c.dataset.via === via)));
+    input.type = m.type; input.inputMode = m.inputmode; input.autocomplete = m.autocomplete;
+    input.placeholder = m.placeholder; label.textContent = m.label;
+    input.value = ''; say('', true);
+    if (focus) input.focus();
+  };
+  choices.forEach((c) => c.addEventListener('click', () => choose(c.dataset.via, true)));
+  form.querySelector('.via').addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const next = via === 'email' ? 'whatsapp' : 'email';
+    choose(next, false);
+    form.querySelector(`[data-via="${next}"]`).focus();
+  });
+
+  const looksRight = (v) => via === 'email'
+    ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)
+    : v.replace(/\D/g, '').length >= 9;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = form.email.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-      say('Please enter a valid email address.', false);
-      form.email.focus();
+    const value = input.value.trim();
+    if (!looksRight(value)) {
+      say(via === 'email' ? 'Please enter a valid email address.' : 'Please enter your WhatsApp number, like 082 123 4567.', false);
+      input.focus();
       return;
     }
     if (form.company && form.company.value) return; // honeypot
-
-    const endpoint = form.dataset.endpoint; // Backend URL that accepts a POST of the form fields.
-    if (!endpoint) {
-      // No backend yet (front-end preview): confirm the email looks right, send nothing.
-      say('Thanks! Sign-ups open very soon. Follow us on Instagram in the meantime.', true);
-      return;
-    }
     btn.disabled = true;
     btn.textContent = 'Sending…';
-    const data = new FormData(form);
     try {
-      const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
-      if (!res.ok) throw new Error(String(res.status));
-      form.email.value = '';
+      const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ via, value, from: 'home' }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'failed');
+      input.value = '';
       btn.textContent = 'You’re in';
-      say('Thanks! We’ll let you know the moment we open.', true);
+      say(via === 'email' ? 'Thank you. Your invite will come to your inbox.' : 'Thank you. Your invite will come on WhatsApp.', true);
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Get the invite';
-      say('That didn’t go through. Try again, or message us on Instagram.', false);
+      say(err.message && err.message !== 'failed' ? err.message : 'That didn’t go through. Please try again.', false);
     }
   });
 })();

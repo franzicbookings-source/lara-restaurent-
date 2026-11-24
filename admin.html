@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>La Raza Hiring</title>
+<link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/admin/admin.css?v=1">
+</head>
+<body>
+
+<section class="login" id="login" hidden>
+  <img class="login__emb" src="/assets/img/logo/emblem-gold.svg" alt="">
+  <h1 class="login__title">Hiring dashboard</h1>
+  <p class="login__sub">La Raza staff only</p>
+  <form id="login-form" class="login__form">
+    <label class="sr" for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+    <button class="btn" type="submit">Sign in</button>
+  </form>
+  <p class="msg err" id="login-msg" role="alert"></p>
+</section>
+
+<div class="app" id="app" hidden>
+  <header class="top">
+    <img class="top__word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" class="tab" data-tab="apps" aria-selected="true">Applications <b id="n-apps">0</b></button>
+      <button type="button" class="tab" data-tab="subs" aria-selected="false">Sign-ups <b id="n-subs">0</b></button>
+    </nav>
+    <button type="button" class="link" id="logout">Sign out</button>
+  </header>
+
+  <main class="view" id="view-apps">
+    <div class="bar">
+      <div class="chips" id="status-chips" role="group" aria-label="Filter by status"></div>
+      <div class="bar__row">
+        <label class="sr" for="role-filter">Role</label>
+        <select id="role-filter"><option value="">All roles</option><option>Manager</option><option>Barman</option><option>Hostess</option><option>General Workers</option></select>
+        <label class="sr" for="q">Search</label>
+        <input id="q" type="search" placeholder="Search name or email" autocomplete="off">
+      </div>
+    </div>
+    <div class="split">
+      <ul class="list" id="list" aria-label="Applications"></ul>
+      <article class="detail" id="detail" aria-live="polite">
+        <p class="empty">Choose an application to review it.</p>
+      </article>
+    </div>
+  </main>
+
+  <main class="view" id="view-subs" hidden>
+    <div class="subs-head">
+      <p class="subs-count" id="subs-count"></p>
+      <div class="subs-actions">
+        <button type="button" class="btn ghost" id="copy-emails">Copy emails</button>
+        <button type="button" class="btn ghost" id="copy-phones">Copy WhatsApp numbers</button>
+        <a class="btn" href="/api/admin?action=subs-csv" id="dl-subs">Download CSV</a>
+      </div>
+    </div>
+    <ul class="subs" id="subs"></ul>
+  </main>
+</div>
+
+<script src="/assets/admin/admin.js?v=1" defer></script>
+</body>
+</html>

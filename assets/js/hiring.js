@@ -26,29 +26,85 @@
   const pocket = section.querySelector('.inv-pocket');
   const sealBtn = section.querySelector('.inv-seal');
   const halves = [...section.querySelectorAll('.inv-seal__half')];
-  const EMAIL = (document.getElementById('cv-email') || {}).textContent || 'restaurantlaraza@gmail.com';
   const rnd = (a, b) => a + Math.random() * (b - a);
 
-  /* ---------- RSVP links: the role as the subject, a ready-made first line ---------- */
-  section.querySelectorAll('[data-apply]').forEach((a) => {
-    const role = a.dataset.apply;
-    const subject = role || 'Application';
-    const body = role
-      ? `Hi La Raza team,\n\nI’d like to apply for the ${role} position. My CV is attached, along with contact details for two references.\n\n`
-      : 'Hi La Raza team,\n\nI’d like to apply for the role of: \n\nMy CV is attached, along with contact details for two references.\n\n';
-    a.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  });
+  /* ---------- Apply online: tap a role on the card, fill the form, attach the CV ---------- */
+  const applyForm = document.getElementById('apply-form');
+  if (applyForm) {
+    const msg = document.getElementById('apply-msg');
+    const sendBtn = applyForm.querySelector('button[type="submit"]');
+    const fileIn = document.getElementById('ap-cv');
+    const fileT = document.getElementById('ap-cv-t');
+    const fileS = document.getElementById('ap-cv-s');
+    const MAX = 4 * 1024 * 1024;
+    const say = (text, ok) => { msg.textContent = text; msg.className = 'form__msg ' + (ok ? 'is-ok' : 'is-err'); };
+    const size = (n) => (n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB');
 
-  /* ---------- copy the email (for phones without a mail app set up) ---------- */
-  section.querySelectorAll('[data-copy]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const el = document.getElementById(btn.dataset.copy);
-      const text = el ? el.textContent.trim() : '';
-      const done = () => { btn.textContent = 'Copied'; btn.classList.add('is-done'); setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('is-done'); }, 1600); };
-      const select = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
-      try { navigator.clipboard.writeText(text).then(done, select); } catch (e) { select(); }
+    section.querySelectorAll('[data-role]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const r = applyForm.querySelector(`input[name="role"][value="${a.dataset.role}"]`);
+        if (r) r.checked = true;
+        document.getElementById('apply').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+        setTimeout(() => document.getElementById('ap-name').focus({ preventScroll: true }), reduced ? 0 : 600);
+      });
     });
-  });
+
+    fileIn.addEventListener('change', () => {
+      const f = fileIn.files[0];
+      fileT.textContent = f ? f.name : 'Attach your CV';
+      fileS.textContent = f ? size(f.size) + ' · tap to change' : 'PDF, Word or a photo · up to 4 MB';
+      fileIn.closest('.apply__file').classList.toggle('has-file', !!f);
+    });
+
+    // A big phone photo of a CV is shrunk before sending so it fits under 4 MB
+    const shrink = (file) => new Promise((resolve) => {
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size <= MAX * 0.9) return resolve(file);
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 2200 / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob((b) => resolve(b ? new File([b], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }) : file), 'image/jpeg', 0.82);
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => resolve(file);
+      img.src = URL.createObjectURL(file);
+    });
+
+    applyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (applyForm.elements.company.value) return; // honeypot
+      const $in = (id) => document.getElementById(id);
+      const role = applyForm.querySelector('input[name="role"]:checked');
+      const name = $in('ap-name').value.trim(), email = $in('ap-email').value.trim(), phone = $in('ap-phone').value.trim();
+      let file = fileIn.files[0];
+      const fail = (text, el) => { say(text, false); if (el) el.focus(); };
+      if (!role) return fail('Please choose the role you’re applying for.', applyForm.querySelector('input[name="role"]'));
+      if (name.length < 2) return fail('Please add your full name.', $in('ap-name'));
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail('Please add a valid email address.', $in('ap-email'));
+      if (phone.replace(/\D/g, '').length < 9) return fail('Please add your WhatsApp number, like 082 123 4567.', $in('ap-phone'));
+      if (!file) return fail('Please attach your CV.', fileIn);
+      sendBtn.disabled = true; sendBtn.textContent = 'Sending…'; say('', true);
+      file = await shrink(file);
+      if (file.size > MAX) { sendBtn.disabled = false; sendBtn.textContent = 'Send my application'; return fail('Your CV is over 4 MB. Please attach a smaller file.', fileIn); }
+      const data = new FormData();
+      data.append('role', role.value); data.append('name', name); data.append('email', email); data.append('phone', phone);
+      data.append('refs', $in('ap-refs').value.trim()); data.append('cv', file, file.name);
+      try {
+        const res = await fetch('/api/apply', { method: 'POST', body: data });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok || !out.ok) throw new Error(out.error || 'failed');
+        applyForm.reset(); fileIn.dispatchEvent(new Event('change'));
+        sendBtn.textContent = 'Application sent';
+        say(`Thank you, ${name.split(' ')[0]}. We’ve received your application for ${role.value} and will be in touch.`, true);
+      } catch (err) {
+        sendBtn.disabled = false; sendBtn.textContent = 'Send my application';
+        say(err.message && err.message !== 'failed' ? err.message : 'That didn’t go through. Please try again.', false);
+      }
+    });
+  }
 
   /* ---------- the paper and lining textures load once the invitation is close ---------- */
   if ('IntersectionObserver' in window) {

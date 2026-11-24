@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@vercel/og": "0.6.8"
+    "@vercel/og": "0.6.8",
+    "@vercel/blob": "2.9.0"
   }
 }

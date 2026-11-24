@@ -94,8 +94,8 @@ button, input { font: inherit; color: inherit; }
 /* ---------- Form ---------- */
 .form { width: 100%; max-width: 460px; }
 .field {
-  display: flex; flex-direction: column; gap: .375rem; padding: .375rem;
-  border-radius: 28px;
+  display: flex; flex-direction: row; align-items: center; gap: .375rem; padding: .3rem;
+  border-radius: var(--radius);
   background: rgba(22, 22, 20, .72);
   border: 1px solid var(--color-line);
   transition: border-color var(--dur-fast);
@@ -106,10 +106,29 @@ button, input { font: inherit; color: inherit; }
 }
 .field:focus-within { border-color: var(--lr-gold); }
 .field input {
-  flex: 1; min-width: 0; height: 46px; padding: 0 1rem; text-align: center;
+  flex: 1 1 0; width: 0; min-width: 0; height: 46px; padding: 0 .6rem 0 1.1rem; text-align: left;
   border: 0; background: transparent; outline: none; font-size: 1rem;
 }
 .field input::placeholder { color: var(--lr-white-50); }
+.field .btn { flex: none; width: auto; height: 46px; padding: 0 1.15rem; }
+/* Email or WhatsApp: two quiet words above the field */
+.via { display: flex; justify-content: center; gap: 1.4rem; margin: 0 0 .7rem; }
+.via button {
+  position: relative; padding: .3rem 0; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: .875rem; font-weight: var(--fw-semibold); letter-spacing: .02em; color: var(--lr-white-50);
+  transition: color var(--dur-fast);
+}
+.via button::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; border-radius: 2px;
+  background: var(--lr-gold); transform: scaleX(0); transition: transform var(--dur-fast);
+}
+.via button[aria-checked="true"] { color: var(--lr-gold-light); }
+.via button[aria-checked="true"]::after { transform: scaleX(1); }
+.via button:focus-visible { outline: 2px solid var(--lr-gold); outline-offset: 4px; border-radius: 4px; }
+@media (max-width: 359px) {
+  .field input { padding-left: .9rem; font-size: .9375rem; }
+  .field .btn { padding: 0 .9rem; font-size: .875rem; }
+}
 .btn {
   width: 100%; height: 48px; padding: 0 1.4rem; border: 0; border-radius: var(--radius);
   background: var(--lr-gold); color: var(--lr-black);
@@ -426,21 +445,38 @@ button, input { font: inherit; color: inherit; }
 .rsvp__need { margin: 0; max-width: 30ch; color: var(--lr-white-70); text-wrap: balance; }
 .rsvp__btn { display: grid; place-items: center; width: 100%; height: 50px; margin-top: .25rem; text-decoration: none; font-size: 1rem; }
 .rsvp__how { margin: 0; font-size: var(--fs-small); color: var(--lr-white-50); text-wrap: balance; }
-.copy {
-  display: flex; align-items: center; gap: .5rem; width: 100%; padding: .375rem .375rem .375rem 1rem;
-  border: 1px solid var(--color-line); border-radius: var(--radius); background: rgba(255,255,255,.03);
+/* Apply online: role chips, three fields, the CV, references */
+.apply { width: 100%; display: grid; gap: .6rem; text-align: left; }
+.apply__roles { margin: 0 0 .2rem; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; }
+.apply__legend { width: 100%; margin-bottom: .55rem; text-align: center; font-size: var(--fs-small); color: var(--lr-white-70); }
+.apply__roles label { position: relative; cursor: pointer; }
+.apply__roles input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.apply__roles span {
+  display: inline-flex; align-items: center; height: 38px; padding: 0 1rem; border-radius: var(--radius);
+  border: 1px solid var(--color-line); font-size: .9375rem; font-weight: var(--fw-medium); color: var(--lr-white-70);
+  transition: border-color var(--dur-fast), color var(--dur-fast), background-color var(--dur-fast);
 }
-.copy__text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; font-weight: var(--fw-medium); user-select: all; }
-.copy__btn {
-  flex: none; height: 38px; padding: 0 1rem; border: 1px solid rgba(214,178,122,.55); border-radius: var(--radius);
-  background: transparent; color: var(--lr-gold-light); font-size: .8125rem; font-weight: var(--fw-semibold); cursor: pointer;
+.apply__roles input:checked + span { border-color: var(--lr-gold); background: rgba(214,178,122,.14); color: var(--lr-gold-light); }
+.apply__roles input:focus-visible + span { outline: 2px solid var(--lr-gold); outline-offset: 2px; }
+.apply__in {
+  width: 100%; height: 48px; padding: 0 1rem; border-radius: 14px; border: 1px solid var(--color-line);
+  background: rgba(255,255,255,.04); color: var(--lr-white); font: inherit; font-size: 1rem; outline: none;
+  transition: border-color var(--dur-fast);
 }
-.copy__btn.is-done { background: var(--lr-gold); color: var(--lr-black); border-color: var(--lr-gold); }
-@media (max-width: 359px) {
-  .copy { padding-left: .8rem; }
-  .copy__text { font-size: .8125rem; }
-  .copy__btn { padding: 0 .75rem; }
+.apply__in::placeholder { color: var(--lr-white-50); }
+.apply__in:focus { border-color: var(--lr-gold); }
+.apply__refs { height: auto; min-height: 72px; padding: .8rem 1rem; line-height: 1.45; resize: vertical; }
+.apply__file {
+  position: relative; display: grid; gap: .15rem; padding: .85rem 1rem; border-radius: 14px; cursor: pointer;
+  border: 1px dashed rgba(214,178,122,.55); background: rgba(214,178,122,.05); transition: border-color var(--dur-fast), background-color var(--dur-fast);
 }
+.apply__file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.apply__file-t { font-weight: var(--fw-semibold); color: var(--lr-gold-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.apply__file-s { font-size: .8125rem; color: var(--lr-white-50); }
+.apply__file.has-file { border-style: solid; background: rgba(214,178,122,.1); }
+.apply__file:focus-within { border-color: var(--lr-gold); }
+.apply .rsvp__btn { margin-top: .3rem; }
+.apply .form__msg { margin: .2rem 0 0; text-align: center; }
 
 /* ---------- Closing footer: the wordmark signs off ---------- */
 .end {

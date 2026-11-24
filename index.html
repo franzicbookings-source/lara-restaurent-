@@ -93,12 +93,15 @@
           <div class="countdown__unit"><b data-u="s">00</b><span>secs</span></div>
         </div>
 
-        <form class="form reveal reveal-3" id="waitlist-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="company" data-endpoint="" novalidate>
-          <input type="hidden" name="form-name" value="waitlist">
+        <form class="form reveal reveal-3" id="waitlist-form" novalidate>
           <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
+          <div class="via" role="radiogroup" aria-label="Get the invite by">
+            <button type="button" role="radio" aria-checked="true" data-via="email">Email</button>
+            <button type="button" role="radio" aria-checked="false" data-via="whatsapp">WhatsApp</button>
+          </div>
           <div class="field">
-            <label class="sr-only" for="email">Email address</label>
-            <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email for opening night" required>
+            <label class="sr-only" for="contact" id="contact-label">Your email</label>
+            <input id="contact" name="contact" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required>
             <button class="btn" type="submit">Get the invite</button>
           </div>
           <p class="form__msg" id="form-msg" role="status" aria-live="polite"></p>
@@ -135,8 +138,8 @@
   </main>
 
   <!-- We're hiring (assets/js/hiring.js): an invitation. A cream envelope sealed with black wax and
-       the gold emblem; the seal cracks, the flap opens and the card rises out. Tap a role to email
-       an application with the role as the subject. Link straight here with #hiring. -->
+       the gold emblem; the seal cracks, the flap opens and the card rises out. Tap a role to apply
+       online below. Link straight here with #hiring. -->
   <section class="hiring" id="hiring" aria-labelledby="hiring-title">
     <header class="hiring__head">
       <p class="hiring__aside">Oh, and one more thing…</p>
@@ -151,10 +154,10 @@
         <p class="inv-card__rule" aria-hidden="true"><svg viewBox="0 0 1206 1170"><use href="#sym-emblem" fill="url(#g-gold)"/></svg></p>
         <p class="inv-card__caps">for one of four seats</p>
         <ul class="inv-card__roles">
-              <li><a href="mailto:restaurantlaraza@gmail.com?subject=Manager" data-apply="Manager">Manager</a></li>
-              <li><a href="mailto:restaurantlaraza@gmail.com?subject=Barman" data-apply="Barman">Barman</a></li>
-              <li><a href="mailto:restaurantlaraza@gmail.com?subject=Hostess" data-apply="Hostess">Hostess</a></li>
-              <li><a href="mailto:restaurantlaraza@gmail.com?subject=General%20Workers" data-apply="General Workers">General Workers</a></li>
+              <li><a href="#apply" data-role="Manager">Manager</a></li>
+              <li><a href="#apply" data-role="Barman">Barman</a></li>
+              <li><a href="#apply" data-role="Hostess">Hostess</a></li>
+              <li><a href="#apply" data-role="General Workers">General Workers</a></li>
         </ul>
       </div>
       <div class="inv-env">
@@ -185,14 +188,34 @@
       <p class="inv-hint" aria-hidden="true">Looking for a fresh start? <b>Break the seal.</b></p>
     </div>
 
-    <div class="rsvp">
+    <div class="rsvp" id="apply">
       <p class="rsvp__need">1–2 years in hospitality · evenings, weekends &amp; public holidays</p>
-      <a class="btn rsvp__btn" href="mailto:restaurantlaraza@gmail.com" data-apply="">RSVP by email</a>
-      <div class="copy">
-        <span class="copy__text" id="cv-email">restaurantlaraza@gmail.com</span>
-        <button class="copy__btn" type="button" data-copy="cv-email">Copy</button>
-      </div>
-      <p class="rsvp__how">Your role as the subject, with your CV and two references.</p>
+      <form class="apply" id="apply-form" novalidate>
+        <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
+        <fieldset class="apply__roles">
+          <legend class="apply__legend">The role you’re applying for</legend>
+          <label><input type="radio" name="role" value="Manager"><span>Manager</span></label>
+          <label><input type="radio" name="role" value="Barman"><span>Barman</span></label>
+          <label><input type="radio" name="role" value="Hostess"><span>Hostess</span></label>
+          <label><input type="radio" name="role" value="General Workers"><span>General Workers</span></label>
+        </fieldset>
+        <label class="sr-only" for="ap-name">Full name</label>
+        <input class="apply__in" id="ap-name" name="name" autocomplete="name" placeholder="Full name" required>
+        <label class="sr-only" for="ap-email">Email</label>
+        <input class="apply__in" id="ap-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Email" required>
+        <label class="sr-only" for="ap-phone">WhatsApp number</label>
+        <input class="apply__in" id="ap-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="WhatsApp number" required>
+        <label class="apply__file" for="ap-cv">
+          <input id="ap-cv" name="cv" type="file" accept=".pdf,.doc,.docx,image/*">
+          <span class="apply__file-t" id="ap-cv-t">Attach your CV</span>
+          <small class="apply__file-s" id="ap-cv-s">PDF, Word or a photo · up to 4 MB</small>
+        </label>
+        <label class="sr-only" for="ap-refs">References</label>
+        <textarea class="apply__in apply__refs" id="ap-refs" name="refs" rows="2" placeholder="Two references: name and number (optional)"></textarea>
+        <button class="btn rsvp__btn" type="submit">Send my application</button>
+        <p class="form__msg" id="apply-msg" role="status" aria-live="polite"></p>
+      </form>
+      <p class="rsvp__how">Your details are only used for hiring at La Raza.</p>
     </div>
   </section>
 
