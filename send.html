@@ -102,12 +102,12 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
   </header>
 
   <section class="card try" aria-labelledby="try-h">
-    <h2 id="try-h">Example: Sabelo Ndlovu</h2>
-    <p>Tap Send. WhatsApp opens to this number with Sabelo's warm message and his own invitation link, ready to go. This is exactly what each guest below will get.</p>
+    <h2 id="try-h">Example: <span id="ex-name"></span></h2>
+    <p>Tap Send. WhatsApp opens to this number with the warm message and their own invitation link, ready to go. This is exactly what each guest below will get.</p>
     <div class="line">
-      <input class="f" id="test-num" type="tel" inputmode="tel" value="081 236 0230" aria-label="WhatsApp number for the example">
+      <input class="f" id="test-num" type="tel" inputmode="tel" value="" aria-label="WhatsApp number for the example">
       <a class="btn wa" id="test-send" target="_blank" rel="noopener">Send</a>
-      <a class="btn ghost" id="test-view" target="_blank" rel="noopener">View his invite</a>
+      <a class="btn ghost" id="test-view" target="_blank" rel="noopener">View the invite</a>
     </div>
   </section>
 
@@ -135,7 +135,7 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
   <div class="list" id="list"></div>
 </div>
 </div>
-<script src="/assets/invite/send-data.js?v=1795509342227"></script>
+<script src="/assets/invite/send-data.js?v=1795509376716"></script>
 <script>
 window.__start = function (ROWS, EXAMPLE) {
 
@@ -241,6 +241,8 @@ document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("clic
   document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
   render();
 }));
+$("#ex-name").textContent = EXAMPLE.name;
+$("#test-num").value = pretty(EXAMPLE.wa);
 testLink();
 render();
 
