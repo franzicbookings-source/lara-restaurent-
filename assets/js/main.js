@@ -55,24 +55,64 @@
     });
   }
 
-  /* ---------- Countdown to opening night (set data-opening on #countdown) ---------- */
+  /* ---------- Countdown: first to the big announcement, then (revealed live) to opening night ---------- */
   const cd = document.getElementById('countdown');
   if (cd) {
-    const target = new Date(cd.dataset.opening).getTime();
+    const label = document.getElementById('cd-label');
+    const dateLine = document.getElementById('cd-date');
+    const slot = document.getElementById('slot');
+    // ?reveal-preview plays the reveal 6 seconds after the page opens
+    const shift = /reveal-preview/.test(location.search) ? new Date(cd.dataset.reveal).getTime() - Date.now() - 6000 : 0;
+    const now = () => Date.now() + shift;
+    const REVEAL = new Date(cd.dataset.reveal).getTime();
+    const OPEN = Date.UTC(2026, 11, 2, 16, 0, 0); // opening night, 18:00 in South Africa
     const el = (u) => cd.querySelector(`[data-u="${u}"]`);
     const out = { d: el('d'), h: el('h'), m: el('m'), s: el('s') };
     const pad = (n) => String(n).padStart(2, '0');
-    const tick = () => {
-      let t = Math.max(0, Math.floor((target - Date.now()) / 1000));
-      if (t === 0) {
-        cd.classList.add('is-open');
-        if (ticker) ticker.innerHTML = '<span class="ticker__line is-on">Now open. Come and see us.</span>';
-        return false;
-      }
+    let phase = now() >= REVEAL ? 'open' : 'tease';
+    let spin = null;
+
+    const show = (target) => {
+      let t = Math.max(0, Math.floor((target - now()) / 1000));
       out.d.textContent = pad(Math.floor(t / 86400)); t %= 86400;
       out.h.textContent = pad(Math.floor(t / 3600)); t %= 3600;
       out.m.textContent = pad(Math.floor(t / 60));
       out.s.textContent = pad(t % 60);
+    };
+    const revealed = (animate) => {
+      if (spin) { clearInterval(spin); spin = null; }
+      slot.textContent = '2';
+      slot.removeAttribute('aria-label');
+      dateLine.innerHTML = 'Opening <span class="slot is-set">2</span> December · 18:00';
+      label.textContent = 'Opening night in';
+      cd.setAttribute('aria-label', 'Time until La Raza opens');
+      const td = document.getElementById('ticker-date'); if (td) td.textContent = 'Opening 2 December.';
+      const end = document.getElementById('end-line'); if (end) end.textContent = 'Opening 2 December · Newcastle';
+      if (animate && !reduced) { cd.classList.remove('is-flip'); void cd.offsetWidth; cd.classList.add('is-flip'); dateLine.classList.add('is-landed'); }
+    };
+
+    if (phase === 'tease') {
+      if (!reduced) spin = setInterval(() => { slot.textContent = pad(1 + Math.floor(Math.random() * 31)); }, 90);
+    } else {
+      revealed(false);
+    }
+
+    const tick = () => {
+      if (phase === 'tease') {
+        if (now() >= REVEAL) {
+          phase = 'open';
+          // land the spinning day on 02, then flip the countdown over to opening night
+          if (spin) { clearInterval(spin); spin = null; }
+          slot.textContent = '02'; slot.classList.add('is-set');
+          setTimeout(() => revealed(true), reduced ? 0 : 900);
+        } else return show(REVEAL), true;
+      }
+      if (now() >= OPEN) {
+        cd.classList.add('is-open'); label.hidden = true;
+        dateLine.textContent = 'Now open. Come and see us.';
+        return false;
+      }
+      show(OPEN);
       return true;
     };
     if (tick()) { const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000); }

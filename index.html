@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>La Raza — Restaurant &amp; cocktail lounge, opening 2 December in Newcastle</title>
-  <meta name="description" content="La Raza, a restaurant and cocktail lounge, opens in Newcastle on 2 December. Get the opening news first.">
+  <title>La Raza — Restaurant &amp; cocktail lounge, Newcastle</title>
+  <meta name="description" content="La Raza, a restaurant and cocktail lounge, is coming to Newcastle. Big announcement Wednesday 25 November at 19:00.">
   <meta name="theme-color" content="#0B0B0A">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="La Raza — Opening 2 December">
-  <meta property="og:description" content="A restaurant and cocktail lounge is coming to Newcastle. Doors open on 2 December.">
+  <meta property="og:title" content="La Raza — Big announcement · Wednesday, 19:00">
+  <meta property="og:description" content="Something big is coming to Newcastle. The countdown is on: Wednesday 25 November, 19:00.">
   <meta property="og:image" content="https://www.laraza.co.za/assets/img/og.jpg">
   <meta property="og:url" content="https://www.laraza.co.za/">
   <meta name="twitter:card" content="summary_large_image">
@@ -17,12 +17,12 @@
   <link rel="preload" href="assets/img/logo/emblem-gold.svg" as="image" type="image/svg+xml">
   <link rel="preload" href="assets/img/photo/hero-poster-portrait.jpg" as="image" media="(max-aspect-ratio: 4/5)">
   <link rel="preload" href="assets/img/photo/hero-poster.jpg" as="image" media="(min-aspect-ratio: 4.001/5)">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=24">
-  <link rel="stylesheet" href="assets/css/site.css?v=24">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=25">
+  <link rel="stylesheet" href="assets/css/site.css?v=25">
   <script>document.documentElement.classList.add('js');</script>
-  <script src="assets/js/swarm.js?v=24" defer></script>
-  <script src="assets/js/main.js?v=24" defer></script>
-  <script src="assets/js/hiring.js?v=24" defer></script>
+  <script src="assets/js/swarm.js?v=25" defer></script>
+  <script src="assets/js/main.js?v=25" defer></script>
+  <script src="assets/js/hiring.js?v=25" defer></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -80,18 +80,20 @@
           <p class="headline">Something extraordinary is coming to Newcastle.</p>
           <p class="ticker" id="ticker" aria-live="off">
             <span class="ticker__line is-on">A restaurant &amp; cocktail lounge.</span>
-            <span class="ticker__line">Opening 2 December.</span>
+            <span class="ticker__line" id="ticker-date">Big news Wednesday, 19:00.</span>
             <span class="ticker__line">Be first through the door.</span>
             <span class="ticker__line">Oh, and we’re hiring.</span>
           </p>
         </div>
 
-        <div class="countdown reveal reveal-2" id="countdown" data-opening="2026-12-02T18:00:00+02:00" role="timer" aria-label="Time until La Raza opens">
+        <p class="cd-label reveal reveal-2" id="cd-label">Big announcement in</p>
+        <div class="countdown reveal reveal-2" id="countdown" data-reveal="2026-11-25T19:00:00+02:00" role="timer" aria-label="Time until the big announcement">
           <div class="countdown__unit"><b data-u="d">00</b><span>days</span></div>
           <div class="countdown__unit"><b data-u="h">00</b><span>hours</span></div>
           <div class="countdown__unit"><b data-u="m">00</b><span>mins</span></div>
           <div class="countdown__unit"><b data-u="s">00</b><span>secs</span></div>
         </div>
+        <p class="cd-date reveal reveal-2" id="cd-date" aria-live="polite">Opening <span class="slot" id="slot" aria-label="a date we reveal on Wednesday">??</span> December</p>
 
         <form class="form reveal reveal-3" id="waitlist-form" action="/api/subscribe" method="post" novalidate>
           <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
@@ -217,7 +219,7 @@
 
   <footer class="end">
     <svg class="end__word" viewBox="0 0 2544 1170" role="img" aria-label="La Raza"><use href="#sym-word" fill="url(#g-gold)"/></svg>
-    <p class="end__line">Opening 2 December · Newcastle</p>
+    <p class="end__line" id="end-line">Newcastle · Big news Wednesday, 19:00</p>
     <ul class="socials">
       <li><a href="https://www.instagram.com/laraza_restaurant" target="_blank" rel="noopener" aria-label="La Raza on Instagram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a></li>
