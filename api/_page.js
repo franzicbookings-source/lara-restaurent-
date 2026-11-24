@@ -51,7 +51,7 @@ function head({ title, desc, og, url }) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/pinyon-script.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/invite/invite.css?v=3">
+<link rel="stylesheet" href="/assets/invite/invite.css?v=4">
 </head>`;
 }
 
@@ -65,8 +65,8 @@ export function page(slug, guest, origin) {
     ? "La Raza soft launch · Close friends only · Friday 27 November, 17:00"
     : "A private preview of La Raza · Friday 27 November, 17:00";
   const num = String(no).padStart(3, "0");
-  const yes = wa(friend ? `It’s ${name}. Say less, I’m there on Friday 🖤` : `Hi, it’s ${name}. I’ll be there on Friday 27 November 🖤`);
-  const no_ = wa(friend ? `It’s ${name}. I can’t make it on Friday 😩` : `Hi, it’s ${name}. Sadly I can’t make it on Friday 27 November.`);
+  const yes = wa(friend ? `It’s ${name}. Say less, I’m there on Friday 🖤` : `Hi, it’s ${name}. I joyfully accept, see you on Friday 27 November 🖤`);
+  const no_ = wa(friend ? `It’s ${name}. I can’t make it on Friday 😩` : `Hi, it’s ${name}. I regretfully can’t make it on Friday 27 November, but thank you so much for the invitation.`);
   const data = JSON.stringify({ slug, name, first, kind, iso: EVENT.iso }).replace(/</g, "\\u003c");
 
   const opener = friend ? `
@@ -110,74 +110,63 @@ export function page(slug, guest, origin) {
     <p class="hint">Tap the seal to open</p>
   </section>`;
 
-  const card = friend ? `
-    <div class="gold-big rise">
-      <i class="in2"></i>
-      <span class="gc-k">La Raza · Soft launch</span>
-      <span class="gc-d">Fri 27 Nov</span>
-      <span class="gc-t">Doors 17:00</span>
-      <img class="gc-e" src="/assets/img/logo/emblem-mono.svg" alt="">
-      <i class="sheen"></i>
-    </div>
-    <h1 class="see rise">See you Friday,<br><span class="foil fit" data-max="76">${esc(name)}</span></h1>
-    <p class="sub rise">Close friends only. You made the list.</p>` : `
-    <div class="card rise">
-      <i class="in2"></i>
-      <img class="c-emb" src="/assets/img/logo/emblem-gold.svg" alt="">
-      <p class="c-k">A private preview for</p>
-      <p class="c-name fit" data-max="54">${esc(name)}</p>
-      <i class="c-rule"></i>
-      <p class="c-date">Friday · 27 November · 17:00</p>
-      <img class="c-word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
-      <i class="sheen"></i>
-    </div>
-    <h1 class="lede rise">You’re first.</h1>
-    <p class="sub rise">Before the doors open to Newcastle, they open&nbsp;for&nbsp;you.</p>`;
+  const front = friend ? `
+        <p class="g-k">La Raza · Soft launch</p>
+        <img class="g-emb" src="/assets/img/logo/emblem-mono.svg" alt="">
+        <div class="g-mid"><p class="g-name fit" data-cq="19">${esc(name)},</p><p class="g-sub">you made the list.</p></div>
+        <div class="g-bot"><p class="g-date">Fri 27 Nov</p><p class="g-t">Doors 17:00 · Formal, all black</p></div>` : `
+        <img class="f-emb" src="/assets/img/logo/emblem-gold.svg" alt="">
+        <img class="f-word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
+        <p class="f-req">requests the pleasure of the company of</p>
+        <p class="f-name fit" data-cq="16.5">${esc(name)}</p>
+        <p class="f-req">at a private preview</p>
+        <p class="f-when">Friday, the twenty-seventh of November<br>at five o’clock in the evening</p>
+        <i class="f-rule"></i>
+        <p class="f-meta">Newcastle<br>Formal · All black</p>`;
+
+  const back = friend ? `
+        <p class="g-k">Door pass</p>
+        <img class="g-emb" src="/assets/img/logo/emblem-mono.svg" alt="">
+        <div class="g-mid"><p class="g-no">${num}</p><p class="g-sub">Show this at the door, ${esc(name)}.</p></div>
+        <div class="g-bot"><p class="g-t">Fri 27 Nov · 17:00 · Close friends only</p></div>` : `
+        <p class="f-meta">Door pass</p>
+        <p class="b-name fit" data-cq="13">${esc(name)}</p>
+        <p class="b-no"><small>Nº</small>${num}</p>
+        <p class="f-req">Kindly show this at the door</p>
+        <i class="f-rule"></i>
+        <p class="f-meta">Friday 27 November · 17:00</p>
+        <img class="b-word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">`;
 
   return `${head({ title, desc, og: `${origin}/i/${slug}/og.png`, url })}
 <body class="${friend ? "k-f" : "k-v"}">
 ${SPRITE}
 <main>
 ${opener}
-  <section class="invite" id="invite" aria-label="Invitation details">
-${card}
-    <div class="count rise" id="count" aria-label="Time until doors open">
-      <p class="count-k">Doors open in</p>
-      <div class="count-row"><span><b id="cd-d">0</b><small>days</small></span><span><b id="cd-h">00</b><small>hrs</small></span><span><b id="cd-m">00</b><small>min</small></span><span><b id="cd-s">00</b><small>sec</small></span></div>
-    </div>
-
-    <dl class="facts rise">
-      <div><dt>When</dt><dd>Friday 27 November · 17:00</dd></div>
-      <div><dt>Dress</dt><dd>Formal · All black</dd></div>
-      <div><dt>Entry</dt><dd>${friend ? "Close friends only" : "By invitation only"}</dd></div>
-      <div><dt>Where</dt><dd>La Raza, Newcastle<br><small>Exact location comes with your reminder</small></dd></div>
-    </dl>
-
-    <div class="rsvp rise">
-      <a class="btn gold" href="${esc(yes)}" target="_blank" rel="noopener">${friend ? "Say less. I’m there" : "I’ll be there"}</a>
-      <a class="btn line" href="${esc(no_)}" target="_blank" rel="noopener">${friend ? "Can’t make it" : "Sadly, I can’t make it"}</a>
-      <p class="by">Kindly reply by ${EVENT.rsvpBy} · ${EVENT.phone}</p>
-      <a class="cal" id="cal" href="/assets/invite/la-raza-soft-launch.ics">Add to calendar</a>
-    </div>
-
-    <div class="ticket rise" aria-label="Your door pass">
-      <div class="t-main">
-        <p class="t-k">Show this at the door</p>
-        <p class="t-name">${esc(name)}</p>
-        <p class="t-d">Fri 27 Nov · 17:00 · ${friend ? "Friend of the house" : "Private preview"}</p>
+  <section class="invite" id="invite" aria-label="Your invitation">
+    <p class="doors rise" id="doors">Doors open on Friday</p>
+    <div class="stage rise">
+      <div class="card" id="card" role="button" tabindex="0" aria-label="Turn the card over for your door pass">
+        <div class="face front"><i class="in2"></i>${front}
+          <i class="sheen"></i>
+        </div>
+        <div class="face back"><i class="in2"></i>${back}
+        </div>
       </div>
-      <div class="t-stub"><p class="t-k">Guest</p><p class="t-no">${num}</p></div>
     </div>
-
-    <footer class="foot">
-      <img src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
-      <p>Restaurant &amp; cocktail lounge · Newcastle</p>
-      <button type="button" class="again" id="again">${friend ? "Replay the message" : "Open the envelope again"}</button>
-    </footer>
+    <p class="reply rise">${friend ? "Let us know by Wednesday" : "Kindly reply by Wednesday, the twenty-fifth"}</p>
+    <div class="rsvp rise">
+      <a class="btn gold" href="${esc(yes)}" target="_blank" rel="noopener">${friend ? "Say less. I’m there" : "Joyfully accept"}</a>
+      <a class="decline" href="${esc(no_)}" target="_blank" rel="noopener">${friend ? "Can’t make it" : "Regretfully decline"}</a>
+    </div>
+    <p class="links rise">
+      <button type="button" id="flip">Door pass</button>
+      <a id="cal" href="/assets/invite/la-raza-soft-launch.ics">Calendar</a>
+      <button type="button" id="again">Replay</button>
+    </p>
   </section>
 </main>
 <script>window.LR=${data}</script>
-<script src="/assets/invite/invite.js?v=3" defer></script>
+<script src="/assets/invite/invite.js?v=4" defer></script>
 </body>
 </html>`;
 }

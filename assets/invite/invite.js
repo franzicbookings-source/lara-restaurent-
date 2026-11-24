@@ -13,9 +13,11 @@
   // shrink a single-line name until it fits its box
   function fit() {
     document.querySelectorAll(".fit").forEach(function (el) {
-      var max = +el.getAttribute("data-max") || 60, s = max, box = el.parentElement.clientWidth * 0.94;
+      var face = el.closest(".face"), cq = +el.getAttribute("data-cq");
+      var max = cq && face ? face.clientWidth * cq / 100 : (+el.getAttribute("data-max") || 60), s = max;
+      var box = (face ? face.clientWidth * 0.82 : el.parentElement.clientWidth * 0.94);
       el.style.fontSize = s + "px";
-      while (el.scrollWidth > box && s > 18) { s -= 1; el.style.fontSize = s + "px"; }
+      while (el.scrollWidth > box && s > 14) { s -= 1; el.style.fontSize = s + "px"; }
     });
   }
 
@@ -29,17 +31,32 @@
     tick();
   }
 
-  // live countdown to doors
+  // one quiet line: how long until the doors open
   var target = new Date(D.iso).getTime(), timer;
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
   function tick() {
-    var left = Math.max(0, target - Date.now());
-    var d = Math.floor(left / 864e5), h = Math.floor(left / 36e5) % 24, m = Math.floor(left / 6e4) % 60, s = Math.floor(left / 1e3) % 60;
-    var set = function (id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
-    set("cd-d", d); set("cd-h", pad(h)); set("cd-m", pad(m)); set("cd-s", pad(s));
-    if (left === 0) { var k = document.querySelector(".count-k"); if (k) k.textContent = "Tonight · the doors are open"; return; }
-    clearTimeout(timer); timer = setTimeout(tick, 1000);
+    var el = document.getElementById("doors"); if (!el) return;
+    var left = target - Date.now();
+    var d = Math.floor(left / 864e5), h = Math.floor(left / 36e5) % 24, m = Math.floor(left / 6e4) % 60;
+    if (left <= 0) el.textContent = "Tonight · the doors are open";
+    else if (d >= 1) el.textContent = "Doors open in " + plural(d, "day") + (h ? ", " + plural(h, "hour") : "");
+    else if (h >= 1) el.textContent = "Doors open in " + plural(h, "hour") + (m ? ", " + plural(m, "minute") : "");
+    else el.textContent = "Doors open in " + plural(Math.max(1, m), "minute");
+    clearTimeout(timer); if (left > 0) timer = setTimeout(tick, 30000);
   }
+
+  // the card turns over to the door pass
+  var card = document.getElementById("card"), flipBtn = document.getElementById("flip");
+  function flip() {
+    var on = card.classList.toggle("flipped");
+    if (flipBtn) flipBtn.textContent = on ? "Invitation" : "Door pass";
+    card.setAttribute("aria-label", on ? "Turn the card back to the invitation" : "Turn the card over for your door pass");
+  }
+  if (card) {
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } });
+  }
+  if (flipBtn) flipBtn.addEventListener("click", flip);
 
   // calendar: Apple devices take the .ics file, everyone else gets Google Calendar
   var cal = document.getElementById("cal");
