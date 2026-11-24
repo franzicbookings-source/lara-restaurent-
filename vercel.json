@@ -2,6 +2,15 @@
   "cleanUrls": true,
   "headers": [
     {
+      "source": "/assets/invite/(.*).ics",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/calendar; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/assets/(css|js|fonts)/(.*)",
       "headers": [
         {
@@ -31,6 +40,16 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/i/:slug/og.png",
+      "destination": "/api/og?slug=:slug"
+    },
+    {
+      "source": "/i/:slug",
+      "destination": "/api/invite?slug=:slug"
     }
   ]
 }
