@@ -17,12 +17,12 @@
   <link rel="preload" href="assets/img/logo/emblem-gold.svg" as="image" type="image/svg+xml">
   <link rel="preload" href="assets/img/photo/hero-poster-portrait.jpg" as="image" media="(max-aspect-ratio: 4/5)">
   <link rel="preload" href="assets/img/photo/hero-poster.jpg" as="image" media="(min-aspect-ratio: 4.001/5)">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=23">
-  <link rel="stylesheet" href="assets/css/site.css?v=23">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=24">
+  <link rel="stylesheet" href="assets/css/site.css?v=24">
   <script>document.documentElement.classList.add('js');</script>
-  <script src="assets/js/swarm.js?v=23" defer></script>
-  <script src="assets/js/main.js?v=23" defer></script>
-  <script src="assets/js/hiring.js?v=23" defer></script>
+  <script src="assets/js/swarm.js?v=24" defer></script>
+  <script src="assets/js/main.js?v=24" defer></script>
+  <script src="assets/js/hiring.js?v=24" defer></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -93,7 +93,7 @@
           <div class="countdown__unit"><b data-u="s">00</b><span>secs</span></div>
         </div>
 
-        <form class="form reveal reveal-3" id="waitlist-form" novalidate>
+        <form class="form reveal reveal-3" id="waitlist-form" action="/api/subscribe" method="post" novalidate>
           <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
           <div class="field">
             <label class="sr-only" for="contact">Your email or WhatsApp number</label>
@@ -186,7 +186,7 @@
 
     <div class="rsvp" id="apply">
       <p class="rsvp__need">1–2 years in hospitality · evenings, weekends &amp; public holidays</p>
-      <form class="apply" id="apply-form" novalidate>
+      <form class="apply" id="apply-form" action="/api/apply" method="post" enctype="multipart/form-data" novalidate>
         <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
         <fieldset class="apply__roles">
           <legend class="apply__legend">The role you’re applying for</legend>
@@ -227,5 +227,17 @@
     <p class="end__copy">© <span id="year">2026</span> La Raza</p>
   </footer>
 
+  <script>
+    // After a form was sent without the page script (an old cached copy), show the result.
+    (function () {
+      var q = new URLSearchParams(location.search), m, el;
+      if (q.has('applied') || q.has('apply_error')) { el = document.getElementById('apply-msg'); m = q.get('apply_error'); }
+      else if (q.has('subscribed') || q.has('subscribe_error')) { el = document.getElementById('form-msg'); m = q.get('subscribe_error'); }
+      if (!el) return;
+      el.textContent = m || (q.has('applied') ? 'Thank you. We’ve received your application and will be in touch.' : 'You’re subscribed. We’ll keep you posted.');
+      el.className = 'form__msg ' + (m ? 'is-err' : 'is-ok');
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+    })();
+  </script>
 </body>
 </html>

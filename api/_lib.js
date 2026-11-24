@@ -162,3 +162,7 @@ function guessType(p) {
   return { pdf: "application/pdf", doc: "application/msword", docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", heic: "image/heic", json: "application/json" }[ext] || "application/octet-stream";
 }
+
+// A form posted without the page script expects a page back, not JSON
+export const wantsPage = (request) => (request.headers.get("accept") || "").includes("text/html");
+export const backTo = (hash, params) => new Response(null, { status: 303, headers: { location: "/?" + new URLSearchParams(params).toString() + "#" + hash, "cache-control": "no-store" } });

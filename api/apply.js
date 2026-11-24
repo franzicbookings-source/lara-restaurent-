@@ -1,5 +1,5 @@
 // Job applications: the form fields plus the CV file, stored privately for the hiring dashboard.
-import { json, clean, cleanText, validEmail, validPhone, putJSON, putFile, newId, ROLES } from "./_lib.js";
+import { json as sendJSON, clean, cleanText, validEmail, validPhone, putJSON, putFile, newId, ROLES, wantsPage, backTo } from "./_lib.js";
 
 const MAX = 4 * 1024 * 1024;
 const TYPES = {
@@ -10,6 +10,8 @@ const TYPES = {
 };
 
 export async function POST(request) {
+  const page = wantsPage(request);
+  const json = (d, status) => (page ? backTo("apply", d.ok ? { applied: "1" } : { apply_error: d.error }) : sendJSON(d, status));
   let form;
   try { form = await request.formData(); } catch {
     return json({ ok: false, error: "Your CV may be too big. Keep it under 4 MB and try again." }, 400);
