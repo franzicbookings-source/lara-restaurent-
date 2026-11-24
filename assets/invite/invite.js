@@ -13,11 +13,9 @@
   // shrink a single-line name until it fits its box
   function fit() {
     document.querySelectorAll(".fit").forEach(function (el) {
-      var face = el.closest(".face"), cq = +el.getAttribute("data-cq");
-      var max = cq && face ? face.clientWidth * cq / 100 : (+el.getAttribute("data-max") || 60), s = max;
-      var box = (face ? face.clientWidth * 0.82 : el.parentElement.clientWidth * 0.94);
+      var max = +el.getAttribute("data-max") || 60, s = max, box = el.parentElement.clientWidth * 0.94;
       el.style.fontSize = s + "px";
-      while (el.scrollWidth > box && s > 14) { s -= 1; el.style.fontSize = s + "px"; }
+      while (el.scrollWidth > box && s > 18) { s -= 1; el.style.fontSize = s + "px"; }
     });
   }
 
@@ -45,19 +43,6 @@
     clearTimeout(timer); if (left > 0) timer = setTimeout(tick, 30000);
   }
 
-  // the card turns over to the door pass
-  var card = document.getElementById("card"), flipBtn = document.getElementById("flip");
-  function flip() {
-    var on = card.classList.toggle("flipped");
-    if (flipBtn) flipBtn.textContent = on ? "Invitation" : "Door pass";
-    card.setAttribute("aria-label", on ? "Turn the card back to the invitation" : "Turn the card over for your door pass");
-  }
-  if (card) {
-    card.addEventListener("click", flip);
-    card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } });
-  }
-  if (flipBtn) flipBtn.addEventListener("click", flip);
-
   // calendar: Apple devices take the .ics file, everyone else gets Google Calendar
   var cal = document.getElementById("cal");
   if (cal && !/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)) {
@@ -74,7 +59,6 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   var opener = document.getElementById("open");
   if (!opener) { tick(); return; }
-  if (store.get()) { show(true); return; }
 
   if (D.kind === "f") {
     // the chat plays itself, then the gold card waits to be tapped
