@@ -25,7 +25,7 @@ export default async function handler(req) {
     { name: "Manrope", data: m800, weight: 800, style: "normal" },
   ];
   const name = guest ? guest[0] : "";
-  const friend = guest && guest[2] === "f";
+  const friend = guest && (guest[2] === "f" || guest[2] === "sd");
 
   const frame = (card) => el("div", { width: "100%", height: "100%", alignItems: "center", justifyContent: "center", background: "#F3ECE1" }, card);
 

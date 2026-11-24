@@ -86,7 +86,7 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
 <body>
 <div class="lock" id="lock">
   <img src="/assets/img/logo/emblem-gold.svg" alt="">
-  <h1>Invite list</h1>
+  <h1>Sphe D’s list</h1>
   <p id="lock-msg">Opening…</p>
   <form id="lock-form" hidden>
     <input class="f" id="pass" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="xxxx-xxxx-xxxx" aria-label="Passcode">
@@ -129,19 +129,22 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
     <textarea id="t-v"></textarea>
     <label for="t-f">Friends</label>
     <textarea id="t-f"></textarea>
+    <label for="t-sd">Sphe D’s friends</label>
+    <textarea id="t-sd"></textarea>
     <p class="note">{name} becomes the guest's name and {link} their personal invitation. Changes are saved on this device. <button type="button" class="num" id="reset">Go back to the original wording</button></p>
   </details>
 
   <div class="list" id="list"></div>
 </div>
 </div>
-<script src="/assets/invite/send-data.js?v=1795524015157"></script>
+<script src="/assets/invite/send-data.js?v=1795539349284"></script>
 <script>
 window.__start = function (ROWS, EXAMPLE) {
 
 const DEF = {
   v: "Hi {name} 🖤\n\nWe’d love for you to be one of the very first people through our doors.\n\nBefore La Raza opens to Newcastle, we’re hosting a small private evening for the people who matter most to us, and you’re on that list.\n\nFriday 27 November · 17:00\nFormal · All black\n\nYour personal invitation is here:\n{link}\n\nIt would mean a lot to have you with us. Kindly let us know by Wednesday.\n\nWarm regards,\nThe La Raza family",
-  f: "{name}! 🖤\n\nFriday is a big one for us. We’re opening La Raza to our closest people before anyone else, and it wouldn’t feel right without you.\n\nTap this, it’s yours:\n{link}\n\nWear black. See you Friday?"
+  f: "{name}! 🖤\n\nFriday is a big one for us. We’re opening La Raza to our closest people before anyone else, and it wouldn’t feel right without you.\n\nTap this, it’s yours:\n{link}\n\nWear black. See you Friday?",
+  sd: "{name}! It’s Sphe D 😂\n\nSomething big is opening in Newcastle on Friday and I put your name on the list. Don’t embarrass me.\n\nYour invite is here:\n{link}\n\nWear black. Not ‘black-ish’. BLACK. 🖤"
 };
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
@@ -150,7 +153,7 @@ const store = {
 };
 let sent = store.get("lr-sent", {});
 let local = store.get("lr-num", {});
-const tpl = { v: store.get("lr-tpl2-v", DEF.v), f: store.get("lr-tpl2-f", DEF.f) };
+const tpl = { v: store.get("lr-tpl2-v", DEF.v), f: store.get("lr-tpl2-f", DEF.f), sd: store.get("lr-tpl2-sd", DEF.sd) };
 let filter = "all", editing = null;
 const $ = (s) => document.querySelector(s);
 
@@ -185,7 +188,7 @@ function render() {
       </div>`;
     const b = row.querySelector("b");
     b.textContent = r.name;
-    if (r.kind === "f") { const t = document.createElement("span"); t.className = "tag"; t.textContent = "Friend"; b.appendChild(t); }
+    if (r.kind !== "v") { const t = document.createElement("span"); t.className = "tag"; t.textContent = r.kind === "sd" ? "Sphe D" : "Friend"; b.appendChild(t); }
     const who = row.querySelector(".who");
     if (editing === r.no) {
       const inp = document.createElement("input");
@@ -229,11 +232,11 @@ function copy(text, btn) {
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
 }
 function testLink() { $("#test-send").href = waLink(norm($("#test-num").value), msg(EXAMPLE)); $("#test-view").href = EXAMPLE.url; }
-for (const k of ["v", "f"]) {
+for (const k of ["v", "f", "sd"]) {
   const t = $("#t-" + k); t.value = tpl[k];
   t.addEventListener("input", () => { tpl[k] = t.value || DEF[k]; store.set("lr-tpl2-" + k, tpl[k]); render(); testLink(); });
 }
-$("#reset").addEventListener("click", () => { for (const k of ["v", "f"]) { tpl[k] = DEF[k]; $("#t-" + k).value = DEF[k]; store.del("lr-tpl2-" + k); } render(); testLink(); });
+$("#reset").addEventListener("click", () => { for (const k of ["v", "f", "sd"]) { tpl[k] = DEF[k]; $("#t-" + k).value = DEF[k]; store.del("lr-tpl2-" + k); } render(); testLink(); });
 $("#test-num").addEventListener("input", testLink);
 $("#q").addEventListener("input", render);
 document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
@@ -248,7 +251,7 @@ render();
 
 };
 (function () {
-  var KEY = "lr-send-pass";
+  var KEY = "lr-send-pass-" + location.pathname;
   var b = function (s) { return Uint8Array.from(atob(s), function (ch) { return ch.charCodeAt(0); }); };
   async function unlock(pass) {
     var D = window.LR_SEND, enc = new TextEncoder();

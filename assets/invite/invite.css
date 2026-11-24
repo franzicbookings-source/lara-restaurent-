@@ -65,6 +65,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: rgba(251,248,241,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(10px); }
 .chat-hdr .av { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #3a332c, #14110e 70%); box-shadow: inset 0 0 0 1.5px rgba(214,178,122,.55); }
 .chat-hdr .av img { width: 24px; }
+.chat-hdr .av .ini { font-size: 15px; font-weight: 800; color: #E9C78D; letter-spacing: .02em; }
 .chat-hdr b { display: block; font-size: 17px; }
 .chat-hdr small { display: block; font-size: 13px; font-weight: 600; color: #7f8a5c; }
 .chat-hdr small.ty { color: var(--gold); }

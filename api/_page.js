@@ -12,7 +12,7 @@ export const EVENT = {
 const enc = new TextEncoder();
 const hex = (buf) => Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
 
-// slug -> [name, guest number, "v" (business) | "f" (friend)], or null
+// slug -> [name, guest number, "v" (business) | "f" (friend) | "sd" (friend invited by Sphe D)], or null
 export async function findGuest(slug) {
   if (!slug || slug.length > 80) return null;
   const blob = DATA[hex(await crypto.subtle.digest("SHA-256", enc.encode(slug))).slice(0, 32)];
@@ -51,17 +51,21 @@ function head({ title, desc, og, url }) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/pinyon-script.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/invite/invite.css?v=5">
+<link rel="stylesheet" href="/assets/invite/invite.css?v=6">
 </head>`;
 }
 
 export function page(slug, guest, origin) {
   const [name, no, kind] = guest;
+  const sphe = kind === "sd";
+  const friend = kind === "f" || sphe;
   const first = kind === "f" ? name : name.replace(/^(Dr|Mr|Mrs|Ms|Prof)\.?\s+/i, "").split(/\s+/)[0];
-  const friend = kind === "f";
+  const from = sphe ? "Sphe D" : "La Raza";
   const url = `${origin}/i/${slug}`;
   const title = friend ? `${name}, you made the list` : `${name}, you’re invited`;
-  const desc = friend
+  const desc = sphe
+    ? "Sphe D put your name on the list · La Raza soft launch · Friday 27 November, 17:00"
+    : friend
     ? "La Raza soft launch · Close friends only · Friday 27 November, 17:00"
     : "A private preview of La Raza · Friday 27 November, 17:00";
   const num = String(no).padStart(3, "0");
@@ -70,17 +74,19 @@ export function page(slug, guest, origin) {
   const data = JSON.stringify({ slug, name, first, kind, iso: EVENT.iso }).replace(/</g, "\\u003c");
 
   const opener = friend ? `
-  <section class="scene chat" id="opener" aria-label="A message from La Raza">
+  <section class="scene chat" id="opener" aria-label="A message from ${from}">
     <header class="chat-hdr">
-      <span class="av"><img src="/assets/img/logo/emblem-gold.svg" alt=""></span>
-      <span><b>La Raza</b><small id="chat-st">online</small></span>
+      <span class="av">${sphe ? '<b class="ini">SD</b>' : '<img src="/assets/img/logo/emblem-gold.svg" alt="">'}</span>
+      <span><b>${from}</b><small id="chat-st">online</small></span>
     </header>
     <div class="thread" id="thread">
       <p class="chip">Today</p>
       <p class="b in">${esc(first)}.</p>
-      <p class="b in">You free Friday night?</p>
+      ${sphe ? `<p class="b in">You free Friday or you’re still “busy” 👀</p>
+      <p class="b in">Something big is opening in Newcastle and I put your name on the list. Don’t embarrass me.</p>
+      <p class="b in">Wear black. Not ‘black-ish’. BLACK.</p>` : `<p class="b in">You free Friday night?</p>
       <p class="b in">We’re opening our doors before anyone else.</p>
-      <p class="b in">Soft launch. Close friends only. You made the list.</p>
+      <p class="b in">Soft launch. Close friends only. You made the list.</p>`}
       <button class="b gold-card" id="open" type="button" aria-label="Open your invite">
         <span class="gc-k">La Raza · Soft launch</span>
         <span class="gc-d">Fri 27 Nov</span>
@@ -120,7 +126,7 @@ export function page(slug, guest, origin) {
       <i class="sheen"></i>
     </div>
     <h1 class="see rise">See you Friday,<br><span class="foil fit" data-max="76">${esc(name)}</span></h1>
-    <p class="sub rise">Close friends only. You made the list.</p>` : `
+    <p class="sub rise">${sphe ? "Don’t be late, I’m not saving you a seat 😂 · Sphe D" : "Close friends only. You made the list."}</p>` : `
     <div class="card rise">
       <i class="in2"></i>
       <img class="c-emb" src="/assets/img/logo/emblem-gold.svg" alt="">
