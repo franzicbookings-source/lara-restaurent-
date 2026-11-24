@@ -51,11 +51,11 @@ function head({ title, desc, og, url }) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/pinyon-script.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/invite/invite.css?v=7">
+<link rel="stylesheet" href="/assets/invite/invite.css?v=8">
 </head>`;
 }
 
-export function page(slug, guest, origin) {
+export function page(slug, guest, origin, vid = "") {
   const [name, no, kind] = guest;
   const sphe = kind === "sd";
   const friend = kind === "f" || sphe;
@@ -76,7 +76,7 @@ export function page(slug, guest, origin) {
   const opener = sphe ? `
   <section class="film" id="film" aria-label="A message from Sphe D">
     <div class="iphone"><div class="iphone__screen" id="screen">
-      <iframe id="film-frame" src="/assets/film-sphe/index.html?name=${encodeURIComponent(first)}" title="A message from Sphe D" scrolling="no" tabindex="-1"></iframe>
+      <video id="film-video" src="/assets/v/${vid}.mp4" autoplay muted playsinline preload="auto"></video>
     </div><i class="iphone__island"></i></div>
     <div class="film__btns">
       <button type="button" class="film-btn" id="sound">🔊 Tap for sound</button>
@@ -175,7 +175,7 @@ ${card}
   </section>
 </main>
 <script>window.LR=${data}</script>
-<script src="/assets/invite/invite.js?v=7" defer></script>
+<script src="/assets/invite/invite.js?v=8" defer></script>
 </body>
 </html>`;
 }
@@ -193,4 +193,9 @@ export function notFound(origin) {
 </main>
 </body>
 </html>`;
+}
+
+// The file name of a guest's personal video (not guessable from their name)
+export async function videoId(slug) {
+  return hex(await crypto.subtle.digest("SHA-256", enc.encode("lr-video:" + slug))).slice(0, 24);
 }

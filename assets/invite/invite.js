@@ -57,16 +57,14 @@
 
   fit();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-  // Sphe D's friends: his chat film plays on the iPhone; sound and replay on request
-  var frame = document.getElementById("film-frame");
-  if (frame) {
-    var screen = document.getElementById("screen"), soundBtn = document.getElementById("sound"), replayBtn = document.getElementById("replay");
-    var scale = function () { frame.style.transform = "scale(" + screen.clientWidth / 1080 + ")"; };
-    scale(); addEventListener("resize", scale);
-    var post = function (m) { try { frame.contentWindow.postMessage(m, "*"); } catch (e) {} };
-    soundBtn.addEventListener("click", function () { post("lr-sound"); soundBtn.hidden = true; });
-    replayBtn.addEventListener("click", function () { post("lr-replay"); replayBtn.hidden = true; });
-    addEventListener("message", function (e) { if (e.data === "lr-film-done") replayBtn.hidden = false; });
+  // Sphe D's friends: their personal video plays on the iPhone; sound and replay on request
+  var film = document.getElementById("film-video");
+  if (film) {
+    var soundBtn = document.getElementById("sound"), replayBtn = document.getElementById("replay");
+    var p = film.play(); if (p && p.catch) p.catch(function () {});
+    soundBtn.addEventListener("click", function () { film.muted = false; film.currentTime = 0; film.play(); soundBtn.hidden = true; });
+    replayBtn.addEventListener("click", function () { film.currentTime = 0; film.play(); replayBtn.hidden = true; });
+    film.addEventListener("ended", function () { replayBtn.hidden = false; });
     tick();
   }
   var opener = document.getElementById("open");
