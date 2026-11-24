@@ -9,6 +9,16 @@ export async function GET(request) {
   const action = act(request);
   const url = new URL(request.url);
   if (action === "session") return json({ ok: await isSignedIn(request) });
+  if (action === "health") {
+    // Storage self-check: write, read back and remove one tiny file (no personal data)
+    try {
+      const stamp = new Date().toISOString();
+      await putJSON("health/ping.json", { stamp }, { overwrite: true });
+      const back = await getJSON("health/ping.json");
+      await remove(["health/ping.json"]);
+      return json({ ok: !!back && back.stamp === stamp });
+    } catch (err) { return json({ ok: false, error: String(err && err.message || err).slice(0, 200) }, 500); }
+  }
   if (!(await isSignedIn(request))) return denied();
 
   if (action === "apps") {
