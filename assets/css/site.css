@@ -111,20 +111,6 @@ button, input { font: inherit; color: inherit; }
 }
 .field input::placeholder { color: var(--lr-white-50); }
 .field .btn { flex: none; width: auto; height: 46px; padding: 0 1.15rem; }
-/* Email or WhatsApp: two quiet words above the field */
-.via { display: flex; justify-content: center; gap: 1.4rem; margin: 0 0 .7rem; }
-.via button {
-  position: relative; padding: .3rem 0; border: 0; background: none; cursor: pointer;
-  font: inherit; font-size: .875rem; font-weight: var(--fw-semibold); letter-spacing: .02em; color: var(--lr-white-50);
-  transition: color var(--dur-fast);
-}
-.via button::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; border-radius: 2px;
-  background: var(--lr-gold); transform: scaleX(0); transition: transform var(--dur-fast);
-}
-.via button[aria-checked="true"] { color: var(--lr-gold-light); }
-.via button[aria-checked="true"]::after { transform: scaleX(1); }
-.via button:focus-visible { outline: 2px solid var(--lr-gold); outline-offset: 4px; border-radius: 4px; }
 @media (max-width: 359px) {
   .field input { padding-left: .9rem; font-size: .9375rem; }
   .field .btn { padding: 0 .9rem; font-size: .875rem; }
@@ -138,7 +124,8 @@ button, input { font: inherit; color: inherit; }
 .btn:hover { background: var(--lr-gold-light); }
 .btn:active { transform: scale(.97); }
 .btn:disabled { opacity: .7; cursor: default; }
-.form__msg { min-height: 1.5em; margin: .5rem 0 -.5rem; font-size: var(--fs-small); color: var(--color-text-muted); }
+.form__msg { min-height: 1.5em; margin: .6rem 0 -.5rem; font-size: var(--fs-small); color: var(--lr-white-50); text-align: center; }
+.form__msg.is-hint { color: var(--lr-white-70); }
 .form__msg.is-ok { color: var(--lr-gold-light); }
 .form__msg.is-err { color: var(--color-error); }
 

@@ -1,5 +1,5 @@
 // Hiring dashboard API (one shared password). ?action= session | login | logout | apps | update | delete | cv | subs | subs-csv
-import { json, isSignedIn, checkPassword, sessionCookie, clearCookie, listPaths, getMany, getJSON, putJSON, getFile, remove, STATUSES, cleanText, clean } from "./_lib.js";
+import { json, isSignedIn, checkPassword, sessionCookie, clearCookie, listPaths, getMany, getJSON, putJSON, getFile, remove, exists, sha, validEmail, validPhone, STATUSES, cleanText, clean } from "./_lib.js";
 
 const act = (request) => new URL(request.url).searchParams.get("action") || "";
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -35,7 +35,9 @@ export async function GET(request) {
     return new Response(file.body, { headers: { "content-type": file.type, "content-disposition": `${disp}; filename="${fname}"`, "cache-control": "private, no-store", "x-robots-tag": "noindex" } });
   }
   if (action === "subs" || action === "subs-csv") {
-    const subs = await getMany(await listPaths("subscribers/"));
+    const paths = (await listPaths("subscribers/")).filter((p) => p.endsWith(".json"));
+    const recs = await Promise.all(paths.map(async (p) => { try { const r = await getJSON(p); return r && { ...r, id: r.id || p.slice(12, -5) }; } catch { return null; } }));
+    const subs = recs.filter(Boolean);
     subs.sort((a, b) => (a.at < b.at ? 1 : -1));
     if (action === "subs") return json({ ok: true, subs });
     const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
@@ -57,6 +59,24 @@ export async function POST(request) {
   }
   if (action === "logout") return json({ ok: true }, 200, { "set-cookie": clearCookie });
   if (!(await isSignedIn(request))) return denied();
+
+  if (action === "sub-add") {
+    const raw = clean(body.value, 120);
+    const via = raw.includes("@") ? "email" : "whatsapp";
+    const value = via === "email" ? validEmail(raw) : validPhone(raw);
+    if (!value) return json({ ok: false, error: "Enter an email address or a WhatsApp number like 082 123 4567." }, 400);
+    const id = (await sha(via + ":" + value)).slice(0, 32);
+    if (await exists(`subscribers/${id}.json`)) return json({ ok: false, error: "That person is already subscribed." }, 409);
+    const sub = { id, via, value, at: new Date().toISOString(), from: "admin" };
+    await putJSON(`subscribers/${id}.json`, sub, { overwrite: true });
+    return json({ ok: true, sub });
+  }
+  if (action === "sub-delete") {
+    const id = clean(body.id, 40).replace(/[^a-f0-9]/g, "");
+    if (!id) return json({ ok: false, error: "That subscriber could not be found." }, 404);
+    await remove([`subscribers/${id}.json`]);
+    return json({ ok: true });
+  }
 
   const id = clean(body.id, 40);
   const path = `applications/${id}.json`;

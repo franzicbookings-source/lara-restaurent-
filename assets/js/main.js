@@ -78,53 +78,30 @@
     if (tick()) { const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000); }
   }
 
-  /* ---------- Sign-up: email or WhatsApp number ---------- */
+  /* ---------- Subscribe: one box takes an email or a WhatsApp number ---------- */
   const form = document.getElementById('waitlist-form');
   if (!form) return;
   const msg = document.getElementById('form-msg');
   const btn = form.querySelector('button[type="submit"]');
   const input = document.getElementById('contact');
-  const label = document.getElementById('contact-label');
-  const choices = [...form.querySelectorAll('[data-via]')];
-  let via = 'email';
-  const say = (text, ok) => { msg.textContent = text; msg.className = 'form__msg ' + (ok ? 'is-ok' : 'is-err'); };
+  const HINT = msg.textContent;
+  const say = (text, cls) => { msg.textContent = text; msg.className = 'form__msg' + (cls ? ' ' + cls : ''); };
 
-  const MODES = {
-    email: { type: 'email', inputmode: 'email', autocomplete: 'email', placeholder: 'Your email', label: 'Your email' },
-    whatsapp: { type: 'tel', inputmode: 'tel', autocomplete: 'tel', placeholder: 'Your WhatsApp number', label: 'Your WhatsApp number' },
-  };
-  const choose = (next, focus) => {
-    if (next === via && !focus) return;
-    via = next;
-    const m = MODES[via];
-    choices.forEach((c) => c.setAttribute('aria-checked', String(c.dataset.via === via)));
-    input.type = m.type; input.inputMode = m.inputmode; input.autocomplete = m.autocomplete;
-    input.placeholder = m.placeholder; label.textContent = m.label;
-    input.value = ''; say('', true);
-    if (focus) input.focus();
-  };
-  choices.forEach((c) => c.addEventListener('click', () => choose(c.dataset.via, true)));
-  form.querySelector('.via').addEventListener('keydown', (e) => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    e.preventDefault();
-    const next = via === 'email' ? 'whatsapp' : 'email';
-    choose(next, false);
-    form.querySelector(`[data-via="${next}"]`).focus();
+  // What did they type? An @ means email; otherwise enough digits means a WhatsApp number.
+  const kind = (v) => (v.includes('@') ? 'email' : v.replace(/\D/g, '').length >= 9 && !/[a-z]/i.test(v) ? 'whatsapp' : '');
+  input.addEventListener('input', () => {
+    if (btn.disabled) return;
+    const k = kind(input.value.trim());
+    say(k === 'email' ? 'We’ll keep you posted by email.' : k === 'whatsapp' ? 'We’ll keep you posted on WhatsApp.' : HINT, k ? 'is-hint' : '');
   });
-
-  const looksRight = (v) => via === 'email'
-    ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)
-    : v.replace(/\D/g, '').length >= 9;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const value = input.value.trim();
-    if (!looksRight(value)) {
-      say(via === 'email' ? 'Please enter a valid email address.' : 'Please enter your WhatsApp number, like 082 123 4567.', false);
-      input.focus();
-      return;
-    }
     if (form.company && form.company.value) return; // honeypot
+    const value = input.value.trim();
+    const via = kind(value);
+    if (via === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) { say('That email doesn’t look right. Please check it.', 'is-err'); input.focus(); return; }
+    if (!via) { say('Please enter your email, or your WhatsApp number like 082 123 4567.', 'is-err'); input.focus(); return; }
     btn.disabled = true;
     btn.textContent = 'Sending…';
     try {
@@ -132,12 +109,12 @@
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error(data.error || 'failed');
       input.value = '';
-      btn.textContent = 'You’re in';
-      say(via === 'email' ? 'Thank you. Your invite will come to your inbox.' : 'Thank you. Your invite will come on WhatsApp.', true);
+      btn.textContent = 'Subscribed';
+      say(via === 'email' ? 'You’re subscribed. We’ll keep you posted by email.' : 'You’re subscribed. We’ll keep you posted on WhatsApp.', 'is-ok');
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = 'Get the invite';
-      say(err.message && err.message !== 'failed' ? err.message : 'That didn’t go through. Please try again.', false);
+      btn.textContent = 'Subscribe';
+      say(err.message && err.message !== 'failed' ? err.message : 'That didn’t go through. Please try again.', 'is-err');
     }
   });
 })();

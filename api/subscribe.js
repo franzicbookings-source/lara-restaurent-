@@ -12,8 +12,9 @@ export async function POST(request) {
     return json({ ok: false, error: via === "email" ? "That email doesn’t look right. Check it and try again." : "That number doesn’t look right. Try it like 082 123 4567." }, 400);
   }
 
-  const pathname = `subscribers/${(await sha(via + ":" + value)).slice(0, 32)}.json`;
+  const id = (await sha(via + ":" + value)).slice(0, 32);
+  const pathname = `subscribers/${id}.json`;
   if (await exists(pathname)) return json({ ok: true, already: true });
-  await putJSON(pathname, { via, value, at: new Date().toISOString(), from: clean(body.from || "home", 40) }, { overwrite: true });
+  await putJSON(pathname, { id, via, value, at: new Date().toISOString(), from: clean(body.from || "home", 40) }, { overwrite: true });
   return json({ ok: true });
 }

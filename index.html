@@ -17,12 +17,12 @@
   <link rel="preload" href="assets/img/logo/emblem-gold.svg" as="image" type="image/svg+xml">
   <link rel="preload" href="assets/img/photo/hero-poster-portrait.jpg" as="image" media="(max-aspect-ratio: 4/5)">
   <link rel="preload" href="assets/img/photo/hero-poster.jpg" as="image" media="(min-aspect-ratio: 4.001/5)">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=22">
-  <link rel="stylesheet" href="assets/css/site.css?v=22">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=23">
+  <link rel="stylesheet" href="assets/css/site.css?v=23">
   <script>document.documentElement.classList.add('js');</script>
-  <script src="assets/js/swarm.js?v=22" defer></script>
-  <script src="assets/js/main.js?v=22" defer></script>
-  <script src="assets/js/hiring.js?v=22" defer></script>
+  <script src="assets/js/swarm.js?v=23" defer></script>
+  <script src="assets/js/main.js?v=23" defer></script>
+  <script src="assets/js/hiring.js?v=23" defer></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -95,16 +95,12 @@
 
         <form class="form reveal reveal-3" id="waitlist-form" novalidate>
           <p class="sr-only"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
-          <div class="via" role="radiogroup" aria-label="Get the invite by">
-            <button type="button" role="radio" aria-checked="true" data-via="email">Email</button>
-            <button type="button" role="radio" aria-checked="false" data-via="whatsapp">WhatsApp</button>
-          </div>
           <div class="field">
-            <label class="sr-only" for="contact" id="contact-label">Your email</label>
-            <input id="contact" name="contact" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required>
-            <button class="btn" type="submit">Get the invite</button>
+            <label class="sr-only" for="contact">Your email or WhatsApp number</label>
+            <input id="contact" name="contact" type="text" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="Email or WhatsApp" required>
+            <button class="btn" type="submit">Subscribe</button>
           </div>
-          <p class="form__msg" id="form-msg" role="status" aria-live="polite"></p>
+          <p class="form__msg" id="form-msg" role="status" aria-live="polite">News and specials, by email or WhatsApp.</p>
         </form>
 
         <div class="links reveal reveal-4">

@@ -4,65 +4,125 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>La Raza Hiring</title>
+<meta name="theme-color" content="#14110E">
+<title>La Raza Admin</title>
 <link rel="icon" href="/assets/img/logo/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/admin/admin.css?v=1">
+<link rel="preload" href="/assets/fonts/cormorant-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/admin/admin.css?v=2">
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-hire" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/></symbol>
+  <symbol id="i-subs" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 7.4M18.2 14.8c1.9.7 3 2.4 3.3 5.2"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l4-4-4-4M14 12H4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M4 20l1.2-3.8A8.2 8.2 0 1 1 8 19z"/><path d="M9 8.6c0 3.4 2.9 6.4 6.4 6.4l1.1-1.6-2-1-1 .9c-1.2-.5-2.2-1.5-2.7-2.7l.9-1-1-2z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+</svg>
+
 <section class="login" id="login" hidden>
-  <img class="login__emb" src="/assets/img/logo/emblem-gold.svg" alt="">
-  <h1 class="login__title">Hiring dashboard</h1>
-  <p class="login__sub">La Raza staff only</p>
-  <form id="login-form" class="login__form">
-    <label class="sr" for="pw">Password</label>
-    <input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
-    <button class="btn" type="submit">Sign in</button>
-  </form>
-  <p class="msg err" id="login-msg" role="alert"></p>
+  <div class="login__card">
+    <img class="login__emb" src="/assets/img/logo/emblem-gold.svg" alt="">
+    <img class="login__word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
+    <p class="login__kicker">Admin</p>
+    <form id="login-form" class="login__form">
+      <label class="sr" for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+      <button class="btn" type="submit">Enter</button>
+    </form>
+    <p class="msg err" id="login-msg" role="alert"></p>
+  </div>
 </section>
 
-<div class="app" id="app" hidden>
-  <header class="top">
-    <img class="top__word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
-    <nav class="tabs" aria-label="Sections">
-      <button type="button" class="tab" data-tab="apps" aria-selected="true">Applications <b id="n-apps">0</b></button>
-      <button type="button" class="tab" data-tab="subs" aria-selected="false">Sign-ups <b id="n-subs">0</b></button>
+<div class="shell" id="app" hidden>
+  <aside class="side">
+    <div class="side__brand">
+      <img src="/assets/img/logo/emblem-gold.svg" alt="">
+      <img class="side__word" src="/assets/img/logo/wordmark-gold.svg" alt="La Raza">
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <button type="button" class="nav__item" data-view="overview" aria-current="page"><svg><use href="#i-home"/></svg><span>Overview</span></button>
+      <button type="button" class="nav__item" data-view="hiring"><svg><use href="#i-hire"/></svg><span>Hiring</span><b class="nav__badge" id="badge-new" hidden></b></button>
+      <button type="button" class="nav__item" data-view="subs"><svg><use href="#i-subs"/></svg><span>Subscribers</span></button>
     </nav>
-    <button type="button" class="link" id="logout">Sign out</button>
-  </header>
+    <button type="button" class="side__out" id="logout"><svg><use href="#i-out"/></svg><span>Sign out</span></button>
+  </aside>
 
-  <main class="view" id="view-apps">
-    <div class="bar">
-      <div class="chips" id="status-chips" role="group" aria-label="Filter by status"></div>
-      <div class="bar__row">
-        <label class="sr" for="role-filter">Role</label>
-        <select id="role-filter"><option value="">All roles</option><option>Manager</option><option>Barman</option><option>Hostess</option><option>General Workers</option></select>
-        <label class="sr" for="q">Search</label>
-        <input id="q" type="search" placeholder="Search name or email" autocomplete="off">
+  <div class="main">
+    <header class="head">
+      <div>
+        <p class="head__kicker" id="head-kicker"></p>
+        <h1 class="head__title" id="head-title">Overview</h1>
       </div>
-    </div>
-    <div class="split">
-      <ul class="list" id="list" aria-label="Applications"></ul>
-      <article class="detail" id="detail" aria-live="polite">
-        <p class="empty">Choose an application to review it.</p>
-      </article>
-    </div>
-  </main>
+      <button type="button" class="icon-btn head__out" id="logout-m" aria-label="Sign out"><svg><use href="#i-out"/></svg></button>
+    </header>
 
-  <main class="view" id="view-subs" hidden>
-    <div class="subs-head">
-      <p class="subs-count" id="subs-count"></p>
-      <div class="subs-actions">
-        <button type="button" class="btn ghost" id="copy-emails">Copy emails</button>
-        <button type="button" class="btn ghost" id="copy-phones">Copy WhatsApp numbers</button>
-        <a class="btn" href="/api/admin?action=subs-csv" id="dl-subs">Download CSV</a>
+    <!-- Overview -->
+    <section class="view" id="v-overview">
+      <div class="stats" id="ov-stats"></div>
+      <div class="cols">
+        <div class="panel">
+          <div class="panel__head"><h2>Latest applicants</h2><button type="button" class="link" data-go="hiring">See all</button></div>
+          <ul class="rows" id="ov-apps"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel__head"><h2>Latest subscribers</h2><button type="button" class="link" data-go="subs">See all</button></div>
+          <ul class="rows" id="ov-subs"></ul>
+        </div>
       </div>
-    </div>
-    <ul class="subs" id="subs"></ul>
-  </main>
+    </section>
+
+    <!-- Hiring -->
+    <section class="view" id="v-hiring" hidden>
+      <div class="pipe" id="pipe" role="tablist" aria-label="Pipeline"></div>
+      <div class="tools">
+        <label class="search"><svg><use href="#i-search"/></svg><span class="sr">Search applicants</span><input id="hq" type="search" placeholder="Search name or email" autocomplete="off"></label>
+        <label class="sr" for="role">Role</label>
+        <select id="role" class="select"><option value="">All roles</option><option>Manager</option><option>Barman</option><option>Hostess</option><option>General Workers</option></select>
+      </div>
+      <ul class="cards" id="apps"></ul>
+    </section>
+
+    <!-- Subscribers -->
+    <section class="view" id="v-subs" hidden>
+      <div class="stats stats--3" id="sub-stats"></div>
+      <div class="tools">
+        <label class="search"><svg><use href="#i-search"/></svg><span class="sr">Search subscribers</span><input id="sq" type="search" placeholder="Search email or number" autocomplete="off"></label>
+        <div class="seg" role="group" aria-label="Show">
+          <button type="button" data-f="all" aria-pressed="true">All</button>
+          <button type="button" data-f="email" aria-pressed="false">Email</button>
+          <button type="button" data-f="whatsapp" aria-pressed="false">WhatsApp</button>
+        </div>
+      </div>
+      <div class="actions">
+        <form class="add" id="add-form">
+          <label class="sr" for="add-in">Add a subscriber</label>
+          <input id="add-in" placeholder="Add an email or WhatsApp number" autocomplete="off">
+          <button class="btn small" type="submit"><svg><use href="#i-plus"/></svg>Add</button>
+        </form>
+        <div class="actions__right">
+          <button type="button" class="btn small ghost" id="copy-list"><svg><use href="#i-copy"/></svg><span>Copy list</span></button>
+          <a class="btn small ghost" href="/api/admin?action=subs-csv"><svg><use href="#i-down"/></svg>Download</a>
+        </div>
+      </div>
+      <p class="msg" id="sub-msg" role="status"></p>
+      <ul class="subs" id="subs"></ul>
+    </section>
+  </div>
+
+  <!-- Applicant -->
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="sheet" id="sheet" aria-label="Applicant" hidden></aside>
 </div>
 
-<script src="/assets/admin/admin.js?v=1" defer></script>
+<script src="/assets/admin/admin.js?v=2" defer></script>
 </body>
 </html>
