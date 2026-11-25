@@ -67,6 +67,23 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
 .row.done .who b { color: var(--muted); }
 .btn:focus-visible, .seg button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, .num:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .empty { padding: 30px 0; text-align: center; color: var(--muted); }
+/* RSVP: tally tiles (tap to filter) and the Coming / Not coming pair on each guest */
+.tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.t { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px 14px 12px; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font-family: var(--font); text-align: left; cursor: pointer; }
+.t b { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.t small { font-size: 12px; font-weight: 700; color: var(--muted); }
+.t.yes b { color: var(--ok); } .t.no b { color: var(--warn); }
+.t[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--gold); }
+.sync { margin: -8px 0 0; font-size: 12px; color: var(--muted); min-height: 1.2em; }
+.sync.err { color: var(--warn); font-weight: 700; }
+.rv { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.rb { height: 30px; padding: 0 12px; border-radius: 99px; border: 0; box-shadow: inset 0 0 0 1.5px var(--line); background: none; color: var(--muted);
+  font: 700 12px var(--font); cursor: pointer; }
+.rb.yes[aria-pressed="true"] { background: var(--ok); color: #fff; box-shadow: none; }
+.rb.no[aria-pressed="true"] { background: var(--warn); color: #fff; box-shadow: none; }
+.rb:focus-visible, .t:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (max-width: 420px) { .t { padding: 12px 10px 10px; } .t b { font-size: 26px; } }
 @media (max-width: 560px) {
   .row { grid-template-columns: 30px minmax(0,1fr); }
   .act { grid-column: 2; flex-wrap: wrap; }
@@ -99,6 +116,7 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
   <header>
     <h1>Invite list</h1>
     <p>Tap <b>Send</b> on a guest. WhatsApp opens straight to their chat with a warm message and their personal invitation already typed in. Just press send. Each guest is ticked as sent when you tap it.</p>
+    <p>When they reply on WhatsApp, come back and tap <b>Coming</b> or <b>Not coming</b> on their name. It saves straight away and shows the same on any phone that opens this link.</p>
   </header>
 
   <section class="card try" aria-labelledby="try-h">
@@ -111,14 +129,23 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
     </div>
   </section>
 
-  <div class="card prog" aria-live="polite"><b id="count">0 / 140</b><div class="bar"><i id="bar"></i></div><small id="left">140 to go</small><small id="nums"></small></div>
+  <div class="tally" role="group" aria-label="Replies">
+    <button type="button" class="t yes" data-f="yes" aria-pressed="false"><b id="n-yes">0</b><small>Coming</small></button>
+    <button type="button" class="t no" data-f="no" aria-pressed="false"><b id="n-no">0</b><small>Not coming</small></button>
+    <button type="button" class="t wait" data-f="wait" aria-pressed="false"><b id="n-wait">0</b><small>No reply yet</small></button>
+  </div>
+  <p class="sync" id="sync" aria-live="polite"></p>
+
+  <div class="card prog" aria-live="polite"><b id="count">0 / 151</b><div class="bar"><i id="bar"></i></div><small id="left">151 to go</small><small id="nums"></small></div>
 
   <div class="tools">
     <input class="f" id="q" type="search" placeholder="Search a name" aria-label="Search a name" autocomplete="off">
     <div class="seg" role="group" aria-label="Show">
       <button type="button" data-f="all" aria-pressed="true">All</button>
-      <button type="button" data-f="v" aria-pressed="false">Business 140</button>
       <button type="button" data-f="todo" aria-pressed="false">Not sent</button>
+      <button type="button" data-f="yes" aria-pressed="false">Coming</button>
+      <button type="button" data-f="no" aria-pressed="false">Not coming</button>
+      <button type="button" data-f="wait" aria-pressed="false">No reply</button>
     </div>
   </div>
 
@@ -136,7 +163,7 @@ details .note { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
   <div class="list" id="list"></div>
 </div>
 </div>
-<script src="/assets/invite/send-data.js?v=1795545771049"></script>
+<script src="/assets/invite/send-data.js?v=1795591555611"></script>
 <script>
 window.__start = function (ROWS, EXAMPLE) {
 
@@ -151,6 +178,9 @@ const store = {
   del(k) { try { localStorage.removeItem(k); } catch (e) {} }
 };
 let sent = store.get("lr-sent", {});
+let rsvp = store.get("lr-rsvp", {});          // guest number -> "yes" | "no"
+let pending = store.get("lr-pending", {});    // changes not yet saved online
+const KEY = window.LR_KEY || null;            // set when the list is unlocked; without it, ticks stay on this phone
 let local = store.get("lr-num", {});
 const tpl = { v: store.get("lr-tpl2-v", DEF.v), f: store.get("lr-tpl2-f", DEF.f), sd: store.get("lr-tpl2-sd", DEF.sd) };
 let filter = "all", editing = null;
@@ -172,7 +202,8 @@ function render() {
   const q = $("#q").value.trim().toLowerCase();
   const list = $("#list");
   list.textContent = "";
-  const shown = ROWS.filter((r) => (filter === "all" || filter === r.kind || (filter === "todo" && !sent[r.no])) && (!q || r.name.toLowerCase().includes(q)));
+  const pick = { all: () => true, todo: (r) => !sent[r.no], yes: (r) => rsvp[r.no] === "yes", no: (r) => rsvp[r.no] === "no", wait: (r) => sent[r.no] && !rsvp[r.no] };
+  const shown = ROWS.filter((r) => (pick[filter] || ((x) => x.kind === filter))(r) && (!q || r.name.toLowerCase().includes(q)));
   for (const r of shown) {
     const n = numOf(r);
     const row = document.createElement("div");
@@ -205,8 +236,18 @@ function render() {
       nb.addEventListener("click", () => { editing = r.no; render(); });
       who.appendChild(nb);
     }
+    const rv = document.createElement("div");
+    rv.className = "rv"; rv.setAttribute("role", "group"); rv.setAttribute("aria-label", "Reply from " + r.name);
+    for (const [val, label] of [["yes", "Coming"], ["no", "Not coming"]]) {
+      const rb = document.createElement("button");
+      rb.type = "button"; rb.className = "rb " + val; rb.textContent = (rsvp[r.no] === val ? "✓ " : "") + label;
+      rb.setAttribute("aria-pressed", rsvp[r.no] === val ? "true" : "false");
+      rb.addEventListener("click", () => setRsvp(r.no, rsvp[r.no] === val ? "" : val));
+      rv.appendChild(rb);
+    }
+    who.appendChild(rv);
     const a = row.querySelector(".wa");
-    a.textContent = n ? "Send" : "Send (pick chat)";
+    a.textContent = "Send";
     a.href = waLink(n, msg(r));
     a.addEventListener("click", () => mark(r.no, true));
     row.querySelector(".vw").href = r.url;
@@ -223,8 +264,54 @@ function render() {
   $("#left").textContent = done === ROWS.length ? "All sent" : (ROWS.length - done) + " to go";
   $("#nums").textContent = withNum + " of " + ROWS.length + " have a number";
   $("#bar").style.width = (100 * done / ROWS.length) + "%";
+  $("#n-yes").textContent = ROWS.filter((r) => rsvp[r.no] === "yes").length;
+  $("#n-no").textContent = ROWS.filter((r) => rsvp[r.no] === "no").length;
+  $("#n-wait").textContent = ROWS.filter((r) => sent[r.no] && !rsvp[r.no]).length;
+  document.querySelectorAll(".t").forEach((t) => t.setAttribute("aria-pressed", t.dataset.f === filter ? "true" : "false"));
 }
-function mark(no, on) { if (on) sent[no] = 1; else delete sent[no]; store.set("lr-sent", sent); setTimeout(render, 60); }
+function mark(no, on) { if (on) sent[no] = 1; else delete sent[no]; changed(no); setTimeout(render, 60); }
+function setRsvp(no, val) { if (val) { rsvp[no] = val; sent[no] = 1; } else delete rsvp[no]; changed(no); render(); }
+function changed(no) { store.set("lr-sent", sent); store.set("lr-rsvp", rsvp); if (KEY) { pending[no] = 1; store.set("lr-pending", pending); push(); } }
+
+// Online saving: every change goes to the website, so the ticks survive and match on every phone
+const api = (method, body) => fetch("/api/rsvp", { method, cache: "no-store", headers: { "content-type": "application/json", "x-lr-key": KEY }, body: body && JSON.stringify(body) })
+  .then((res) => res.ok ? res.json() : Promise.reject(res.status));
+function syncNote(text, err) { const el = $("#sync"); el.textContent = text; el.classList.toggle("err", !!err); }
+let pushing = false;
+async function push() {
+  if (!KEY || pushing) return;
+  pushing = true;
+  try {
+    for (const no of Object.keys(pending)) {
+      await api("POST", { no: +no, r: rsvp[no] || "", s: sent[no] ? 1 : 0 });
+      delete pending[no]; store.set("lr-pending", pending);
+    }
+    syncNote("Saved online · shows the same on every phone with this link");
+  } catch (e) {
+    syncNote(e === 401 ? "This link can’t save online. Ask for the latest invite list link." : "Not saved online yet. Check your connection; it will retry by itself.", true);
+  }
+  pushing = false;
+}
+async function pull() {
+  if (!KEY) { syncNote("Ticks are saved on this phone only."); return; }
+  try {
+    const d = await api("GET");
+    for (const r of ROWS) {
+      const no = r.no, rec = d.list[no];
+      if (pending[no]) continue;                          // this phone has a newer change still saving
+      if (rec) { if (rec.s) sent[no] = 1; else delete sent[no]; if (rec.r) rsvp[no] = rec.r; else delete rsvp[no]; }
+      else if (sent[no] || rsvp[no]) pending[no] = 1;     // ticked on this phone before online saving existed
+    }
+    store.set("lr-sent", sent); store.set("lr-rsvp", rsvp); store.set("lr-pending", pending);
+    render();
+    if (Object.keys(pending).length) push(); else syncNote("Saved online · shows the same on every phone with this link");
+  } catch (e) {
+    syncNote(e === 401 ? "This link can’t save online. Ask for the latest invite list link." : "Can’t reach the website right now. Your ticks are kept on this phone.", true);
+  }
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) pull(); });
+window.addEventListener("online", () => { push(); pull(); });
+setInterval(() => { if (!document.hidden) { Object.keys(pending).length ? push() : pull(); } }, 30000);
 function copy(text, btn) {
   const done = () => { const o = btn.textContent; btn.textContent = "Copied"; setTimeout(() => { btn.textContent = o; }, 1400); };
   const fallback = () => { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); };
@@ -238,15 +325,18 @@ for (const k of ["v", "f", "sd"]) {
 $("#reset").addEventListener("click", () => { for (const k of ["v", "f", "sd"]) { tpl[k] = DEF[k]; $("#t-" + k).value = DEF[k]; store.del("lr-tpl2-" + k); } render(); testLink(); });
 $("#test-num").addEventListener("input", testLink);
 $("#q").addEventListener("input", render);
-document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
-  filter = b.dataset.f;
-  document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.f === f ? "true" : "false"));
   render();
-}));
+}
+document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => setFilter(b.dataset.f)));
+document.querySelectorAll(".t").forEach((t) => t.addEventListener("click", () => setFilter(filter === t.dataset.f ? "all" : t.dataset.f)));
 $("#ex-name").textContent = EXAMPLE.name;
 $("#test-num").value = pretty(EXAMPLE.wa);
 testLink();
 render();
+pull();
 
 };
 (function () {
@@ -263,6 +353,8 @@ render();
     try {
       var data = await unlock(pass.trim().toLowerCase());
       try { localStorage.setItem(KEY, pass.trim().toLowerCase()); } catch (e) {}
+      var kb = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("lr-rsvp:" + pass.trim().toLowerCase())));
+      window.LR_KEY = Array.from(kb, function (x) { return x.toString(16).padStart(2, "0"); }).join("");
       document.getElementById("lock").hidden = true;
       document.getElementById("app").hidden = false;
       window.__start(data.rows, data.example);
