@@ -51,5 +51,12 @@
       "source": "/i/:slug",
       "destination": "/api/invite?slug=:slug"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/preview",
+      "destination": "/",
+      "permanent": false
+    }
   ]
 }
