@@ -23,7 +23,9 @@
     const loop = document.getElementById('poster-loop');
     const still = document.getElementById('poster-still');
     const play = (v) => { const p = v.play(); if (p) p.catch(() => {}); return p; };
+    let skipped = false, late;
     intro.addEventListener('playing', () => {
+      if (skipped) { intro.pause(); return; }
       poster.classList.add('is-playing');
       if (loop.preload !== 'auto') { loop.preload = 'auto'; loop.load(); }
     });
@@ -32,14 +34,22 @@
     loop.addEventListener('playing', () => poster.classList.add('is-looping'));
     // no autoplay (e.g. low power mode): show the finished picture instead of the first frame
     const noVideo = () => { if (!poster.classList.contains('is-playing')) still.src = still.dataset.final; };
+    // a slow connection: skip the intro and go straight to the loop, which starts on the finished picture
+    const skip = () => {
+      if (poster.classList.contains('is-playing')) return;
+      skipped = true; intro.pause(); noVideo();
+      loop.preload = 'auto'; loop.currentTime = 0; play(loop);
+    };
+    intro.addEventListener('error', skip);
     const start = () => {
       poster.classList.add('is-on'); // the frame shows straight away; the still is the film's first frame
       if (reduced) return noVideo();
-      poster.classList.remove('is-looping');
-      loop.pause();
+      poster.classList.remove('is-looping', 'is-playing');
+      skipped = false; loop.pause();
       intro.currentTime = 0;
       const p = play(intro);
       if (p) p.catch(noVideo);
+      clearTimeout(late); late = setTimeout(skip, 2200);
     };
     // rises with the page while the butterflies are still landing; again when the intro is replayed
     let intros = 0; // the first 'intro-done' belongs to the load we already started on
