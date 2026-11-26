@@ -33,7 +33,11 @@
     intro.addEventListener('ended', () => { loop.currentTime = 0; play(loop); });
     loop.addEventListener('playing', () => poster.classList.add('is-looping'));
     // no autoplay (e.g. low power mode): show the finished picture instead of the first frame
-    const noVideo = () => { if (!poster.classList.contains('is-playing')) still.src = still.dataset.final; };
+    const noVideo = () => {
+      if (poster.classList.contains('is-playing')) return;
+      poster.querySelectorAll('source[data-final]').forEach((src) => { src.srcset = src.dataset.final; });
+      still.src = still.dataset.final;
+    };
     // a slow connection: skip the intro and go straight to the loop, which starts on the finished picture
     const skip = () => {
       if (poster.classList.contains('is-playing')) return;
