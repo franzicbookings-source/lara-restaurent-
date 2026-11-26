@@ -26,8 +26,9 @@
    The frame sits between 13% and 77% of the film's height: the logo lives on the wall above it,
    the words on the wall below, exactly where the poster had them. */
 .film {
-  position: absolute; z-index: -1; left: 50%; top: calc(var(--H) * .01); margin: 0;
-  height: calc(var(--H) * .94); aspect-ratio: 4 / 5; transform: translateX(-50%);
+  --fk: .94; --ft: .01;
+  position: absolute; z-index: -1; left: 50%; top: calc(var(--H) * var(--ft)); margin: 0;
+  height: calc(var(--H) * var(--fk)); aspect-ratio: 4 / 5; transform: translateX(-50%);
 }
 .film img, .film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .film__intro, .film__loop { opacity: 0; }
@@ -40,12 +41,16 @@
   content: ""; position: absolute; inset: -1px; pointer-events: none;
   background: linear-gradient(180deg, var(--lr-black) 0%, rgba(11,11,10,0) 7%, rgba(11,11,10,0) 89%, var(--lr-black) 100%);
 }
+/* most phones once the browser bars are on screen: a touch smaller, so the words below fit */
+@media (max-aspect-ratio: 2.999/4) and (max-height: 790px) {
+  .film { --fk: .85; --ft: .025; }
+}
 @media (min-aspect-ratio: 3/4) {
-  .film { top: 0; height: var(--H); }
+  .film { --fk: 1; --ft: 0; }
 }
 /* landscape screens get the widescreen room */
 @media (min-aspect-ratio: 1/1) {
-  .film { aspect-ratio: 16 / 9; }
+  .film { aspect-ratio: 16 / 9; --fk: .94; }
 }
 
 /* ---------- A few words, like the poster's own lettering ---------- */
@@ -58,6 +63,8 @@
   margin: 0; font-size: clamp(1.375rem, 5.8vw, 2.125rem); font-weight: var(--fw-medium);
   letter-spacing: -.02em; line-height: 1.15; color: var(--lr-white); text-wrap: balance;
 }
+.info__sub { margin: -.15rem 0 0; font-size: .9375rem; line-height: 1.2; color: var(--lr-white-70); }
+.info__script { font-family: "Pinyon", cursive; font-size: 1.85em; line-height: .9; color: var(--lr-gold-light); padding: 0 .06em; vertical-align: -.1em; }
 .info__count {
   margin: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: .2rem .6rem;
   font-size: .8125rem; color: var(--lr-white-50); font-variant-numeric: tabular-nums;
@@ -85,15 +92,31 @@
 .more__copy { margin: .6rem 0 0; font-size: .75rem; color: var(--lr-white-50); }
 
 /* ---------- Sizes ---------- */
-@media (max-height: 700px) and (max-width: 599px) {
-  .scene .logo { width: 62px; }
-  .info { gap: .35rem; }
-  .info__btn { height: 44px; margin-top: .35rem; }
+@media (max-height: 790px) and (max-width: 599px) {
+  .scene .logo { width: 60px; gap: .2rem; }
+  .info { gap: .3rem; }
+  .info__date { font-size: clamp(1.25rem, 5.6vw, 1.5rem); }
+  .info__btn { height: 44px; margin-top: .3rem; }
 }
 @media (min-width: 900px) {
   .scene .logo { width: 84px; gap: .4rem; }
   .info__kicker { font-size: .8125rem; }
-  .info__count { font-size: .875rem; }
+  .info__sub { margin: -.15rem 0 0; font-size: .9375rem; line-height: 1.2; color: var(--lr-white-70); }
+.info__script { font-family: "Pinyon", cursive; font-size: 1.85em; line-height: .9; color: var(--lr-gold-light); padding: 0 .06em; vertical-align: -.1em; }
+.info__count { font-size: .875rem; }
+}
+/* laptops and landscape phones: the words tighten up so they stay under the envelope */
+@media (min-aspect-ratio: 1/1) {
+  .info { gap: .3rem; }
+  .info__btn { margin-top: .25rem; height: 44px; }
+}
+@media (min-aspect-ratio: 1/1) and (max-height: 800px) {
+  .scene .logo { width: 64px; gap: .2rem; }
+  .film { --fk: .9; }
+  .info__date { font-size: 1.625rem; }
+}
+@media (min-aspect-ratio: 1/1) and (max-height: 620px) {
+  .scene .logo { width: 54px; gap: .15rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .js .film { opacity: 1; }
