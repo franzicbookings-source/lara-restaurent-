@@ -17,12 +17,12 @@
   <link rel="icon" href="assets/img/logo/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/img/logo/emblem-gold.svg" as="image" type="image/svg+xml">
-  <link rel="preload" href="assets/img/photo/poster-still.jpg" as="image">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=28">
-  <link rel="stylesheet" href="assets/css/site.css?v=28">
+  <link rel="preload" href="assets/img/photo/poster-start.jpg" as="image">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=29">
+  <link rel="stylesheet" href="assets/css/site.css?v=29">
   <script>document.documentElement.classList.add('js');</script>
-  <script src="assets/js/swarm.js?v=28" defer></script>
-  <script src="assets/js/main.js?v=28" defer></script>
+  <script src="assets/js/swarm.js?v=29" defer></script>
+  <script src="assets/js/main.js?v=29" defer></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -58,9 +58,9 @@
 
     <section class="center">
       <div class="center__inner">
-        <!-- The grand opening poster, alive: the intro builds it once, then it loops (main.js) -->
+        <!-- The invitation in its frame: a short intro, then a seamless loop (main.js). No words in it: the page says them. -->
         <figure class="poster" id="poster">
-          <img class="poster__still" src="assets/img/photo/poster-still.jpg" width="1080" height="1350" alt="La Raza grand opening poster: a gold-gloved hand reaches out of a gilded frame holding an envelope sealed with the La Raza wax seal. This is your invite. Grand opening, 2 December 2026, 15:00. Sphe D’s birthday celebration. Reservations 066 407 9896. www.laraza.co.za" fetchpriority="high" decoding="async">
+          <img class="poster__still" id="poster-still" src="assets/img/photo/poster-start.jpg" data-final="assets/img/photo/poster-still.jpg" width="1080" height="1350" alt="A gold-gloved hand reaches out of a gilded frame, holding an envelope sealed with the La Raza wax seal." fetchpriority="high" decoding="async">
           <video class="poster__intro" id="poster-intro" muted playsinline preload="auto" aria-hidden="true" src="assets/video/poster-intro.mp4"></video>
           <video class="poster__loop" id="poster-loop" muted loop playsinline preload="none" aria-hidden="true" src="assets/video/poster-loop.mp4"></video>
         </figure>
@@ -80,16 +80,15 @@
         </h1>
 
         <div class="pitch reveal reveal-1">
-          <p class="headline">It’s official.<br> We open 2&nbsp;December.</p>
+          <p class="headline">It’s official.<br> This is your&nbsp;invite.</p>
           <p class="ticker" id="ticker" aria-live="off">
             <span class="ticker__line is-on">Celebrating Sphe D’s birthday.</span>
-            <span class="ticker__line">Doors open at 15:00.</span>
             <span class="ticker__line">A restaurant &amp; cocktail lounge.</span>
             <span class="ticker__line">Reservations: 066 407 9896.</span>
           </p>
         </div>
 
-        <p class="cd-label reveal reveal-2" id="cd-label">Doors open in</p>
+        <p class="cd-label reveal reveal-2" id="cd-label">Grand opening in</p>
         <div class="countdown reveal reveal-2" id="countdown" data-open="2026-12-02T15:00:00+02:00" role="timer" aria-label="Time until La Raza opens">
           <div class="countdown__unit"><b data-u="d">00</b><span>days</span></div>
           <div class="countdown__unit"><b data-u="h">00</b><span>hours</span></div>

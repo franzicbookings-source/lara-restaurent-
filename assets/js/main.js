@@ -16,36 +16,35 @@
     else document.addEventListener('lr:ready', fn, { once: true });
   };
 
-  /* ---------- The poster: the intro builds it once, then a seamless loop takes over ---------- */
+  /* ---------- The invitation in its frame: a 3s intro, then a seamless loop ---------- */
   const poster = document.getElementById('poster');
   if (poster) {
     const intro = document.getElementById('poster-intro');
     const loop = document.getElementById('poster-loop');
+    const still = document.getElementById('poster-still');
     const play = (v) => { const p = v.play(); if (p) p.catch(() => {}); return p; };
-    let shown = false;
-    const show = () => { if (!shown) { shown = true; poster.classList.add('is-on'); } };
     intro.addEventListener('playing', () => {
-      poster.classList.add('is-playing'); show();
+      poster.classList.add('is-playing');
       if (loop.preload !== 'auto') { loop.preload = 'auto'; loop.load(); }
     });
     // the intro's last frame is the loop's first, so the hand-over is invisible
     intro.addEventListener('ended', () => { loop.currentTime = 0; play(loop); });
     loop.addEventListener('playing', () => poster.classList.add('is-looping'));
+    // no autoplay (e.g. low power mode): show the finished picture instead of the first frame
+    const noVideo = () => { if (!poster.classList.contains('is-playing')) still.src = still.dataset.final; };
     const start = () => {
-      if (reduced) return show();
+      poster.classList.add('is-on'); // the frame shows straight away; the still is the film's first frame
+      if (reduced) return noVideo();
       poster.classList.remove('is-looping');
       loop.pause();
       intro.currentTime = 0;
       const p = play(intro);
-      if (p) p.catch(show); // no autoplay (e.g. low power mode): the finished poster shows as a still
-      setTimeout(show, 1500);
+      if (p) p.catch(noVideo);
     };
-    // starts when the butterflies have made the logo, and again whenever the intro is replayed
-    whenReady(() => {
-      const sw = document.getElementById('swarm');
-      if (!sw || sw.hidden) setTimeout(start, 200);
-    });
-    document.addEventListener('lr:intro-done', () => setTimeout(start, 150));
+    // rises with the page while the butterflies are still landing; again when the intro is replayed
+    let intros = 0; // the first 'intro-done' belongs to the load we already started on
+    whenReady(() => { const sw = document.getElementById('swarm'); if (!sw || sw.hidden) intros = 1; start(); });
+    document.addEventListener('lr:intro-done', () => { if (intros++ > 0) start(); });
   }
 
   /* ---------- Rotating line: the page "talks", one short line at a time ---------- */
