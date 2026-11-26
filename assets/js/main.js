@@ -1,6 +1,6 @@
 /* ==========================================================================
-   LA RAZA — Grand opening, 2 December 2026
-   The living invitation poster, gold dust, rotating line, countdown, subscribe. No libraries.
+   LA RAZA — Coming Soon
+   Rotating line, countdown, waitlist form. No libraries.
    The photo swarm intro lives in swarm.js and adds .is-ready when done.
    ========================================================================== */
 (() => {
@@ -10,110 +10,30 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  // The background film loads only after the intro, so the first screen arrives fast.
+  // Until then (and with reduced motion, always) the still photo shows behind it.
+  const video = document.getElementById('bg');
+  if (video) {
+    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
+  }
+  const startVideo = () => {
+    if (!video || reduced || video.dataset.offscreen || !video.paused) return;
+    const hero = video.closest('.stage');
+    if (hero && hero.getBoundingClientRect().bottom <= 0) return; // starts when you scroll back up
+    const p = video.play(); if (p) p.catch(() => {});
+  };
+
   // Run something once the intro has handed over to the page.
   const whenReady = (fn) => {
     if (root.classList.contains('is-ready')) fn();
     else document.addEventListener('lr:ready', fn, { once: true });
   };
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const apple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
 
-  /* ---------- Reserve on WhatsApp, and the opening in your calendar ---------- */
-  const RESERVE = 'https://wa.me/27664079896?text=' + encodeURIComponent(
-    'Hi La Raza! I’d like to reserve a table for the Grand Opening on Wednesday 2 December 2026.\n\nName:\nNumber of guests:');
-  const CAL = apple ? 'assets/invite/la-raza-grand-opening.ics'
-    : 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('La Raza · Grand Opening') +
-      '&dates=20261202T160000Z/20261202T210000Z&details=' + encodeURIComponent('Sphe D’s Birthday Celebration. Reservations 066 407 9896. www.laraza.co.za') +
-      '&location=' + encodeURIComponent('La Raza, Newcastle');
-  ['reserve', 'reserve-back'].forEach((id) => { const a = document.getElementById(id); if (a) a.href = RESERVE; });
-  ['cal', 'cal-back'].forEach((id) => {
-    const a = document.getElementById(id); if (!a) return;
-    a.href = CAL;
-    if (!apple) { a.target = '_blank'; a.rel = 'noopener'; }
+  whenReady(() => {
+    const sw = document.getElementById('swarm');
+    if (!sw || sw.hidden) setTimeout(startVideo, 300);
+    else document.addEventListener('lr:intro-done', startVideo, { once: true });
   });
-
-  /* ---------- The invitation: tap the seal and it turns over ---------- */
-  const card = document.getElementById('card');
-  if (card) {
-    const front = document.getElementById('card-front');
-    const back = document.getElementById('card-back');
-    const turnBack = document.getElementById('card-turn');
-    const hint = document.getElementById('card-hint');
-    const flip = (open) => {
-      card.classList.toggle('is-flipped', open);
-      card.classList.add('was-opened');
-      back.toggleAttribute('inert', !open); back.setAttribute('aria-hidden', String(!open));
-      front.toggleAttribute('inert', open); front.setAttribute('aria-hidden', String(open));
-      if (hint) hint.lastChild.textContent = open ? 'Tap “Turn it back” to see the poster' : 'Tap the seal to open your invite';
-      if (navigator.vibrate) navigator.vibrate(12);
-      setTimeout(() => (open ? back.querySelector('a') : front).focus({ preventScroll: true }), reduced ? 0 : 650);
-    };
-    front.addEventListener('click', () => flip(true));
-    turnBack.addEventListener('click', () => flip(false));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && card.classList.contains('is-flipped')) flip(false); });
-
-    // Desktop: the poster leans toward the mouse and the light follows it
-    if (finePointer && !reduced) {
-      const tilt = document.getElementById('card-tilt');
-      const art = card.parentElement;
-      let raf = 0, tx = 0, ty = 0;
-      art.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect();
-        tx = (e.clientX - r.left) / r.width; ty = (e.clientY - r.top) / r.height;
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          raf = 0;
-          tilt.style.setProperty('--ry', ((tx - .5) * 10).toFixed(2) + 'deg');
-          tilt.style.setProperty('--rx', ((.5 - ty) * 8).toFixed(2) + 'deg');
-          card.style.setProperty('--gx', (tx * 100).toFixed(1) + '%');
-          card.style.setProperty('--gy', (ty * 100).toFixed(1) + '%');
-          card.style.setProperty('--go', '1');
-        });
-      });
-      art.addEventListener('pointerleave', () => {
-        tilt.style.setProperty('--ry', '0deg'); tilt.style.setProperty('--rx', '0deg'); card.style.setProperty('--go', '0');
-      });
-    }
-  }
-
-  /* ---------- Gold dust drifting through the room ---------- */
-  const dust = document.getElementById('dust');
-  if (dust && !reduced && dust.getContext) {
-    const ctx = dust.getContext('2d');
-    const N = finePointer ? 70 : 36;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    let W = 0, H = 0, ps = [], on = true, last = 0;
-    const size = () => {
-      W = dust.clientWidth; H = dust.clientHeight;
-      dust.width = Math.round(W * dpr); dust.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    const spawn = (anywhere) => ({
-      x: Math.random() * W, y: anywhere ? Math.random() * H : H + 10,
-      r: .5 + Math.random() * 1.7, vy: 6 + Math.random() * 16, vx: -4 + Math.random() * 8,
-      ph: Math.random() * Math.PI * 2, tw: .6 + Math.random() * 1.6,
-    });
-    size(); ps = Array.from({ length: N }, () => spawn(true));
-    addEventListener('resize', size);
-    const frame = (t) => {
-      if (!on) return;
-      const dt = Math.min(.05, (t - (last || t)) / 1000); last = t;
-      ctx.clearRect(0, 0, W, H);
-      for (const p of ps) {
-        p.y -= p.vy * dt; p.x += (p.vx + Math.sin(t / 1300 + p.ph) * 6) * dt;
-        if (p.y < -10) Object.assign(p, spawn(false));
-        const a = .25 + .55 * (.5 + .5 * Math.sin(t / 1000 * p.tw + p.ph));
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
-        g.addColorStop(0, `rgba(255,226,170,${a})`); g.addColorStop(.35, `rgba(234,190,120,${a * .45})`); g.addColorStop(1, 'rgba(234,190,120,0)');
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2); ctx.fill();
-      }
-      requestAnimationFrame(frame);
-    };
-    const run = (v) => { if (v && !on) { on = true; last = 0; requestAnimationFrame(frame); } else if (!v) on = false; };
-    whenReady(() => requestAnimationFrame(frame));
-    document.addEventListener('visibilitychange', () => run(!document.hidden));
-    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => run(e.isIntersecting && !document.hidden)).observe(dust);
-  }
 
   /* ---------- Rotating line: the page "talks", one short line at a time ---------- */
   const ticker = document.getElementById('ticker');
@@ -135,12 +55,12 @@
     });
   }
 
-  /* ---------- Countdown to the doors opening: Wednesday 2 December, 18:00 ---------- */
+  /* ---------- Countdown to the grand opening: Wednesday 2 December, 15:00 in South Africa ---------- */
   const cd = document.getElementById('countdown');
   if (cd) {
     const label = document.getElementById('cd-label');
     const dateLine = document.getElementById('cd-date');
-    const OPEN = Date.UTC(2026, 11, 2, 16, 0, 0); // 18:00 in South Africa
+    const OPEN = new Date(cd.dataset.open).getTime();
     const el = (u) => cd.querySelector(`[data-u="${u}"]`);
     const out = { d: el('d'), h: el('h'), m: el('m'), s: el('s') };
     const pad = (n) => String(n).padStart(2, '0');
