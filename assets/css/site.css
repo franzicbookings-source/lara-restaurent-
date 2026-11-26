@@ -26,14 +26,14 @@ button, input { font: inherit; color: inherit; }
   grid-template-rows: 1fr auto;
   overflow: hidden;
   isolation: isolate;
-  background: var(--lr-black) url("../img/photo/opening-still.jpg") center / cover no-repeat;
+  background: var(--lr-black) url("../img/photo/room-bg.jpg") center / cover no-repeat;
 }
 .stage__video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
   opacity: 0; transition: opacity .8s var(--ease);
 }
 .stage__video.is-playing { opacity: 1; }
-@media (max-aspect-ratio: 4/5) { .stage { background-image: url("../img/photo/opening-still-portrait.jpg"); } }
+@media (max-aspect-ratio: 4/5) { .stage { background-image: url("../img/photo/room-bg-portrait.jpg"); } }
 .stage::after {
   /* Calm the footage enough for text, without tinting it */
   content: ""; position: absolute; inset: 0; z-index: -1;
@@ -505,4 +505,39 @@ button, input { font: inherit; color: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .hire__env, .inv-seal, .inv-seal__glow { animation: none !important; }
+}
+
+/* ==========================================================================
+   The grand opening poster, in front. A framed print: gold hairline, dark mat,
+   a warm light behind it. main.js plays the intro once, then the loop.
+   ========================================================================== */
+.center__col { display: contents; }
+.center__col > .logo { order: -1; }
+.poster {
+  position: relative; margin: 0; width: min(100%, 440px); aspect-ratio: 4 / 5;
+  border-radius: 3px; overflow: hidden; background: #0b0a09;
+  box-shadow:
+    0 0 0 1px rgba(214,178,122,.42),
+    0 0 0 7px rgba(11,11,10,.62),
+    0 0 0 8px rgba(214,178,122,.24),
+    0 44px 90px -34px rgba(0,0,0,.92),
+    0 0 150px -36px rgba(226,168,100,.42);
+}
+.poster > img, .poster > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.poster__intro, .poster__loop { opacity: 0; }
+.poster.is-playing .poster__intro { opacity: 1; }
+.poster.is-looping .poster__loop { opacity: 1; }
+.js .poster { opacity: 0; transform: translateY(26px) scale(.97); }
+.js .poster.is-on { opacity: 1; transform: none; transition: opacity 1.1s var(--ease), transform 1.5s var(--ease); }
+
+@media (min-width: 1000px) and (min-height: 620px) {
+  .center { padding-bottom: var(--space-4); }
+  .center__inner { display: flex; align-items: center; justify-content: center; gap: clamp(48px, 5vw, 96px); max-width: 1240px; }
+  .center__col { display: grid; justify-items: center; gap: 1.375rem; flex: 0 1 540px; min-width: 0; }
+  .center__col > .logo { order: 0; }
+  .poster { flex: none; width: auto; height: min(80svh, 860px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .poster { opacity: 1; transform: none; }
+  .poster__intro, .poster__loop { display: none; }
 }

@@ -10,30 +10,43 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  // The background film loads only after the intro, so the first screen arrives fast.
-  // Until then (and with reduced motion, always) the still photo shows behind it.
-  const video = document.getElementById('bg');
-  if (video) {
-    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
-  }
-  const startVideo = () => {
-    if (!video || reduced || video.dataset.offscreen || !video.paused) return;
-    const hero = video.closest('.stage');
-    if (hero && hero.getBoundingClientRect().bottom <= 0) return; // starts when you scroll back up
-    const p = video.play(); if (p) p.catch(() => {});
-  };
-
   // Run something once the intro has handed over to the page.
   const whenReady = (fn) => {
     if (root.classList.contains('is-ready')) fn();
     else document.addEventListener('lr:ready', fn, { once: true });
   };
 
-  whenReady(() => {
-    const sw = document.getElementById('swarm');
-    if (!sw || sw.hidden) setTimeout(startVideo, 300);
-    else document.addEventListener('lr:intro-done', startVideo, { once: true });
-  });
+  /* ---------- The poster: the intro builds it once, then a seamless loop takes over ---------- */
+  const poster = document.getElementById('poster');
+  if (poster) {
+    const intro = document.getElementById('poster-intro');
+    const loop = document.getElementById('poster-loop');
+    const play = (v) => { const p = v.play(); if (p) p.catch(() => {}); return p; };
+    let shown = false;
+    const show = () => { if (!shown) { shown = true; poster.classList.add('is-on'); } };
+    intro.addEventListener('playing', () => {
+      poster.classList.add('is-playing'); show();
+      if (loop.preload !== 'auto') { loop.preload = 'auto'; loop.load(); }
+    });
+    // the intro's last frame is the loop's first, so the hand-over is invisible
+    intro.addEventListener('ended', () => { loop.currentTime = 0; play(loop); });
+    loop.addEventListener('playing', () => poster.classList.add('is-looping'));
+    const start = () => {
+      if (reduced) return show();
+      poster.classList.remove('is-looping');
+      loop.pause();
+      intro.currentTime = 0;
+      const p = play(intro);
+      if (p) p.catch(show); // no autoplay (e.g. low power mode): the finished poster shows as a still
+      setTimeout(show, 1500);
+    };
+    // starts when the butterflies have made the logo, and again whenever the intro is replayed
+    whenReady(() => {
+      const sw = document.getElementById('swarm');
+      if (!sw || sw.hidden) setTimeout(start, 200);
+    });
+    document.addEventListener('lr:intro-done', () => setTimeout(start, 150));
+  }
 
   /* ---------- Rotating line: the page "talks", one short line at a time ---------- */
   const ticker = document.getElementById('ticker');
