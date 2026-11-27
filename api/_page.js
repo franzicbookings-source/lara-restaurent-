@@ -59,7 +59,9 @@ export function page(slug, guest, origin, vid = "") {
   const [name, no, kind] = guest;
   const sphe = kind === "sd";
   const friend = kind === "f" || sphe;
-  const first = kind === "f" ? name : name.replace(/^(Dr|Mr|Mrs|Ms|Prof)\.?\s+/i, "").split(/\s+/)[0];
+  // a title or a couple ("Mr Masange", "Mr & Mrs Mtshali") is greeted in full
+  const first =
+    kind === "f" || /^(Dr|Mr|Mrs|Ms|Prof)\b|&/i.test(name) ? name : name.split(/\s+/)[0];
   const from = sphe ? "Sphe D" : "La Raza";
   const url = `${origin}/i/${slug}`;
   const title = friend ? `${name}, you made the list` : `${name}, you’re invited`;
